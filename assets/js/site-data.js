@@ -1380,6 +1380,11 @@ SITE_DATA.profile.location = {
   en: "Ansan, Republic of Korea"
 };
 SITE_DATA.profile.email = "envy978@hanmail.net";
+SITE_DATA.profile.photo = "assets/images/profile-portrait.svg";
+SITE_DATA.profile.photoAlt = {
+  ko: "권나현 프로필 이미지",
+  en: "Nahyun Kwon profile image"
+};
 SITE_DATA.profile.title = {
   ko: "Research Professor, Center for AI Technology in Construction",
   en: "Research Professor, Center for AI Technology in Construction"

@@ -111,7 +111,9 @@
     return `
       <section class="masthead section-card reveal">
         <div class="masthead-primary">
-          <div class="profile-mark">${SITE_DATA.profile.initials}</div>
+          <div class="portrait-shell">
+            <img class="profile-portrait" src="${SITE_DATA.profile.photo}" alt="${text(SITE_DATA.profile.photoAlt || SITE_DATA.profile.name)}">
+          </div>
           <div class="profile-copy">
             <p class="section-kicker">${text(SITE_DATA.hero.eyebrow)}</p>
             <h1 class="profile-name">${profileName()}</h1>
@@ -566,9 +568,35 @@
   }
 
   function renderPublicationList(publications) {
+    const groups = publications.reduce((acc, item) => {
+      const key = item.year || "-";
+
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+
+      acc[key].push(item);
+      return acc;
+    }, {});
+
     return `
-      <div class="publication-list">
-        ${publications.map((item) => renderPublicationItem(item)).join("")}
+      <div class="year-group-list">
+        ${Object.keys(groups)
+          .sort((a, b) => Number(b) - Number(a))
+          .map(
+            (year) => `
+              <section class="year-group">
+                <div class="year-heading">
+                  <h3>${year}</h3>
+                  <p>${groups[year].length} ${text({ ko: "건", en: "items" })}</p>
+                </div>
+                <div class="publication-list">
+                  ${groups[year].map((item) => renderPublicationItem(item)).join("")}
+                </div>
+              </section>
+            `
+          )
+          .join("")}
       </div>
     `;
   }

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 820" role="img" aria-labelledby="title desc">
+  <title id="title">Profile portrait placeholder</title>
+  <desc id="desc">Minimal grayscale portrait placeholder for a faculty-style personal website.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f6f7f9"/>
+      <stop offset="100%" stop-color="#e7ebf0"/>
+    </linearGradient>
+    <linearGradient id="coat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#495564"/>
+      <stop offset="100%" stop-color="#263241"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#d6c2b7"/>
+      <stop offset="100%" stop-color="#c4aa9b"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="820" rx="28" fill="url(#bg)"/>
+  <circle cx="320" cy="250" r="108" fill="url(#skin)"/>
+  <path d="M224 257c12-92 76-143 122-143 65 0 131 61 132 146-37-28-71-45-102-50-57-10-101 13-152 47Z" fill="#2f3946"/>
+  <path d="M270 333h102c0 44 23 70 61 92 49 28 90 92 111 183H96c19-90 60-155 109-183 39-22 65-48 65-92Z" fill="url(#coat)"/>
+  <path d="M276 372c24 18 48 28 72 28 24 0 47-10 68-28l34 48-43 37-58-76-55 76-42-37 24-35Z" fill="#f8fafc"/>
+  <path d="M286 463h67l24 145H262l24-145Z" fill="#ffffff" opacity=".92"/>
+  <circle cx="278" cy="252" r="8" fill="#5b433e"/>
+  <circle cx="360" cy="252" r="8" fill="#5b433e"/>
+  <path d="M284 305c20 14 53 15 74 0" fill="none" stroke="#8c6d63" stroke-linecap="round" stroke-width="6"/>
+  <path d="M224 602h194c59 0 108 49 108 108v82H116v-82c0-59 49-108 108-108Z" fill="#213040" opacity=".2"/>
+  <rect x="44" y="44" width="552" height="732" rx="22" fill="none" stroke="#d3dae3" stroke-width="2"/>
+</svg>
