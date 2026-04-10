@@ -21,13 +21,13 @@
   const PAGE_LABELS = {
     home: { ko: "홈", en: "Home" },
     bio: { ko: "소개", en: "Biography" },
-    publications: { ko: "아웃풋", en: "Outputs" },
-    teaching: { ko: "학습", en: "Learning" },
+    publications: { ko: "논문", en: "Publications" },
+    teaching: { ko: "교육", en: "Teaching" },
     news: { ko: "소식", en: "News" },
-    contact: { ko: "연락", en: "Contact" }
+    contact: { ko: "연락처", en: "Contact" }
   };
 
-  const QUICK_LINKS = [
+  const HOME_SECTIONS = [
     { id: "about", label: SITE_DATA.about.section.title },
     { id: "research", label: SITE_DATA.research.section.title },
     { id: "outputs", label: SITE_DATA.outputs.section.title },
@@ -36,18 +36,17 @@
     { id: "contact", label: SITE_DATA.contact.section.title }
   ];
 
-  document.title = `${SITE_DATA.profile.name} | ${text(PAGE_LABELS[page])}`;
+  document.title = `${profileName()} | ${text(PAGE_LABELS[page])}`;
 
   app.innerHTML = `
     <div class="site-shell">
-      ${renderSidebar()}
-      <div class="content-shell">
-        ${renderTopbar()}
-        <main class="main-content">
-          ${renderPage()}
-        </main>
-        ${renderFooter()}
-      </div>
+      ${renderHeader()}
+      <main class="site-main">
+        ${renderMasthead()}
+        ${page === "home" ? renderHomeJumpNav() : ""}
+        ${renderPage()}
+      </main>
+      ${renderFooter()}
     </div>
   `;
 
@@ -70,96 +69,115 @@
     return String(value);
   }
 
+  function profileName() {
+    return text(SITE_DATA.profile.nameDisplay || SITE_DATA.profile.name);
+  }
+
   function route(name, routeLang) {
     return ROUTES[name][routeLang || lang];
   }
 
-  function linkTarget(item) {
-    return item && item.external ? ' target="_blank" rel="noreferrer"' : "";
+  function externalAttrs(url) {
+    return url && !url.startsWith("mailto:") ? ' target="_blank" rel="noreferrer"' : "";
   }
 
-  function buttonLink(item) {
-    if (item.page) {
-      return route(item.page);
-    }
-
-    return item.href || "#";
-  }
-
-  function renderSidebar() {
-    return `
-      <aside class="sidebar">
-        <section class="glass-card profile-card reveal">
-          <div class="profile-accent"></div>
-          <div class="monogram">${SITE_DATA.profile.initials}</div>
-          <p class="eyebrow">${text(SITE_DATA.hero.eyebrow)}</p>
-          <h1 class="sidebar-title">${SITE_DATA.profile.name}</h1>
-          <p class="sidebar-subtitle">${text(SITE_DATA.profile.title)}</p>
-          <p class="sidebar-description">${text(SITE_DATA.profile.affiliation)}</p>
-          <div class="meta-stack">
-            <span>${text(SITE_DATA.profile.location)}</span>
-            <span>${text(SITE_DATA.profile.status)}</span>
-          </div>
-          <div class="social-strip">
-            ${SITE_DATA.profile.links
-              .map(
-                (item) =>
-                  `<a class="social-link" href="${item.url}"${item.url.startsWith("mailto:") ? "" : ' target="_blank" rel="noreferrer"'}>${item.label}</a>`
-              )
-              .join("")}
-          </div>
-          <div class="cta-row compact">
-            <a class="button button-primary" href="${route("contact")}">${text({
-              ko: "연락 페이지",
-              en: "Contact page"
-            })}</a>
-            <a class="button button-secondary" href="${route("publications")}">${text({
-              ko: "아웃풋 보기",
-              en: "See outputs"
-            })}</a>
-          </div>
-        </section>
-        <nav class="glass-card quick-nav reveal" aria-label="Quick navigation">
-          <p class="quick-nav-title">${text({
-            ko: "빠른 이동",
-            en: "Quick jump"
-          })}</p>
-          ${QUICK_LINKS.map(
-            (item) =>
-              `<a class="quick-link" data-target="${item.id}" href="${route("home")}#${item.id}">${text(item.label)}</a>`
-          ).join("")}
-        </nav>
-      </aside>
-    `;
-  }
-
-  function renderTopbar() {
+  function renderHeader() {
     const navOrder = ["home", "bio", "publications", "teaching", "news", "contact"];
 
     return `
-      <header class="glass-card topbar">
-        <a class="wordmark" href="${route("home")}">${SITE_DATA.profile.name}</a>
-        <nav class="page-nav" aria-label="Pages">
-          ${navOrder
+      <header class="site-header reveal">
+        <div class="header-inner">
+          <a class="brand" href="${route("home")}">
+            <span class="brand-mark">${SITE_DATA.profile.initials}</span>
+            <span class="brand-text">${profileName()}</span>
+          </a>
+          <nav class="site-nav" aria-label="Pages">
+            ${navOrder
+              .map(
+                (item) =>
+                  `<a class="nav-link ${page === item ? "is-active" : ""}" href="${route(item)}">${text(PAGE_LABELS[item])}</a>`
+              )
+              .join("")}
+          </nav>
+          <a class="lang-toggle" href="${route(page, otherLang)}">${otherLang.toUpperCase()}</a>
+        </div>
+      </header>
+    `;
+  }
+
+  function renderMasthead() {
+    const links = SITE_DATA.profile.links || [];
+
+    return `
+      <section class="masthead section-card reveal">
+        <div class="masthead-primary">
+          <div class="profile-mark">${SITE_DATA.profile.initials}</div>
+          <div class="profile-copy">
+            <p class="section-kicker">${text(SITE_DATA.hero.eyebrow)}</p>
+            <h1 class="profile-name">${profileName()}</h1>
+            <p class="profile-role">${text(SITE_DATA.profile.title)}</p>
+            <p class="profile-affiliation">${text(SITE_DATA.profile.affiliation)}</p>
+            <div class="profile-meta">
+              <span>${text(SITE_DATA.profile.location)}</span>
+              <span>${text(SITE_DATA.profile.status)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="masthead-secondary">
+          <p class="masthead-lead">${text(SITE_DATA.hero.description)}</p>
+          <div class="action-row">
+            <a class="button button-primary" href="${route("publications")}">${text({
+              ko: "전체 논문 목록",
+              en: "Full publication list"
+            })}</a>
+            <a class="button button-secondary" href="${route("contact")}">${text({
+              ko: "연구 문의",
+              en: "Contact"
+            })}</a>
+          </div>
+          <div class="profile-links">
+            ${links
+              .map((item) => `<a class="text-link" href="${item.url}"${externalAttrs(item.url)}>${item.label}</a>`)
+              .join("")}
+          </div>
+        </div>
+        <div class="masthead-stats">
+          ${getPublicationSummaryCards()
             .map(
-              (item) =>
-                `<a class="page-link ${page === item ? "is-active" : ""}" href="${route(item)}">${text(PAGE_LABELS[item])}</a>`
+              (item) => `
+                <article class="stat-card">
+                  <p class="stat-label">${text(item.label)}</p>
+                  <p class="stat-value">${item.value}</p>
+                  <p class="stat-detail">${text(item.detail)}</p>
+                </article>
+              `
             )
             .join("")}
-        </nav>
-        <a class="lang-switch" href="${route(page, otherLang)}">${otherLang.toUpperCase()}</a>
-      </header>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderHomeJumpNav() {
+    return `
+      <nav class="jump-nav reveal" aria-label="Section navigation">
+        ${HOME_SECTIONS.map(
+          (item) => `<a class="jump-link" data-target="${item.id}" href="#${item.id}">${text(item.label)}</a>`
+        ).join("")}
+      </nav>
     `;
   }
 
   function renderFooter() {
     return `
-      <footer class="glass-card site-footer">
-        <p>${SITE_DATA.profile.name}</p>
-        <p>${text({
-          ko: "GitHub Pages용 정적 HTML/CSS/JS 사이트",
-          en: "Static HTML/CSS/JS site for GitHub Pages"
-        })}</p>
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <p>${profileName()}</p>
+          <p>${text({
+            ko: "Clean academic-style GitHub Pages site",
+            en: "Clean academic-style GitHub Pages site"
+          })}</p>
+        </div>
       </footer>
     `;
   }
@@ -184,130 +202,56 @@
 
   function renderHomePage() {
     return `
-      <section class="glass-card hero reveal">
-        <div class="hero-copy">
-          <p class="eyebrow">${text(SITE_DATA.hero.eyebrow)}</p>
-          <h2 class="display-title">${text(SITE_DATA.hero.headline)}</h2>
-          <p class="hero-description">${text(SITE_DATA.hero.description)}</p>
-          <div class="cta-row">
-            ${SITE_DATA.hero.buttons
-              .map(
-                (item) =>
-                  `<a class="button ${
-                    item.kind === "primary" ? "button-primary" : "button-secondary"
-                  }" href="${buttonLink(item)}">${text(item.label)}</a>`
-              )
-              .join("")}
-          </div>
-          <div class="pill-row">
-            ${SITE_DATA.hero.badges.map((badge) => `<span class="pill">${badge}</span>`).join("")}
-          </div>
-        </div>
-        <div class="hero-panel">
-          <p class="eyebrow">${text(SITE_DATA.hero.panelTitle)}</p>
-          <div class="stat-stack">
-            ${SITE_DATA.stats
-              .map(
-                (item) => `
-                  <article class="mini-card">
-                    <p class="mini-label">${text(item.label)}</p>
-                    <p class="mini-value">${text(item.value)}</p>
-                  </article>
-                `
-              )
-              .join("")}
-          </div>
-        </div>
-      </section>
-
-      <section id="about" class="glass-card section-panel reveal">
+      <section id="about" class="section-card reveal">
         ${renderSectionHeader(SITE_DATA.about.section)}
-        <div class="two-column">
-          <div class="stack">
-            <div class="copy-block">
-              ${SITE_DATA.about.paragraphs.map((item) => `<p>${text(item)}</p>`).join("")}
-            </div>
-            <div class="cta-row">
-              <a class="button button-primary" href="${route("bio")}">${text({
-                ko: "상세 소개",
-                en: "Full biography"
+        <div class="split-layout">
+          <div class="body-copy">
+            ${SITE_DATA.about.paragraphs.map((item) => `<p>${text(item)}</p>`).join("")}
+            <div class="action-row">
+              <a class="button button-secondary" href="${route("bio")}">${text({
+                ko: "소개 자세히 보기",
+                en: "Open biography"
               })}</a>
             </div>
           </div>
-          <div class="stack">
-            ${SITE_DATA.about.highlights
-              .map(
-                (item) => `
-                  <article class="info-card">
-                    <h3>${text(item.title)}</h3>
-                    <p>${text(item.body)}</p>
-                  </article>
-                `
-              )
-              .join("")}
+          <div class="simple-grid">
+            ${SITE_DATA.about.highlights.map((item) => renderNoteCard(item)).join("")}
           </div>
         </div>
       </section>
 
-      <section id="research" class="glass-card section-panel reveal">
+      <section id="research" class="section-card reveal">
         ${renderSectionHeader(SITE_DATA.research.section)}
-        <div class="card-grid card-grid-4">
+        <div class="topic-grid">
           ${SITE_DATA.research.areas.map((item) => renderTopicCard(item)).join("")}
         </div>
-        <div class="workflow-row">
-          ${SITE_DATA.research.workflow
-            .map(
-              (item) => `
-                <article class="workflow-card">
-                  <h3>${text(item.title)}</h3>
-                  <p>${text(item.body)}</p>
-                </article>
-              `
-            )
-            .join("")}
-        </div>
       </section>
 
-      <section id="outputs" class="glass-card section-panel reveal">
+      <section id="outputs" class="section-card reveal">
         ${renderSectionHeader(SITE_DATA.outputs.section)}
-        ${renderPublicationOverview()}
-        <div class="card-grid card-grid-3">
-          ${SITE_DATA.outputs.featured.map((item) => renderOutputCard(item)).join("")}
-        </div>
-        <div class="cta-row">
-          <a class="button button-secondary" href="${route("publications")}">${text({
-            ko: "전체 논문실적 보기",
-            en: "Open full publication list"
-          })}</a>
-        </div>
+        ${renderPublicationDigest()}
       </section>
 
-      <section id="teaching" class="glass-card section-panel reveal">
+      <section id="teaching" class="section-card reveal">
         ${renderSectionHeader(SITE_DATA.teaching.section)}
-        <div class="card-grid card-grid-3">
+        <div class="topic-grid">
           ${SITE_DATA.teaching.tracks.map((item) => renderTopicCard(item)).join("")}
         </div>
-        <div class="principle-list">
-          ${SITE_DATA.teaching.principles.map((item) => `<div class="bullet-card">${text(item)}</div>`).join("")}
-        </div>
-        <div class="cta-row">
-          <a class="button button-secondary" href="${route("teaching")}">${text({
-            ko: "학습/멘토링 자세히 보기",
-            en: "Open learning page"
-          })}</a>
+        <div class="compact-list">
+          ${SITE_DATA.teaching.principles.map((item) => `<div class="list-note">${text(item)}</div>`).join("")}
         </div>
       </section>
 
-      <section id="news" class="glass-card section-panel reveal">
+      <section id="news" class="section-card reveal">
         ${renderSectionHeader(SITE_DATA.news.section)}
-        <div class="card-grid card-grid-3">
+        <div class="news-grid">
           ${SITE_DATA.news.featured.map((item) => renderNewsCard(item)).join("")}
         </div>
       </section>
 
-      <section id="contact" class="glass-card section-panel reveal">
+      <section id="contact" class="section-card reveal">
         ${renderSectionHeader(SITE_DATA.contact.section)}
-        <div class="card-grid card-grid-3">
+        <div class="simple-grid">
           ${SITE_DATA.contact.cards.map((item) => renderContactCard(item)).join("")}
         </div>
       </section>
@@ -316,41 +260,23 @@
 
   function renderBioPage() {
     return `
-      ${renderPageHero(
-        text(SITE_DATA.about.section.eyebrow),
-        text(SITE_DATA.about.section.title),
-        text(SITE_DATA.about.section.description)
-      )}
-      <section class="glass-card section-panel reveal">
-        <div class="two-column">
-          <div class="copy-block">
+      ${renderLeadSection(SITE_DATA.about.section)}
+      <section class="section-card reveal">
+        <div class="split-layout">
+          <div class="body-copy">
             ${SITE_DATA.about.paragraphs.map((item) => `<p>${text(item)}</p>`).join("")}
           </div>
-          <div class="stack">
-            ${SITE_DATA.about.principles
-              .map(
-                (item) => `
-                  <article class="info-card">
-                    <h3>${text(item.title)}</h3>
-                    <p>${text(item.body)}</p>
-                  </article>
-                `
-              )
-              .join("")}
+          <div class="simple-grid">
+            ${SITE_DATA.about.principles.map((item) => renderNoteCard(item)).join("")}
           </div>
         </div>
       </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Timeline",
-            en: "Timeline"
-          })}</p>
-          <h2>${text({
-            ko: "짧은 흐름",
-            en: "Compact timeline"
-          })}</h2>
-        </div>
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "학력 및 경력", en: "Education and Career" },
+          { ko: "Timeline", en: "Timeline" },
+          { ko: "공개 프로필과 논문 실적을 기준으로 정리한 간단한 이력입니다.", en: "A compact timeline based on public profile and publication information." }
+        )}
         <div class="timeline-list">
           ${SITE_DATA.about.timeline
             .map(
@@ -367,23 +293,14 @@
             .join("")}
         </div>
       </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Toolkit",
-            en: "Toolkit"
-          })}</p>
-          <h2>${text({
-            ko: "자주 쓰는 작업 언어",
-            en: "Working vocabulary"
-          })}</h2>
-          <p>${text({
-            ko: "이 사이트는 기술 영역을 태그와 키워드 중심으로 빠르게 읽히게 설계했습니다.",
-            en: "The site is designed so visitors can understand the technical space quickly through tags and keywords."
-          })}</p>
-        </div>
-        <div class="pill-row">
-          ${SITE_DATA.about.toolkit.map((item) => `<span class="pill">${item}</span>`).join("")}
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "연구 키워드", en: "Research Keywords" },
+          { ko: "Keywords", en: "Keywords" },
+          { ko: "사이트 전체에서 공통으로 이어지는 키워드를 정리했습니다.", en: "Keywords that connect the overall research agenda." }
+        )}
+        <div class="tag-cloud">
+          ${SITE_DATA.about.toolkit.map((item) => `<span class="chip">${item}</span>`).join("")}
         </div>
       </section>
     `;
@@ -391,122 +308,58 @@
 
   function renderPublicationsPage() {
     return `
-      ${renderPageHero(
-        text(SITE_DATA.outputs.section.eyebrow),
-        text(SITE_DATA.outputs.section.title),
-        text(SITE_DATA.outputs.section.description)
-      )}
-      <section class="glass-card section-panel reveal">
+      ${renderLeadSection(SITE_DATA.outputs.section)}
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "연구 실적 개요", en: "Publication Summary" },
+          { ko: "Summary", en: "Summary" },
+          { ko: "홈페이지와 논문 실적을 함께 읽기 쉬운 구조로 정리했습니다.", en: "A structured summary of the current publication record." }
+        )}
         ${renderPublicationOverview()}
       </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Selected publications",
-            en: "Selected publications"
-          })}</p>
-          <h2>${text({
-            ko: "대표 논문",
-            en: "Representative papers"
-          })}</h2>
-        </div>
-        <div class="card-grid card-grid-3">
-          ${SITE_DATA.outputs.featured.map((item) => renderOutputCard(item)).join("")}
-        </div>
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "대표 논문", en: "Representative Papers" },
+          { ko: "Selected Publications", en: "Selected Publications" },
+          { ko: "인용 수와 대표성을 기준으로 주요 논문을 먼저 보여줍니다.", en: "Selected papers surfaced first using citation count and representativeness." }
+        )}
+        ${renderPublicationTeaserList(getFeaturedPublications())}
       </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Full list",
-            en: "Full list"
-          })}</p>
-          <h2>${text({
-            ko: "전체 논문실적",
-            en: "Complete publication record"
-          })}</h2>
-          <p>${text({
-            ko: "아래 목록은 전달해주신 논문 및 학술 실적을 기준으로 정리했습니다.",
-            en: "The list below is based on the publication record you provided."
-          })}</p>
-        </div>
-        ${renderPublicationList()}
-      </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Research themes",
-            en: "Research themes"
-          })}</p>
-          <h2>${text({
-            ko: "핵심 키워드",
-            en: "Core themes"
-          })}</h2>
-        </div>
-        <div class="workflow-row">
-          ${SITE_DATA.outputs.process
-            .map(
-              (item) => `
-                <article class="workflow-card">
-                  <h3>${text(item.title)}</h3>
-                  <p>${text(item.body)}</p>
-                </article>
-              `
-            )
-            .join("")}
-        </div>
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "전체 논문실적", en: "Complete Publication Record" },
+          { ko: "Full List", en: "Full List" },
+          { ko: "연도 기준으로 정렬했으며, DOI가 확인된 항목은 바로 연결됩니다.", en: "Sorted by year, with DOI links where they could be verified." }
+        )}
+        ${renderPublicationList(getPublicationsByYear())}
       </section>
     `;
   }
 
   function renderTeachingPage() {
     return `
-      ${renderPageHero(
-        text(SITE_DATA.teaching.section.eyebrow),
-        text(SITE_DATA.teaching.section.title),
-        text(SITE_DATA.teaching.section.description)
-      )}
-      <section class="glass-card section-panel reveal">
-        <div class="card-grid card-grid-3">
+      ${renderLeadSection(SITE_DATA.teaching.section)}
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "교육 및 연구지도", en: "Teaching and Mentoring" },
+          { ko: "Teaching & Mentoring", en: "Teaching & Mentoring" },
+          { ko: "과목 운영과 학생 지도를 함께 담을 수 있는 구조로 구성했습니다.", en: "A page structure for both courses and mentoring." }
+        )}
+        <div class="topic-grid">
           ${SITE_DATA.teaching.tracks.map((item) => renderTopicCard(item)).join("")}
         </div>
       </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Mentoring",
-            en: "Mentoring"
-          })}</p>
-          <h2>${text({
-            ko: "함께 일하는 방식",
-            en: "How we work together"
-          })}</h2>
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "지도 방식", en: "Mentoring Style" },
+          { ko: "Mentoring", en: "Mentoring" },
+          { ko: "연구 또는 프로젝트 협업을 시작할 때 기대하는 기준을 정리했습니다.", en: "How collaboration is usually structured for students and projects." }
+        )}
+        <div class="simple-grid">
+          ${SITE_DATA.teaching.mentoring.map((item) => renderNoteCard(item)).join("")}
         </div>
-        <div class="card-grid card-grid-3">
-          ${SITE_DATA.teaching.mentoring
-            .map(
-              (item) => `
-                <article class="info-card">
-                  <h3>${text(item.title)}</h3>
-                  <p>${text(item.body)}</p>
-                </article>
-              `
-            )
-            .join("")}
-        </div>
-      </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Principles",
-            en: "Principles"
-          })}</p>
-          <h2>${text({
-            ko: "운영 원칙",
-            en: "Operating principles"
-          })}</h2>
-        </div>
-        <div class="principle-list">
-          ${SITE_DATA.teaching.principles.map((item) => `<div class="bullet-card">${text(item)}</div>`).join("")}
+        <div class="compact-list">
+          ${SITE_DATA.teaching.principles.map((item) => `<div class="list-note">${text(item)}</div>`).join("")}
         </div>
       </section>
     `;
@@ -514,36 +367,30 @@
 
   function renderNewsPage() {
     return `
-      ${renderPageHero(
-        text(SITE_DATA.news.section.eyebrow),
-        text(SITE_DATA.news.section.title),
-        text(SITE_DATA.news.section.description)
-      )}
-      <section class="glass-card section-panel reveal">
-        <div class="card-grid card-grid-3">
+      ${renderLeadSection(SITE_DATA.news.section)}
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "주요 업데이트", en: "Featured Updates" },
+          { ko: "Featured", en: "Featured" },
+          { ko: "최근 공개된 글과 사이트 업데이트를 중심으로 정리했습니다.", en: "Highlighted updates and public-facing posts." }
+        )}
+        <div class="news-grid">
           ${SITE_DATA.news.featured.map((item) => renderNewsCard(item)).join("")}
         </div>
       </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Archive",
-            en: "Archive"
-          })}</p>
-          <h2>${text({
-            ko: "짧은 로그",
-            en: "Short archive"
-          })}</h2>
-        </div>
-        <div class="timeline-list compact-timeline">
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "아카이브", en: "Archive" },
+          { ko: "Archive", en: "Archive" },
+          { ko: "짧은 로그 형태로 남기는 업데이트 기록입니다.", en: "Short-form archived updates." }
+        )}
+        <div class="timeline-list">
           ${SITE_DATA.news.archive
             .map(
               (item) => `
                 <article class="timeline-item">
                   <p class="timeline-period">${item.date}</p>
-                  <div>
-                    <p>${text(item.body)}</p>
-                  </div>
+                  <div><p>${text(item.body)}</p></div>
                 </article>
               `
             )
@@ -555,111 +402,141 @@
 
   function renderContactPage() {
     return `
-      ${renderPageHero(
-        text(SITE_DATA.contact.section.eyebrow),
-        text(SITE_DATA.contact.section.title),
-        text(SITE_DATA.contact.section.description)
-      )}
-      <section class="glass-card section-panel reveal">
-        <div class="card-grid card-grid-3">
+      ${renderLeadSection(SITE_DATA.contact.section)}
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "기본 연락 정보", en: "Basic Contact" },
+          { ko: "Contact", en: "Contact" },
+          { ko: "공개적으로 확인 가능한 채널과 홈페이지 내 연결을 함께 제공합니다.", en: "Publicly visible contact channels and profile links." }
+        )}
+        <div class="simple-grid">
           ${SITE_DATA.contact.cards.map((item) => renderContactCard(item)).join("")}
         </div>
       </section>
-      <section class="glass-card section-panel reveal">
-        <div class="section-heading">
-          <p class="eyebrow">${text({
-            ko: "Before reaching out",
-            en: "Before reaching out"
-          })}</p>
-          <h2>${text({
-            ko: "연락 전에 함께 적어두면 좋은 것",
-            en: "What helps before you reach out"
-          })}</h2>
-        </div>
-        <div class="principle-list">
-          ${SITE_DATA.contact.checklist.map((item) => `<div class="bullet-card">${text(item)}</div>`).join("")}
+      <section class="section-card reveal">
+        ${renderStaticSectionHeader(
+          { ko: "문의 전 참고", en: "Before Reaching Out" },
+          { ko: "Guidance", en: "Guidance" },
+          { ko: "학생 문의나 공동연구 제안을 보낼 때 도움이 되는 간단한 안내입니다.", en: "A few notes that help when sending a student inquiry or research proposal." }
+        )}
+        <div class="compact-list">
+          ${SITE_DATA.contact.checklist.map((item) => `<div class="list-note">${text(item)}</div>`).join("")}
         </div>
       </section>
     `;
   }
 
-  function renderPageHero(eyebrow, title, description) {
+  function renderLeadSection(section) {
     return `
-      <section class="glass-card page-hero reveal">
-        <div class="stack">
-          <p class="eyebrow">${eyebrow}</p>
-          <h2 class="page-title">${title}</h2>
-          <p class="page-description">${description}</p>
-        </div>
-        <div class="cta-row">
-          <a class="button button-secondary" href="${route("home")}">${text({
-            ko: "메인으로",
-            en: "Back home"
-          })}</a>
-          <a class="button button-primary" href="${route("contact")}">${text({
-            ko: "연락하기",
-            en: "Get in touch"
-          })}</a>
-        </div>
+      <section class="section-card section-lead reveal">
+        ${renderSectionHeader(section)}
       </section>
     `;
   }
 
   function renderSectionHeader(section) {
+    return renderStaticSectionHeader(section.title, section.eyebrow, section.description);
+  }
+
+  function renderStaticSectionHeader(title, eyebrow, description) {
+    const alternate = lang === "ko" && typeof title === "object" && title.en ? title.en : "";
+
     return `
-      <div class="section-heading">
-        <p class="eyebrow">${text(section.eyebrow)}</p>
-        <h2>${text(section.title)}</h2>
-        <p>${text(section.description)}</p>
-      </div>
+      <header class="section-header">
+        <p class="section-kicker">${text(eyebrow)}</p>
+        <h2 class="section-title">${text(title)}</h2>
+        ${alternate ? `<p class="section-alt">${alternate}</p>` : ""}
+        ${description ? `<p class="section-description">${text(description)}</p>` : ""}
+      </header>
+    `;
+  }
+
+  function renderNoteCard(item) {
+    return `
+      <article class="note-card">
+        <h3>${text(item.title)}</h3>
+        <p>${text(item.body)}</p>
+      </article>
     `;
   }
 
   function renderTopicCard(item) {
     return `
-      <article class="info-card">
-        <h3>${text(item.title)}</h3>
+      <article class="topic-card">
+        <div class="topic-top">
+          <h3>${text(item.title)}</h3>
+          ${item.tags ? `<div class="chip-row">${item.tags.map((tag) => `<span class="chip">${tag}</span>`).join("")}</div>` : ""}
+        </div>
         <p>${text(item.body)}</p>
-        ${item.tags ? `<div class="tag-row">${item.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}</div>` : ""}
       </article>
     `;
   }
 
-  function renderOutputCard(item) {
-    const href = item.page ? `${route(item.page)}${item.anchor || ""}` : item.href;
-    const tags = item.tags || [];
+  function renderNewsCard(item) {
+    return `
+      <article class="news-card">
+        <p class="meta-line">${item.date}</p>
+        <h3>${text(item.title)}</h3>
+        <p>${text(item.body)}</p>
+        <a class="text-link" href="${item.href}"${item.external ? ' target="_blank" rel="noreferrer"' : ""}>${text(item.linkLabel)}</a>
+      </article>
+    `;
+  }
+
+  function renderContactCard(item) {
+    return `
+      <article class="note-card">
+        <h3>${text(item.title)}</h3>
+        <p>${text(item.body)}</p>
+        <a class="text-link" href="${item.action.href}"${externalAttrs(item.action.href)}>${text(item.action.label)}</a>
+      </article>
+    `;
+  }
+
+  function renderPublicationDigest() {
+    const summary = getPublicationSummary();
 
     return `
-      <article class="info-card output-card">
-        <div class="meta-row">
-          <span class="badge">${text(item.type)}</span>
-          <span class="date-text">${item.date}</span>
-        </div>
-        <h3>${text(item.title)}</h3>
-        <p class="meta-text">${text(item.meta)}</p>
-        <p>${text(item.description)}</p>
-        ${tags.length ? `<div class="tag-row">${tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}</div>` : ""}
-        ${href ? `<a class="inline-link" href="${href}"${linkTarget(item)}>${text(item.linkLabel)}</a>` : ""}
-      </article>
+      <div class="publication-digest">
+        <article class="summary-card">
+          <p class="section-kicker">${text({
+            ko: "Selected Publications",
+            en: "Selected Publications"
+          })}</p>
+          <h3>${text({
+            ko: "논문 실적이 홈페이지에 반영되었습니다",
+            en: "The publication record is reflected on the site"
+          })}</h3>
+          <p>${text({
+            ko: `총 ${summary.count}건의 학술 실적과 확인 가능한 인용 ${summary.totalCitations}회를 기준으로 정리했습니다. 논문 페이지에서 전체 목록과 DOI 링크를 확인할 수 있습니다.`,
+            en: `The site currently reflects ${summary.count} scholarly records and ${summary.totalCitations} known citations from the provided list. The publications page includes the full record and DOI links where available.`
+          })}</p>
+          <div class="action-row">
+            <a class="button button-secondary" href="${route("publications")}">${text({
+              ko: "전체 논문실적",
+              en: "Full publication record"
+            })}</a>
+            <a class="button button-tertiary" href="${scholarSearchUrl(typeof SITE_DATA.profile.name === "string" ? SITE_DATA.profile.name : profileName())}" target="_blank" rel="noreferrer">${text({
+              ko: "Google Scholar 검색",
+              en: "Search Google Scholar"
+            })}</a>
+          </div>
+        </article>
+        ${renderPublicationTeaserList(getFeaturedPublications().slice(0, 5))}
+      </div>
     `;
   }
 
   function renderPublicationOverview() {
-    const stats = getPublicationStats();
-
-    if (!stats.length) {
-      return "";
-    }
-
     return `
-      <div class="card-grid card-grid-3 publication-overview">
-        ${stats
+      <div class="stats-grid">
+        ${getPublicationSummaryCards()
           .map(
             (item) => `
-              <article class="mini-card publication-stat">
-                <p class="mini-label">${text(item.label)}</p>
-                <p class="publication-stat-value">${item.value}</p>
-                <p class="mini-value">${text(item.detail)}</p>
+              <article class="stat-card">
+                <p class="stat-label">${text(item.label)}</p>
+                <p class="stat-value">${item.value}</p>
+                <p class="stat-detail">${text(item.detail)}</p>
               </article>
             `
           )
@@ -668,76 +545,88 @@
     `;
   }
 
-  function renderPublicationList() {
-    const publications = getSortedPublications();
-
-    if (!publications.length) {
-      return "";
-    }
-
+  function renderPublicationTeaserList(publications) {
     return `
-      <div class="publication-list">
-        ${publications.map((item, index) => renderPublicationItem(item, index)).join("")}
+      <div class="publication-teaser-list">
+        ${publications.map((item) => renderPublicationTeaser(item)).join("")}
       </div>
     `;
   }
 
-  function renderPublicationItem(item, index) {
-    const entryId = item.id || `publication-${index + 1}`;
+  function renderPublicationTeaser(item) {
+    const href = page === "publications" ? `#${item.id}` : `${route("publications")}#${item.id}`;
+
+    return `
+      <article class="publication-teaser">
+        <h3><a href="${href}">${item.title}</a></h3>
+        <p>${item.authors}</p>
+        <p class="meta-line">${item.venue}</p>
+      </article>
+    `;
+  }
+
+  function renderPublicationList(publications) {
+    return `
+      <div class="publication-list">
+        ${publications.map((item) => renderPublicationItem(item)).join("")}
+      </div>
+    `;
+  }
+
+  function renderPublicationItem(item) {
     const citationText =
       typeof item.citations === "number"
         ? `${item.citations} ${text({ ko: "회 인용", en: "citations" })}`
         : "";
-    const scholarUrl = scholarSearchUrl(item.title);
-    const doiUrl = item.doi ? `https://doi.org/${item.doi}` : "";
 
     return `
-      <article class="info-card publication-item" id="${entryId}">
-        <div class="publication-head">
-          <div class="publication-badges">
-            <span class="badge">${publicationTypeLabel(item.type)}</span>
-            <span class="tag">${item.year}</span>
-            ${citationText ? `<span class="tag citation-tag">${citationText}</span>` : ""}
-          </div>
+      <article class="publication-item" id="${item.id}">
+        <div class="publication-meta">
+          <span class="meta-chip">${publicationTypeLabel(item.type)}</span>
+          <span class="meta-chip">${item.year}</span>
+          ${citationText ? `<span class="meta-chip">${citationText}</span>` : ""}
         </div>
-        <h3 class="publication-title">${item.title}</h3>
+        <h3>${item.title}</h3>
         <p class="publication-authors">${item.authors}</p>
         <p class="publication-venue">${item.venue}</p>
         <div class="publication-links">
-          <a class="inline-link" href="${scholarUrl}" target="_blank" rel="noreferrer">${text({
-            ko: "Google Scholar",
-            en: "Google Scholar"
-          })}</a>
-          ${
-            doiUrl
-              ? `<a class="inline-link" href="${doiUrl}" target="_blank" rel="noreferrer">DOI</a>`
-              : ""
-          }
+          <a class="text-link" href="${scholarSearchUrl(item.title)}" target="_blank" rel="noreferrer">Google Scholar</a>
+          ${item.doi ? `<a class="text-link" href="https://doi.org/${item.doi}" target="_blank" rel="noreferrer">DOI</a>` : ""}
         </div>
       </article>
     `;
   }
 
-  function getPublicationStats() {
-    const publications = SITE_DATA.outputs.publications || [];
+  function getPublicationSummary() {
+    const publications = getNormalizedPublications();
+    const years = publications.map((item) => item.year).filter(Number.isFinite);
+    const totalCitations = publications.reduce(
+      (sum, item) => sum + (typeof item.citations === "number" ? item.citations : 0),
+      0
+    );
+    const topCited = publications.reduce(
+      (max, item) => Math.max(max, typeof item.citations === "number" ? item.citations : 0),
+      0
+    );
 
-    if (!publications.length) {
-      return [];
-    }
+    return {
+      count: publications.length,
+      totalCitations,
+      topCited,
+      span: years.length ? `${Math.min(...years)} - ${Math.max(...years)}` : "-"
+    };
+  }
 
-    const years = publications.map((item) => Number(item.year)).filter(Number.isFinite);
-    const citations = publications.map((item) => Number(item.citations)).filter(Number.isFinite);
-    const minYear = years.length ? Math.min(...years) : "";
-    const maxYear = years.length ? Math.max(...years) : "";
-    const maxCitations = citations.length ? Math.max(...citations) : 0;
+  function getPublicationSummaryCards() {
+    const summary = getPublicationSummary();
 
     return [
       {
         label: {
-          ko: "등재 항목",
-          en: "Listed items"
+          ko: "등재 실적",
+          en: "Listed works"
         },
-        value: `${publications.length}`,
+        value: `${summary.count}`,
         detail: {
           ko: "저널, 학술대회, 학위논문 포함",
           en: "Including journals, conferences, and thesis work"
@@ -745,31 +634,57 @@
       },
       {
         label: {
-          ko: "연도 범위",
-          en: "Year span"
+          ko: "확인 가능한 인용",
+          en: "Known citations"
         },
-        value: `${minYear} - ${maxYear}`,
+        value: `${summary.totalCitations}`,
         detail: {
-          ko: "현재 반영된 실적 기준",
-          en: "Across the records currently listed"
+          ko: "제공된 목록에 포함된 인용 수 합계",
+          en: "Sum of citation counts included in the provided record"
         }
       },
       {
         label: {
-          ko: "최다 인용",
-          en: "Top cited"
+          ko: "연도 범위",
+          en: "Year span"
         },
-        value: `${maxCitations}`,
+        value: summary.span,
         detail: {
-          ko: "현재 목록 기준 최대 인용 수",
-          en: "Highest citation count among the listed entries"
+          ko: `최다 인용 논문 ${summary.topCited}회`,
+          en: `Top-cited paper at ${summary.topCited} citations`
         }
       }
     ];
   }
 
-  function getSortedPublications() {
-    return (SITE_DATA.outputs.publications || [])
+  function getNormalizedPublications() {
+    return (SITE_DATA.outputs.publications || []).map((item, index) => ({
+      ...item,
+      id: item.id || `publication-${index + 1}`
+    }));
+  }
+
+  function getPublicationsByYear() {
+    return getNormalizedPublications()
+      .slice()
+      .sort((a, b) => {
+        if ((b.year || 0) !== (a.year || 0)) {
+          return (b.year || 0) - (a.year || 0);
+        }
+
+        const aCitations = typeof a.citations === "number" ? a.citations : -1;
+        const bCitations = typeof b.citations === "number" ? b.citations : -1;
+
+        if (bCitations !== aCitations) {
+          return bCitations - aCitations;
+        }
+
+        return a.title.localeCompare(b.title);
+      });
+  }
+
+  function getFeaturedPublications() {
+    return getNormalizedPublications()
       .slice()
       .sort((a, b) => {
         const aCitations = typeof a.citations === "number" ? a.citations : -1;
@@ -780,11 +695,12 @@
         }
 
         return (b.year || 0) - (a.year || 0);
-      });
+      })
+      .slice(0, 6);
   }
 
-  function scholarSearchUrl(title) {
-    return `https://scholar.google.com/scholar?q=${encodeURIComponent(title)}`;
+  function scholarSearchUrl(query) {
+    return `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`;
   }
 
   function publicationTypeLabel(type) {
@@ -799,29 +715,6 @@
     }
 
     return text(type);
-  }
-
-  function renderNewsCard(item) {
-    return `
-      <article class="info-card">
-        <p class="date-text">${item.date}</p>
-        <h3>${text(item.title)}</h3>
-        <p>${text(item.body)}</p>
-        <a class="inline-link" href="${item.href}"${linkTarget(item)}>${text(item.linkLabel)}</a>
-      </article>
-    `;
-  }
-
-  function renderContactCard(item) {
-    return `
-      <article class="info-card">
-        <h3>${text(item.title)}</h3>
-        <p>${text(item.body)}</p>
-        <a class="inline-link" href="${item.action.href}"${item.action.href.startsWith("mailto:") ? "" : ' target="_blank" rel="noreferrer"'}>${text(
-          item.action.label
-        )}</a>
-      </article>
-    `;
   }
 
   function revealOnScroll() {
@@ -841,7 +734,7 @@
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
 
     items.forEach((item) => observer.observe(item));
@@ -852,8 +745,8 @@
       return;
     }
 
-    const sections = QUICK_LINKS.map((item) => document.getElementById(item.id)).filter(Boolean);
-    const links = Array.from(document.querySelectorAll(".quick-link"));
+    const sections = HOME_SECTIONS.map((item) => document.getElementById(item.id)).filter(Boolean);
+    const links = Array.from(document.querySelectorAll(".jump-link"));
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -869,8 +762,8 @@
         links.forEach((link) => link.classList.toggle("is-active", link.dataset.target === currentId));
       },
       {
-        threshold: [0.3, 0.6, 0.9],
-        rootMargin: "-20% 0px -45% 0px"
+        threshold: [0.3, 0.6],
+        rootMargin: "-20% 0px -55% 0px"
       }
     );
 

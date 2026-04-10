@@ -930,6 +930,29 @@ SITE_DATA.outputs.section.description = {
   ko: "전달해주신 논문 및 학술 실적을 기반으로 대표 논문과 전체 목록을 함께 정리했습니다.",
   en: "Representative papers and the full publication list are organized here based on the records you provided."
 };
+SITE_DATA.outputs.section.eyebrow = {
+  ko: "Publications",
+  en: "Publications"
+};
+
+SITE_DATA.teaching.section.title = {
+  ko: "교육 및 지도",
+  en: "Teaching and Mentoring"
+};
+SITE_DATA.teaching.section.eyebrow = {
+  ko: "Teaching",
+  en: "Teaching"
+};
+
+SITE_DATA.news.section.eyebrow = {
+  ko: "News",
+  en: "News"
+};
+
+SITE_DATA.contact.section.eyebrow = {
+  ko: "Contact",
+  en: "Contact"
+};
 
 SITE_DATA.outputs.process = [
   {
@@ -1347,6 +1370,10 @@ SITE_DATA.outputs.featured = SITE_DATA.outputs.publications
   }));
 
 SITE_DATA.profile.name = "Nahyun Kwon";
+SITE_DATA.profile.nameDisplay = {
+  ko: "권나현",
+  en: "Nahyun Kwon"
+};
 SITE_DATA.profile.initials = "NH";
 SITE_DATA.profile.location = {
   ko: "Ansan, Republic of Korea",
@@ -1387,6 +1414,10 @@ SITE_DATA.profile.links = [
 SITE_DATA.hero.panelTitle = {
   ko: "Research snapshot",
   en: "Research snapshot"
+};
+SITE_DATA.hero.eyebrow = {
+  ko: "Building Engineering · Construction Management · Urban Analytics",
+  en: "Building Engineering · Construction Management · Urban Analytics"
 };
 
 SITE_DATA.about.highlights = [
