@@ -1380,7 +1380,7 @@ SITE_DATA.profile.location = {
   en: "Ansan, Republic of Korea"
 };
 SITE_DATA.profile.email = "envy978@hanmail.net";
-SITE_DATA.profile.photo = "assets/images/profile-portrait.svg";
+SITE_DATA.profile.photo = "assets/images/profile-photo.png";
 SITE_DATA.profile.photoAlt = {
   ko: "권나현 프로필 이미지",
   en: "Nahyun Kwon profile image"
@@ -1531,6 +1531,79 @@ SITE_DATA.about.timeline = [
   }
 ];
 
+SITE_DATA.about.timeline = [
+  {
+    period: {
+      ko: "2024 - Present",
+      en: "2024 - Present"
+    },
+    title: {
+      ko: "Research Professor, Center for AI Technology in Construction, Hanyang University ERICA",
+      en: "Research Professor, Center for AI Technology in Construction, Hanyang University ERICA"
+    },
+    body: {
+      ko: "최근 논문과 공개 연구자 프로필을 기준으로 확인되는 현재 소속입니다.",
+      en: "This is the current affiliation inferred from recent papers and the public lab profile."
+    }
+  },
+  {
+    period: {
+      ko: "2026",
+      en: "2026"
+    },
+    title: {
+      ko: "MDPI Sustainability 특집호 Guest Editor",
+      en: "Guest Editor for an MDPI Sustainability special issue"
+    },
+    body: {
+      ko: "건설 프로젝트 관리, 친환경 건축, 회복탄력적 인프라와 관련된 특집호 편집 활동에 참여하고 있습니다.",
+      en: "Serving on a special issue related to construction project management, green building, and resilient infrastructure."
+    }
+  },
+  {
+    period: {
+      ko: "2018.08",
+      en: "Aug 2018"
+    },
+    title: {
+      ko: "서울대학교 건축학과 건축시공 및 건설관리 전공 박사(공학박사)",
+      en: "Ph.D. in Engineering, Architectural Construction and Construction Management, Department of Architecture, Seoul National University"
+    },
+    body: {
+      ko: "서울대학교 건축학과 건축시공 및 건설관리 전공에서 건설 소음 관리와 건설관리 기반 연구를 심화했습니다.",
+      en: "Completed doctoral research in Architectural Construction and Construction Management at Seoul National University."
+    }
+  },
+  {
+    period: {
+      ko: "2014.02",
+      en: "Feb 2014"
+    },
+    title: {
+      ko: "서울대학교 건축학과 건축시공 및 건설관리 전공 석사(공학석사)",
+      en: "M.Eng., Architectural Construction and Construction Management, Department of Architecture, Seoul National University"
+    },
+    body: {
+      ko: "서울대학교 건축학과 건축시공 및 건설관리 전공에서 현장 소음 제어를 포함한 건설 소음 관리 연구를 수행했습니다.",
+      en: "Completed master's research on construction-site noise management in Architectural Construction and Construction Management at Seoul National University."
+    }
+  },
+  {
+    period: {
+      ko: "2011.02",
+      en: "Feb 2011"
+    },
+    title: {
+      ko: "한양대학교 건축학과 졸업(학사학위, 건축학사)",
+      en: "Bachelor of Architecture, Department of Architecture, Hanyang University"
+    },
+    body: {
+      ko: "한양대학교 건축학과에서 건축학사 학위를 취득하며 이후 건축시공 및 건설관리 연구의 기반을 마련했습니다.",
+      en: "Completed the undergraduate architecture program at Hanyang University, building the foundation for later work in architectural construction and construction management."
+    }
+  }
+];
+
 SITE_DATA.contact.cards = [
   {
     title: {
@@ -1615,7 +1688,124 @@ const DOI_BY_TITLE = {
   "Physics-Regularized Deep Learning Framework for Floor Impact Sound Prediction in Residential Buildings: A Civil Engineering Approach": "10.1016/j.rineng.2026.109400"
 };
 
+const JOURNAL_METRICS_BY_VENUE = {
+  "Advances in Civil Engineering": {
+    indexType: "SCIE",
+    impactFactor: "1.6",
+    percentile: "43.7",
+    topPercent: "56.3"
+  },
+  "Applied Sciences": {
+    indexType: "SCIE",
+    impactFactor: "2.5",
+    percentile: "71.7",
+    topPercent: "28.3"
+  },
+  "Automation in Construction": {
+    indexType: "SCIE",
+    impactFactor: "11.5",
+    percentile: "99.7",
+    topPercent: "0.3"
+  },
+  "Building and Environment": {
+    indexType: "SCIE",
+    impactFactor: "7.6",
+    percentile: "95.4",
+    topPercent: "4.6"
+  },
+  Buildings: {
+    indexType: "SCIE",
+    impactFactor: "3.1",
+    percentile: "67.9",
+    topPercent: "32.1"
+  },
+  "Developments in the Built Environment": {
+    indexType: "SCIE",
+    impactFactor: "8.9",
+    percentile: "96.4",
+    topPercent: "3.6"
+  },
+  Energies: {
+    indexType: "SCIE",
+    impactFactor: "3.2",
+    percentile: "38.7",
+    topPercent: "61.3"
+  },
+  "Energy and Buildings": {
+    indexType: "SCIE",
+    impactFactor: "7.1",
+    percentile: "93.7",
+    topPercent: "6.3"
+  },
+  "Expert Systems with Applications": {
+    indexType: "SCIE",
+    impactFactor: "7.5",
+    percentile: "93.9",
+    topPercent: "6.1"
+  },
+  "Journal of Asian Architecture and Building Engineering": {
+    indexType: "SCIE",
+    impactFactor: "1.6",
+    percentile: "43.7",
+    topPercent: "56.3"
+  },
+  "Journal of Building Engineering": {
+    indexType: "SCIE",
+    impactFactor: "7.4",
+    percentile: "94.8",
+    topPercent: "5.2"
+  },
+  "Journal of Construction Engineering and Management": {
+    indexType: "SCIE",
+    impactFactor: "5.1",
+    percentile: "86.6",
+    topPercent: "13.4"
+  },
+  "Journal of Management in Engineering": {
+    indexType: "SCIE",
+    impactFactor: "7.0",
+    percentile: "93.2",
+    topPercent: "6.8"
+  },
+  "KSCE Journal of Civil Engineering": {
+    indexType: "SCIE",
+    impactFactor: "2.0",
+    percentile: "46.2",
+    topPercent: "53.8"
+  },
+  "Results in Engineering": {
+    indexType: "ESCI",
+    impactFactor: "7.9",
+    percentile: "96.93",
+    topPercent: "3.07"
+  },
+  Sustainability: {
+    indexType: "SCIE",
+    impactFactor: "3.3",
+    percentile: "58.4",
+    topPercent: "41.6"
+  }
+};
+
+function normalizeVenueKey(venue) {
+  return String(venue || "")
+    .replace(/\s+\d.*$/, "")
+    .replace(/,\s*$/, "")
+    .trim();
+}
+
+SITE_DATA.scholarMetrics = {
+  citationsAll: 971,
+  citationsSince2021: 822,
+  hIndexAll: 18,
+  hIndexSince2021: 18,
+  i10IndexAll: 23,
+  i10IndexSince2021: 22,
+  updated: "2026-04-11"
+};
+
 SITE_DATA.outputs.publications = SITE_DATA.outputs.publications.map((item) => ({
   ...item,
-  doi: DOI_BY_TITLE[item.title] || item.doi
+  doi: DOI_BY_TITLE[item.title] || item.doi,
+  metrics: JOURNAL_METRICS_BY_VENUE[normalizeVenueKey(item.venue)] || item.metrics
 }));

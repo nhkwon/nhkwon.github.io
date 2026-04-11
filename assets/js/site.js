@@ -75,6 +75,21 @@
   };
 
   const PROFILE = {
+    educationHeading: { ko: "학력사항", en: "Education" },
+    education: [
+      {
+        ko: "2011.02 한양대학교 건축학과 졸업(건축학사)",
+        en: "Feb 2011, Bachelor of Architecture, Hanyang University"
+      },
+      {
+        ko: "2014.02 서울대학교 건축학과 건축시공 및 건설관리 전공(공학석사)",
+        en: "Feb 2014, M.Eng. in Architectural Construction and Construction Management, Seoul National University"
+      },
+      {
+        ko: "2018.08 서울대학교 건축학과 건축시공 및 건설관리 전공(공학박사)",
+        en: "Aug 2018, Ph.D. in Architectural Construction and Construction Management, Seoul National University"
+      }
+    ],
     name: { ko: "권나현", en: "Nahyun Kwon" },
     title: { ko: "연구교수", en: "Research Professor" },
     affiliation: {
@@ -103,8 +118,8 @@
       {
         title: { ko: "학력 및 경력", en: "Education and Career" },
         body: {
-          ko: "한양대학교 건축공학과 학사, 서울대학교 건설환경공학부 석사·박사를 거쳐 현재 한양대학교 ERICA에서 연구교수로 재직하고 있습니다.",
-          en: "B.S. from Hanyang University, M.S. and Ph.D. from Seoul National University, now serving as a research professor at Hanyang University ERICA."
+          ko: "2011.02 한양대학교 건축학과 졸업(학사학위, 건축학사), 2014.02 서울대학교 건축학과 건축시공 및 건설관리 전공(석사학위, 공학석사), 2018.08 서울대학교 건축학과 건축시공 및 건설관리 전공(박사학위, 공학박사)을 거쳐 현재 한양대학교 ERICA에서 연구교수로 재직하고 있습니다.",
+          en: "She received a Bachelor of Architecture from Hanyang University in February 2011, an M.Eng. in Architectural Construction and Construction Management from Seoul National University in February 2014, and a Ph.D. in the same field in August 2018."
         }
       },
       {
@@ -162,36 +177,36 @@
         }
       },
       {
-        period: { ko: "2018", en: "2018" },
+        period: { ko: "2018.08", en: "Aug 2018" },
         title: {
-          ko: "서울대학교 건설환경공학부 박사",
-          en: "Ph.D., Seoul National University"
+          ko: "서울대학교 건축학과 건축시공 및 건설관리 전공 박사(공학박사)",
+          en: "Ph.D. in Engineering, Architectural Construction and Construction Management, Department of Architecture, Seoul National University"
         },
         body: {
-          ko: "건설 소음 관리와 건설관리 기반 연구를 심화했습니다.",
-          en: "Completed doctoral work centered on construction noise management and construction management."
+          ko: "서울대학교 건축학과 건축시공 및 건설관리 전공에서 건설 소음 관리와 건설관리 기반 연구를 심화했습니다.",
+          en: "Completed doctoral research in Architectural Construction and Construction Management within the Department of Architecture at Seoul National University."
         }
       },
       {
-        period: { ko: "2014", en: "2014" },
+        period: { ko: "2014.02", en: "Feb 2014" },
         title: {
-          ko: "서울대학교 건설환경공학부 석사",
-          en: "M.S., Seoul National University"
+          ko: "서울대학교 건축학과 건축시공 및 건설관리 전공 석사(공학석사)",
+          en: "M.Eng., Architectural Construction and Construction Management, Department of Architecture, Seoul National University"
         },
         body: {
-          ko: "현장 소음 제어를 포함한 건설 소음 관리 연구를 수행했습니다.",
-          en: "Completed master's research on active noise control for construction-site noise management."
+          ko: "서울대학교 건축학과 건축시공 및 건설관리 전공에서 현장 소음 제어를 포함한 건설 소음 관리 연구를 수행했습니다.",
+          en: "Completed master's research on construction-site noise management in Architectural Construction and Construction Management at Seoul National University."
         }
       },
       {
-        period: { ko: "2011", en: "2011" },
+        period: { ko: "2011.02", en: "Feb 2011" },
         title: {
-          ko: "한양대학교 건축공학과 학사",
-          en: "B.S., Hanyang University"
+          ko: "한양대학교 건축학과 졸업(학사학위, 건축학사)",
+          en: "Bachelor of Architecture, Department of Architecture, Hanyang University"
         },
         body: {
-          ko: "건축·건설 연구의 기반이 되는 학부 과정을 이수했습니다.",
-          en: "Completed undergraduate training that built the foundation for later work in building research."
+          ko: "한양대학교 건축학과에서 건축학사 학위를 취득하며 이후 건축시공 및 건설관리 연구의 기반을 마련했습니다.",
+          en: "Completed the undergraduate architecture program at Hanyang University, building the foundation for later work in architectural construction and construction management."
         }
       }
     ],
@@ -343,6 +358,13 @@
   const OTHER_VENUES = new Set(["Results in Engineering"]);
 
   const publicationSummary = getPublicationSummary();
+  const scholarMetrics = {
+    citationsAll: publicationSummary.totalCitations,
+    citationsSince2021: "",
+    hIndexAll: "",
+    hIndexSince2021: "",
+    ...SITE_DATA.scholarMetrics
+  };
 
   document.title = `${text(PROFILE.name)} | ${text(PAGE_META[page].label)}`;
 
@@ -496,6 +518,10 @@
         </div>
         <div class="sidebar-identity">
           <p class="sidebar-name">${text(PROFILE.name)}</p>
+          <div class="sidebar-education">
+            <p class="sidebar-education-title">${text(PROFILE.educationHeading)}</p>
+            ${PROFILE.education.map((item) => `<p class="sidebar-education-item">${text(item)}</p>`).join("")}
+          </div>
           <p class="sidebar-role">${text(PROFILE.title)}</p>
           <p class="sidebar-affiliation">${text(PROFILE.affiliation)}</p>
           <p class="sidebar-summary">${text(PROFILE.summary)}</p>
@@ -682,8 +708,8 @@
         </div>
         <div class="note-banner">
           ${text({
-            ko: `저널 논문 ${publicationSummary.total}편을 기준으로 정리했습니다. 학술대회논문, conference, proceeding, 학위논문은 본 화면에서 제외했습니다.${publicationSummary.OTHER ? " Results in Engineering 1편은 기타 국제학술지로 별도 표시했습니다." : ""}`,
-            en: `This page counts ${publicationSummary.total} journal papers only. Conference papers, proceedings, and thesis work are excluded.${publicationSummary.OTHER ? " The Results in Engineering paper is shown separately as another international journal item." : ""}`
+            ko: `저널 논문 ${publicationSummary.total}편을 기준으로 정리했습니다. 학술대회논문, conference, proceeding, 학위논문은 본 화면에서 제외했고, SCI 저널 지표는 첨부해주신 통합연구실적 PDF의 IF, Percentile, 상위 비율을 반영했습니다.${publicationSummary.OTHER ? " Results in Engineering 1편은 ESCI 기반 기타 국제학술지로 별도 표시했습니다." : ""}`,
+            en: `This page counts ${publicationSummary.total} journal papers only. Conference papers, proceedings, and thesis work are excluded, and the SCI journal metrics are reflected from the provided PDF record.${publicationSummary.OTHER ? " The Results in Engineering paper is shown separately as another international journal item." : ""}`
           })}
         </div>
       </section>
@@ -781,6 +807,7 @@
                   <div class="publication-badges">
                     <span class="badge ${badgeClass(item.journalClass)}">${item.journalClass}</span>
                     ${typeof item.citations === "number" ? `<span class="badge badge-neutral">${item.citations} ${text({ ko: "인용", en: "citations" })}</span>` : ""}
+                    ${item.metrics?.impactFactor ? `<span class="badge badge-neutral">IF ${item.metrics.impactFactor}</span>` : ""}
                   </div>
                   <h3 class="publication-title"><a href="${route("publications")}#${item.id}">${item.title}</a></h3>
                   <p class="publication-authors">${item.authors}</p>
@@ -830,11 +857,27 @@
         <h3 class="publication-title">${item.title}</h3>
         <p class="publication-authors">${item.authors}</p>
         <p class="publication-venue">${item.venue}</p>
+        ${renderPublicationMetrics(item)}
         <div class="link-row">
           <a href="${scholarSearchUrl(item.title)}" target="_blank" rel="noreferrer">Google Scholar</a>
           ${item.doi ? `<a href="https://doi.org/${item.doi}" target="_blank" rel="noreferrer">DOI</a>` : ""}
         </div>
       </article>
+    `;
+  }
+
+  function renderPublicationMetrics(item) {
+    if (!item.metrics) {
+      return "";
+    }
+
+    return `
+      <div class="publication-metrics">
+        ${item.metrics.indexType ? `<span class="metric-chip">${item.metrics.indexType}</span>` : ""}
+        ${item.metrics.impactFactor ? `<span class="metric-chip">IF ${item.metrics.impactFactor}</span>` : ""}
+        ${item.metrics.percentile ? `<span class="metric-chip">${text({ ko: `Percentile ${item.metrics.percentile}`, en: `Percentile ${item.metrics.percentile}` })}</span>` : ""}
+        ${item.metrics.topPercent ? `<span class="metric-chip">${text({ ko: `상위 ${item.metrics.topPercent}%`, en: `Top ${item.metrics.topPercent}%` })}</span>` : ""}
+      </div>
     `;
   }
 
@@ -860,6 +903,30 @@
       { label: { ko: "KCI 논문", en: "KCI Papers" }, value: String(publicationSummary.KCI), detail: { ko: "국내 학술지 기준", en: "Domestic indexed journals" } },
       { label: { ko: "총 저널 논문", en: "Total Journals" }, value: String(publicationSummary.total), detail: { ko: "conference 제외", en: "Conferences excluded" } },
       { label: { ko: "총 인용", en: "Total Citations" }, value: String(publicationSummary.totalCitations), detail: { ko: "제공된 목록 기준", en: "Based on the provided list" } }
+    ];
+  }
+
+  function getSummaryCards() {
+    return [
+      { label: { ko: "SCI 논문", en: "SCI Papers" }, value: String(publicationSummary.SCI), detail: { ko: "저널 논문 기준", en: "Journal papers only" } },
+      { label: { ko: "KCI 논문", en: "KCI Papers" }, value: String(publicationSummary.KCI), detail: { ko: "국내 학술지 기준", en: "Domestic indexed journals" } },
+      { label: { ko: "총 저널 논문", en: "Total Journals" }, value: String(publicationSummary.total), detail: { ko: "conference 제외", en: "Conferences excluded" } },
+      {
+        label: { ko: "총 인용", en: "Total Citations" },
+        value: String(scholarMetrics.citationsAll || publicationSummary.totalCitations),
+        detail: {
+          ko: scholarMetrics.citationsSince2021 ? `2021년 이후 ${scholarMetrics.citationsSince2021}` : "제공된 목록 기준",
+          en: scholarMetrics.citationsSince2021 ? `Since 2021: ${scholarMetrics.citationsSince2021}` : "Based on the provided list"
+        }
+      },
+      {
+        label: { ko: "h-index", en: "h-index" },
+        value: String(scholarMetrics.hIndexAll || ""),
+        detail: {
+          ko: scholarMetrics.hIndexSince2021 ? `2021년 이후 ${scholarMetrics.hIndexSince2021}` : "Google Scholar 기준",
+          en: scholarMetrics.hIndexSince2021 ? `Since 2021: ${scholarMetrics.hIndexSince2021}` : "Based on Google Scholar"
+        }
+      }
     ];
   }
 
