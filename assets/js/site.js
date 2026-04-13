@@ -1434,11 +1434,11 @@
             </div>
             <p class="hero-kicker">${text({ ko: "Research Group", en: "Research Group" })}</p>
             <h1 class="hero-title">Construction AI & Data Intelligence Lab</h1>
-            <p class="hero-description">Data-driven research for maintenance, performance assessment, and predictive modeling in the built environment.</p>
+            <p class="hero-description">Advancing intelligent construction, maintenance, and building-performance research through AI, data infrastructure, and predictive modeling.</p>
             <div class="meta-row">
               <span class="meta-pill">${icon("building")} Hanyang University</span>
               <span class="meta-pill">${icon("research")} AI Construction Technology Research Center</span>
-              <span class="meta-pill">${icon("spark")} Construction Data Intelligence</span>
+              <span class="meta-pill">${icon("spark")} Smart construction intelligence</span>
             </div>
             <div class="button-row">
               <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "전체 논문 보기", en: "View publications" })}</span></a>
@@ -1446,7 +1446,7 @@
             </div>
           </div>
           <div class="hero-visual">
-            <img class="hero-illustration" src="assets/images/construction-ai-data-lab.svg" alt="Construction AI and data illustration">
+            <img class="hero-illustration" src="assets/images/construction-ai-orbit.svg" alt="Abstract construction AI illustration">
           </div>
         </div>
         <div class="summary-grid hero-summary">
@@ -1503,22 +1503,22 @@
   function getSummaryCards() {
     return [
       {
-        label: "SCI(E) Papers",
+        label: "SCI(E) papers",
         value: String(publicationSummary.SCI),
         detail: "Journal articles"
       },
       {
-        label: "KCI Papers",
+        label: "KCI papers",
         value: String(publicationSummary.KCI),
         detail: "Domestic journals"
       },
       {
-        label: "Total Journal Papers",
+        label: "Total journal papers",
         value: String(publicationSummary.total),
         detail: `SCI(E) ${publicationSummary.SCI} + KCI ${publicationSummary.KCI}`
       },
       {
-        label: "Total Citations",
+        label: "Total citations",
         value: String(scholarMetrics.citationsAll || publicationSummary.totalCitations),
         detail: scholarMetrics.citationsSince2021 ? `Since 2021: ${scholarMetrics.citationsSince2021}` : "Google Scholar"
       },
@@ -1796,6 +1796,51 @@
             <div class="education-row"><span class="education-year">2014.02</span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
             <div class="education-row"><span class="education-year">2018.08</span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
             <div class="education-row"><span class="education-year">Present</span><span class="education-text">AI Construction Technology Research Center, Hanyang University</span></div>
+          </div>`
+        },
+        cardClass: "education-card"
+      }
+    ];
+
+    return `
+      ${renderHeroPanel()}
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "소개", en: "Biography" }, { ko: "Biography", en: "Biography" }, route("bio"), { ko: "소개 자세히 보기", en: "Open biography" })}
+        <div class="card-grid one-column">${introItems.map((item) => renderInfoCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "Research Project", en: "Research Project" }, { ko: "Funded Projects", en: "Funded Projects" }, route("teaching"), { ko: "Open research page", en: "Open research page" })}
+        <div class="card-grid three-column research-project-grid">${projects.map((item) => renderResearchProjectCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "논문실적", en: "Publications" }, { ko: "Selected Publications", en: "Selected Publications" }, route("publications"), { ko: "전체 논문 보기", en: "View all publications" })}
+        ${renderPublicationHomeSummary()}
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Activities", en: "Activities" }, route("news"), { ko: "활동 더 보기", en: "Open activities" })}
+        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+      </section>
+      ${renderContactCta()}
+    `;
+  }
+
+  function renderHomePage() {
+    const projects = fundedResearchProjects();
+    const introItems = [
+      {
+        title: { ko: "학력 및 경력", en: "Education & Career" },
+        bodyHtml: {
+          ko: `<div class="education-list">
+            <div class="education-row"><span class="education-meta"><span class="education-year">2011.02</span><span class="education-degree">공학사</span></span><span class="education-text">한양대학교 건축학과</span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2014.02</span><span class="education-degree">공학석사</span></span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2018.08</span><span class="education-degree">공학박사</span></span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">Present</span><span class="education-degree">Current</span></span><span class="education-text">한양대학교 인공지능건설기술 연구센터</span></div>
+          </div>`,
+          en: `<div class="education-list">
+            <div class="education-row"><span class="education-meta"><span class="education-year">2011.02</span><span class="education-degree">B.Eng.</span></span><span class="education-text">Department of Architecture, Hanyang University</span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2014.02</span><span class="education-degree">M.Eng.</span></span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2018.08</span><span class="education-degree">Ph.D.</span></span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">Present</span><span class="education-degree">Current</span></span><span class="education-text">AI Construction Technology Research Center, Hanyang University</span></div>
           </div>`
         },
         cardClass: "education-card"

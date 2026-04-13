@@ -924,6 +924,250 @@ h3 {
   line-height: 1.85;
 }
 
+:root {
+  --bg: #eef3f9;
+  --surface: rgba(255, 255, 255, 0.9);
+  --surface-soft: #f8fbff;
+  --line: #d8e1ec;
+  --line-strong: #c7d4e2;
+  --accent: #15385f;
+  --accent-strong: #0f2743;
+  --accent-bright: #5d94d3;
+  --shadow: 0 22px 56px rgba(17, 41, 71, 0.07);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 15px;
+}
+
+body {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(86, 136, 219, 0.14), transparent 30%),
+    radial-gradient(circle at 100% 10%, rgba(192, 220, 255, 0.48), transparent 24%),
+    linear-gradient(180deg, #f9fbfe 0%, #eef3f9 100%);
+}
+
+.site-frame {
+  max-width: 1480px;
+  gap: 32px;
+}
+
+.site-main {
+  gap: 30px;
+}
+
+.panel {
+  padding: 40px 42px;
+}
+
+.hero-panel {
+  gap: 28px;
+}
+
+.hero-layout {
+  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  gap: 38px;
+}
+
+.hero-copy {
+  gap: 22px;
+}
+
+.hero-description {
+  max-width: 720px;
+  font-size: 1.04rem;
+  line-height: 1.9;
+}
+
+.hero-visual {
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  min-height: 420px;
+}
+
+.hero-visual::before {
+  content: "";
+  position: absolute;
+  width: 86%;
+  height: 86%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(93, 148, 211, 0.2), rgba(93, 148, 211, 0));
+  filter: blur(22px);
+}
+
+.hero-illustration {
+  position: relative;
+  width: min(100%, 520px);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 24px 46px rgba(17, 41, 71, 0.14));
+}
+
+.page-title,
+.hero-title {
+  font-size: clamp(2.35rem, 4vw, 3.5rem);
+}
+
+.summary-grid {
+  gap: 16px;
+}
+
+.hero-summary,
+.page-summary {
+  grid-template-columns: repeat(auto-fit, minmax(186px, 1fr));
+}
+
+.summary-card {
+  display: grid;
+  gap: 10px;
+  min-height: 148px;
+  padding: 22px 22px 20px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(246, 250, 255, 0.92) 100%);
+  box-shadow: 0 14px 34px rgba(17, 41, 71, 0.05);
+}
+
+.summary-label {
+  color: var(--muted);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  line-height: 1.35;
+}
+
+.summary-value {
+  margin-top: 2px;
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.summary-detail {
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.content-section {
+  gap: 20px;
+}
+
+.section-heading {
+  gap: 20px;
+  padding-bottom: 2px;
+}
+
+.section-heading-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.section-title {
+  font-size: 2.05rem;
+}
+
+.card-grid {
+  gap: 18px;
+}
+
+.info-card,
+.topic-card,
+.timeline-item,
+.activity-card,
+.contact-card,
+.publication-item,
+.publication-preview,
+.year-block,
+.note-banner,
+.project-card {
+  border-radius: 24px;
+}
+
+.info-card,
+.topic-card,
+.timeline-item,
+.activity-card,
+.contact-card,
+.publication-item,
+.publication-preview,
+.year-block,
+.note-banner {
+  padding: 24px;
+}
+
+.education-card {
+  max-width: 880px;
+}
+
+.education-list {
+  gap: 16px;
+}
+
+.education-row {
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.education-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.education-year {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.education-degree {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #f3f7fc;
+  color: #47627e;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.education-text {
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.publication-home-grid {
+  grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.project-card {
+  gap: 18px;
+  padding: 24px;
+  border-radius: 24px;
+}
+
+.project-card-meta,
+.interest-header {
+  gap: 14px;
+}
+
+.project-focus {
+  font-size: 1.28rem;
+  line-height: 1.55;
+}
+
+.interest-card {
+  gap: 20px;
+  padding: 26px;
+}
+
+.research-copy {
+  gap: 14px;
+}
+
 @media (max-width: 1180px) {
   .site-frame {
     grid-template-columns: 1fr;
@@ -993,6 +1237,22 @@ h3 {
   .education-row {
     grid-template-columns: 1fr;
     gap: 6px;
+  }
+
+  .panel {
+    padding: 30px 24px;
+  }
+
+  .hero-visual {
+    min-height: 0;
+  }
+
+  .hero-illustration {
+    width: min(100%, 460px);
+  }
+
+  .education-meta {
+    gap: 8px;
   }
 
   .project-card-meta,
