@@ -372,7 +372,7 @@
   };
 
   PAGE_META.home.description = {
-    ko: "권나현의 연구 개요와 주요 논문실적을 정리한 메인 페이지입니다.",
+    ko: "권나현의 연구 개요와 주요 논문실적을 정리한 메인 페이지",
     en: "Main page summarizing Nahyun Kwon's research and journal publications."
   };
 
@@ -383,25 +383,25 @@
     en: "AI Construction Technology Research Center, Hanyang University"
   };
   PROFILE.summary = {
-    ko: "건설 AI·데이터 인텔리전스 연구그룹",
-    en: "Construction AI & Data Intelligence Lab"
+    ko: "Construction AI·Data Intelligence를 향한 연구",
+    en: "Research toward Construction AI & Data Intelligence"
   };
 
-  CONTENT.hero.kicker = { ko: "Academic Website", en: "Academic Website" };
+  CONTENT.hero.kicker = { ko: "Toward", en: "Toward" };
   CONTENT.hero.title = {
-    ko: "건설 AI·데이터 인텔리전스 연구그룹",
-    en: "Construction AI & Data Intelligence Lab"
+    ko: "Construction AI & Data Intelligence",
+    en: "Construction AI & Data Intelligence"
   };
   CONTENT.hero.description = {
-    ko: "건축과 건설 데이터를 바탕으로 유지관리, 성능평가, 예측모형을 연결하는 연구를 소개합니다.",
-    en: "This site highlights research connecting maintenance, performance assessment, and predictive modeling for the built environment."
+    ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
+    en: "Data-driven research linking maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
   };
   CONTENT.intro[0].body = {
-    ko: "2011.02 한양대학교 건축학과 졸업(학사학위, 건축학사), 2014.02 서울대학교 건축학과 건축시공 및 건설관리 전공(석사학위, 공학석사), 2018.08 서울대학교 건축학과 건축시공 및 건설관리 전공(박사학위, 공학박사)을 거쳐 한양대학교 인공지능건설기술 연구센터에서 연구를 이어가고 있습니다.",
-    en: "She received a Bachelor of Architecture from Hanyang University in February 2011, an M.Eng. in Architectural Construction and Construction Management from Seoul National University in February 2014, and a Ph.D. in the same field in August 2018, and now continues her work at the AI Construction Technology Research Center at Hanyang University."
+    ko: "2011.02 한양대학교 건축학과 졸업(건축학사), 2014.02 서울대학교 건축학과 석사(건축시공 및 건설관리 전공, 공학석사), 2018.08 서울대학교 건축학과 박사(건축시공 및 건설관리 전공, 공학박사), 현재 한양대학교 인공지능건설기술 연구센터 연구",
+    en: "B.Arch., Hanyang University (Feb 2011); M.Eng., Department of Architecture, Seoul National University, major in Architectural Construction and Construction Management (Feb 2014); Ph.D. in the same field (Aug 2018); currently at the AI Construction Technology Research Center, Hanyang University."
   };
   CONTENT.intro[1].body = {
-    ko: "건축물 유지관리, 건설환경 리스크, 건물 성능평가, 도시·건축 데이터 분석을 실제 의사결정과 연결하는 연구를 수행하고 있습니다.",
+    ko: "건축물 유지관리, 건설환경 리스크, 건물 성능평가, 도시·건축 데이터 분석을 실제 의사결정과 연결하는 연구",
     en: "Current work connects building maintenance, construction risk, performance assessment, and urban or building data analytics with practical decision-making."
   };
   CONTENT.timeline[0].title = {
@@ -409,14 +409,14 @@
     en: "AI Construction Technology Research Center, Hanyang University"
   };
   CONTENT.timeline[0].body = {
-    ko: "건축물 유지관리, 건설관리, 에너지, 도시 분석을 연결하는 데이터 기반 연구를 수행하고 있습니다.",
+    ko: "건축물 유지관리, 건설관리, 에너지, 도시 분석을 연결하는 데이터 기반 연구",
     en: "Conducting data-driven research connecting building maintenance, construction management, energy, and urban analytics."
   };
 
-  CONTENT.hero.title = { ko: "Construction AI & Data Intelligence Lab", en: "Construction AI & Data Intelligence Lab" };
+  CONTENT.hero.title = { ko: "Construction AI & Data Intelligence", en: "Construction AI & Data Intelligence" };
   CONTENT.hero.description = {
-    ko: "Data-driven research for maintenance, performance assessment, and predictive modeling in the built environment.",
-    en: "Data-driven research for maintenance, performance assessment, and predictive modeling in the built environment."
+    ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
+    en: "Data-driven research linking maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
   };
   CONTENT.intro = [
     {
@@ -650,6 +650,8 @@
   function renderSocialLink(item) {
     const iconName = {
       "google scholar": "scholar",
+      "center profile": "building",
+      "research profile": "building",
       "lab profile": "building",
       github: "code",
       email: "mail"
@@ -1196,7 +1198,7 @@
         <div class="publication-card-header">
           <div class="publication-card-heading">
             <p class="publication-year">${item.year || ""}</p>
-            ${typeof item.citations === "number" ? `<span class="citation-pill">${item.citations} Citations</span>` : ""}
+            ${typeof item.citations === "number" ? `<span class="citation-pill">${text({ ko: `인용 ${item.citations}회`, en: `${item.citations} Citations` })}</span>` : ""}
           </div>
           <div class="publication-card-labels">
             <span class="badge ${badgeClass(kind)} publication-kind-badge">${publicationKindLabel(kind)}</span>
@@ -1314,18 +1316,16 @@
 
   function renderPublicationSortControls() {
     return `
-      <div class="panel publication-toolbar">
-        <div class="publication-toolbar-copy">
-          <p class="page-kicker">${text({ ko: "정렬", en: "Sort" })}</p>
-          <h2 class="section-title">${text({ ko: "논문 보기 방식 선택", en: "Choose how to view publications" })}</h2>
-          <p class="page-description">${text({
-            ko: "버튼을 한 번 클릭하면 같은 화면에서 바로 정렬이 바뀝니다.",
-            en: "A single click updates the ordering immediately on the same page."
-          })}</p>
-        </div>
+      <div class="publication-toolbar publication-toolbar-compact">
         <div class="sort-switch" role="tablist" aria-label="${text({ ko: "논문 정렬", en: "Publication sorting" })}">
-          <button class="sort-chip ${currentPublicationSort === "year" ? "is-active" : ""}" type="button" data-publication-sort="year">${text({ ko: "연도별", en: "By year" })}</button>
-          <button class="sort-chip ${currentPublicationSort === "citations" ? "is-active" : ""}" type="button" data-publication-sort="citations">${text({ ko: "인용순", en: "By citations" })}</button>
+          <button class="sort-chip ${currentPublicationSort === "year" ? "is-active" : ""}" type="button" data-publication-sort="year" aria-pressed="${currentPublicationSort === "year"}">
+            ${icon("calendar")}
+            <span>${text({ ko: "연도별", en: "By year" })}</span>
+          </button>
+          <button class="sort-chip ${currentPublicationSort === "citations" ? "is-active" : ""}" type="button" data-publication-sort="citations" aria-pressed="${currentPublicationSort === "citations"}">
+            ${icon("chart")}
+            <span>${text({ ko: "인용순", en: "By citations" })}</span>
+          </button>
         </div>
       </div>
     `;
@@ -1335,8 +1335,8 @@
     const sciPublications = getPublicationsByClass("SCI");
     const kciPublications = getPublicationsByClass("KCI");
     const summaryNote = text({
-      ko: `국제 저널 ${publicationSummary.international}편을 기준으로 정리했으며, Results in Engineering(2026) 논문도 SCI 구간에 포함해 총 SCI(E) ${publicationSummary.SCI}편으로 표시했습니다. KCI 논문 ${publicationSummary.KCI}편은 별도 구간으로 유지했고, 학술대회논문·proceeding·학위논문은 제외했습니다.`,
-      en: `This page organizes ${publicationSummary.international} international journal papers. The 2026 Results in Engineering paper is also included in the SCI(E) section, bringing that section to ${publicationSummary.SCI} papers. The ${publicationSummary.KCI} KCI papers remain separate, while conference papers, proceedings, and thesis work are excluded.`
+      ko: `국제 저널 ${publicationSummary.international}편 기준. Results in Engineering(2026) 논문을 SCI 구간에 포함해 SCI(E) ${publicationSummary.SCI}편으로 표시. KCI ${publicationSummary.KCI}편은 별도 구간, 학술대회논문·proceeding·학위논문은 제외.`,
+      en: `Organized around ${publicationSummary.international} international journal papers. The 2026 Results in Engineering paper is included in the SCI(E) section, bringing that section to ${publicationSummary.SCI} papers. KCI ${publicationSummary.KCI} remains separate, while conference papers, proceedings, and thesis work are excluded.`
     });
 
     return `
@@ -1432,13 +1432,16 @@
                 <p class="mark-subtitle">Academic Website</p>
               </div>
             </div>
-            <p class="hero-kicker">${text({ ko: "Research Group", en: "Research Group" })}</p>
-            <h1 class="hero-title">Construction AI & Data Intelligence Lab</h1>
-            <p class="hero-description">Advancing intelligent construction, maintenance, and building-performance research through AI, data infrastructure, and predictive modeling.</p>
+            <p class="hero-kicker">${text({ ko: "Toward", en: "Toward" })}</p>
+            <h1 class="hero-title">Construction AI & Data Intelligence</h1>
+            <p class="hero-description">${text({
+              ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
+              en: "Data-driven research linking maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
+            })}</p>
             <div class="meta-row">
               <span class="meta-pill">${icon("building")} Hanyang University</span>
               <span class="meta-pill">${icon("research")} AI Construction Technology Research Center</span>
-              <span class="meta-pill">${icon("spark")} Smart construction intelligence</span>
+              <span class="meta-pill">${icon("spark")} ${text({ ko: "Construction AI·Data Intelligence를 향한 연구", en: "Toward Construction AI & Data Intelligence" })}</span>
             </div>
             <div class="button-row">
               <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "전체 논문 보기", en: "View publications" })}</span></a>
@@ -1821,16 +1824,16 @@
         title: { ko: "학력 및 경력", en: "Education & Career" },
         bodyHtml: {
           ko: `<div class="education-list">
-            <div class="education-row"><span class="education-meta"><span class="education-year">2011.02</span><span class="education-degree">공학사</span></span><span class="education-text">한양대학교 건축학과</span></div>
-            <div class="education-row"><span class="education-meta"><span class="education-year">2014.02</span><span class="education-degree">공학석사</span></span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
-            <div class="education-row"><span class="education-meta"><span class="education-year">2018.08</span><span class="education-degree">공학박사</span></span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
-            <div class="education-row"><span class="education-meta"><span class="education-year">Present</span><span class="education-degree">Current</span></span><span class="education-text">한양대학교 인공지능건설기술 연구센터</span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2011.02</span><span class="education-degree">공학사</span></span><span class="education-text"><span class="education-school">한양대학교 건축학과</span></span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2014.02</span><span class="education-degree">공학석사</span></span><span class="education-text"><span class="education-school">서울대학교 건축학과</span><span class="education-track">건축시공 및 건설관리 전공</span></span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2018.08</span><span class="education-degree">공학박사</span></span><span class="education-text"><span class="education-school">서울대학교 건축학과</span><span class="education-track">건축시공 및 건설관리 전공</span></span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">Present</span><span class="education-degree">Current</span></span><span class="education-text"><span class="education-school">한양대학교</span><span class="education-track">인공지능건설기술 연구센터</span></span></div>
           </div>`,
           en: `<div class="education-list">
-            <div class="education-row"><span class="education-meta"><span class="education-year">2011.02</span><span class="education-degree">B.Eng.</span></span><span class="education-text">Department of Architecture, Hanyang University</span></div>
-            <div class="education-row"><span class="education-meta"><span class="education-year">2014.02</span><span class="education-degree">M.Eng.</span></span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
-            <div class="education-row"><span class="education-meta"><span class="education-year">2018.08</span><span class="education-degree">Ph.D.</span></span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
-            <div class="education-row"><span class="education-meta"><span class="education-year">Present</span><span class="education-degree">Current</span></span><span class="education-text">AI Construction Technology Research Center, Hanyang University</span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2011.02</span><span class="education-degree">B.Eng.</span></span><span class="education-text"><span class="education-school">Department of Architecture</span><span class="education-track">Hanyang University</span></span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2014.02</span><span class="education-degree">M.Eng.</span></span><span class="education-text"><span class="education-school">Department of Architecture, Seoul National University</span><span class="education-track">Architectural Construction and Construction Management</span></span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">2018.08</span><span class="education-degree">Ph.D.</span></span><span class="education-text"><span class="education-school">Department of Architecture, Seoul National University</span><span class="education-track">Architectural Construction and Construction Management</span></span></div>
+            <div class="education-row"><span class="education-meta"><span class="education-year">Present</span><span class="education-degree">Current</span></span><span class="education-text"><span class="education-school">Hanyang University</span><span class="education-track">AI Construction Technology Research Center</span></span></div>
           </div>`
         },
         cardClass: "education-card"
@@ -1869,6 +1872,8 @@
       mail: '<path d="M2.75 4.25h10.5a1 1 0 0 1 1 1v5.5a1 1 0 0 1-1 1H2.75a1 1 0 0 1-1-1v-5.5a1 1 0 0 1 1-1Z"></path><path d="m2.25 5 5.17 3.62a1 1 0 0 0 1.16 0L13.75 5"></path>',
       building: '<path d="M3.25 2.5h5.5v11h-5.5z"></path><path d="M8.75 5h4v8.5h-4z"></path><path d="M5 4.75h1"></path><path d="M5 7h1"></path><path d="M5 9.25h1"></path><path d="M10.25 7h1"></path><path d="M10.25 9.25h1"></path>',
       scholar: '<path d="m8 2 5.75 3.5L8 9 2.25 5.5 8 2Z"></path><path d="M4.25 7.1V9.5c0 1.25 1.72 2.25 3.75 2.25s3.75-1 3.75-2.25V7.1"></path>',
+      calendar: '<rect x="2.5" y="3.25" width="11" height="10.25" rx="1.75"></rect><path d="M5.25 2v2.5"></path><path d="M10.75 2v2.5"></path><path d="M2.5 6.5h11"></path>',
+      chart: '<path d="M2.75 12.5h10.5"></path><path d="M4.75 11V8.25"></path><path d="M8 11V5.75"></path><path d="M11.25 11V3.75"></path>',
       code: '<path d="m5.5 4-3 4 3 4"></path><path d="m10.5 4 3 4-3 4"></path><path d="m8.9 2.75-1.8 10.5"></path>',
       link: '<path d="M6.2 9.8 9.8 6.2"></path><path d="M5.1 11.5H4a2.5 2.5 0 1 1 0-5h1.1"></path><path d="M10.9 4.5H12a2.5 2.5 0 1 1 0 5h-1.1"></path>',
       book: '<path d="M4 3.25h7.5a1 1 0 0 1 1 1v7.5a.75.75 0 0 1-.75.75H4.5A1.5 1.5 0 0 1 3 11V4.25a1 1 0 0 1 1-1Z"></path><path d="M4.5 12.5V4.25"></path>'
