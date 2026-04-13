@@ -52,11 +52,11 @@
     },
     publications: {
       icon: "papers",
-      label: { ko: "논문", en: "Publications" },
+      label: { ko: "Publications", en: "Publications" },
       subtitle: { ko: "Publications", en: "Publications" },
       description: {
-        ko: "저널 논문만 집계해 SCI와 KCI 실적을 분리했습니다.",
-        en: "Journal papers only, organized into SCI and KCI categories."
+        ko: "",
+        en: ""
       }
     },
     news: {
@@ -417,6 +417,30 @@
     ko: "건축물 유지관리, 건설관리, 에너지, 도시 분석을 연결하는 데이터 기반 연구",
     en: "Conducting data-driven research connecting building maintenance, construction management, energy, and urban analytics."
   };
+  CONTENT.timeline[2].title = {
+    ko: "서울대학교 건축학과, 공학박사",
+    en: "Department of Architecture, Seoul National University, Ph.D."
+  };
+  CONTENT.timeline[2].body = {
+    ko: "전공: 건축시공 및 건설관리",
+    en: "Major: Architectural Construction and Construction Management"
+  };
+  CONTENT.timeline[3].title = {
+    ko: "서울대학교 건축학과, 공학석사",
+    en: "Department of Architecture, Seoul National University, M.Eng."
+  };
+  CONTENT.timeline[3].body = {
+    ko: "전공: 건축시공 및 건설관리",
+    en: "Major: Architectural Construction and Construction Management"
+  };
+  CONTENT.timeline[4].title = {
+    ko: "한양대학교 건축학과, 건축학사",
+    en: "Department of Architecture, Hanyang University, B.Arch."
+  };
+  CONTENT.timeline[4].body = {
+    ko: "전공: 건축학",
+    en: "Major: Architecture"
+  };
 
   CONTENT.hero.title = { ko: "Construction AI & Data Intelligence", en: "Construction AI & Data Intelligence" };
   CONTENT.hero.description = {
@@ -626,20 +650,20 @@
         <div class="sidebar-social">
           ${getProfileLinks().map((item) => renderSocialLink(item)).join("")}
         </div>
-        <div class="sidebar-label">${text({ ko: "내비게이션", en: "Navigation" })}</div>
+        <div class="sidebar-label">Navigation</div>
         <nav class="sidebar-nav" aria-label="Main navigation">
           ${navOrder
             .map(
               (item) => `
                 <a class="nav-item ${page === item ? "is-active" : ""}" href="${route(item)}" ${page === item ? 'aria-current="page"' : ""}>
                   ${icon(PAGE_META[item].icon)}
-                  <span>${text(PAGE_META[item].label)}</span>
+                  <span>${PAGE_META[item].label?.en || text(PAGE_META[item].label)}</span>
                 </a>
               `
             )
             .join("")}
         </nav>
-        <div class="sidebar-label">${text({ ko: "언어", en: "Language" })}</div>
+        <div class="sidebar-label">Language</div>
         <div class="language-switch">
           <a class="lang-pill ${lang === "ko" ? "is-active" : ""}" href="${route(page, "ko")}">KO</a>
           <a class="lang-pill ${lang === "en" ? "is-active" : ""}" href="${route(page, "en")}">EN</a>
@@ -706,7 +730,7 @@
           pageKey === "publications"
             ? `
               <div class="meta-row">
-                <span class="meta-pill">${icon("papers")}${text({ ko: `국제저널 ${publicationSummary.international}편`, en: `Intl. journals ${publicationSummary.international}` })}</span>
+                <span class="meta-pill">${icon("papers")}${text({ ko: `Intl. journals ${publicationSummary.international}`, en: `Intl. journals ${publicationSummary.international}` })}</span>
                 <span class="meta-pill">${icon("research")}SCI(E) ${publicationSummary.SCI}</span>
                 ${publicationSummary.OTHER ? `<span class="meta-pill">${icon("link")}Scopus ${publicationSummary.OTHER}</span>` : ""}
                 <span class="meta-pill">${icon("book")}KCI ${publicationSummary.KCI}</span>
@@ -1717,7 +1741,7 @@
           pageKey === "publications"
             ? `
               <div class="meta-row">
-                <span class="meta-pill">${icon("papers")}${text({ ko: `국제저널 ${publicationSummary.international}`, en: `Intl. journals ${publicationSummary.international}` })}</span>
+                <span class="meta-pill">${icon("papers")}${text({ ko: `Intl. journals ${publicationSummary.international}`, en: `Intl. journals ${publicationSummary.international}` })}</span>
                 <span class="meta-pill">${icon("research")}SCI(E) ${publicationSummary.SCI}</span>
                 ${publicationSummary.OTHER ? `<span class="meta-pill">${icon("link")}Scopus ${publicationSummary.OTHER}</span>` : ""}
                 <span class="meta-pill">${icon("book")}KCI ${publicationSummary.KCI}</span>
