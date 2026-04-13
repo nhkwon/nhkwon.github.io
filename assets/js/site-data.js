@@ -44,8 +44,8 @@ const SITE_DATA = {
       en: "A personal website that brings research, projects, writing, and collaboration into one place"
     },
     description: {
-      ko: "박상돈 교수님의 사이트 구조를 참고해 메인 랜딩과 세부 페이지를 분리했습니다. 홈에서는 전체 방향을 보여주고, 각 세부 페이지에서 소개, 아웃풋, 학습/멘토링, 소식, 연락 방식을 더 자세히 정리할 수 있게 구성했습니다.",
-      en: "Inspired by the structure of Prof. Sangdon Park's site, this build separates a strong landing page from focused detail pages. The home page gives a quick overview, while dedicated pages expand biography, outputs, learning and mentoring, updates, and contact."
+      ko: "메인 랜딩과 세부 페이지를 분리해 홈에서는 전체 방향을 보여주고, 각 세부 페이지에서는 소개, 아웃풋, 학습/멘토링, 소식, 연락 방식을 더 자세히 정리할 수 있게 구성했습니다.",
+      en: "This build separates a strong landing page from focused detail pages. The home page gives a quick overview, while dedicated pages expand biography, outputs, learning and mentoring, updates, and contact."
     },
     panelTitle: {
       ko: "Current snapshot",

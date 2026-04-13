@@ -1683,13 +1683,6 @@
     ];
   }
 
-  function researchVision() {
-    return {
-      ko: "서울과학기술대학교에 임용된다면 지금까지 수행해 온 연구를 더욱 확장하고 개선하여, 글로벌 환경과 국내 건설산업의 변화에 능동적으로 대응할 수 있는 스마트 융복합 연구를 수행하고자 합니다. 이는 스마트시티 계획, 시공 및 관리 분야의 핵심 기반이 될 수 있을 것으로 판단합니다.",
-      en: "If appointed at Seoul National University of Science and Technology, I plan to extend and refine the research developed so far into a smart convergent research agenda that can respond proactively to changes in both the global environment and the Korean construction industry. This will provide a strong foundation for planning, construction, and management in future smart cities."
-    };
-  }
-
   function teachingPageMeta() {
     return {
       icon: "research",
@@ -1772,9 +1765,6 @@
       <section class="content-section">
         ${renderSectionHeading({ ko: "관심연구", en: "Research Interests" }, { ko: "Research Interests", en: "Research Interests" })}
         <div class="card-grid two-column research-interest-grid">${interests.map((item) => renderResearchInterestCard(item)).join("")}</div>
-      </section>
-      <section class="content-section">
-        <div class="note-banner research-note">${text(researchVision())}</div>
       </section>
     `;
   }
