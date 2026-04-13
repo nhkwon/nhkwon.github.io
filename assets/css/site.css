@@ -1300,3 +1300,56 @@ body {
     align-items: flex-start;
   }
 }
+
+body[data-page="publications"] .publication-card {
+  padding: 10px 20px !important;
+}
+
+body[data-page="publications"] .publication-card-header,
+body[data-page="publications"] .publication-card-footer {
+  gap: 8px !important;
+}
+
+body[data-page="publications"] .publication-card-body {
+  gap: 6px !important;
+  margin-top: 4px !important;
+}
+
+body[data-page="publications"] .publication-card-footer {
+  margin-top: 6px !important;
+}
+
+body[data-page="publications"] .publication-year {
+  font-size: clamp(2rem, 3vw, 2.8rem) !important;
+}
+
+body[data-page="publications"] .citation-pill {
+  padding: 4px 10px !important;
+  font-size: 0.8rem !important;
+}
+
+body[data-page="publications"] .publication-card-title {
+  font-size: clamp(1.18rem, 1.6vw, 1.55rem) !important;
+  line-height: 1.22 !important;
+}
+
+body[data-page="publications"] .publication-card-authors,
+body[data-page="publications"] .publication-venue-row {
+  font-size: 0.9rem !important;
+  line-height: 1.45 !important;
+}
+
+body[data-page="publications"] .publication-card-metrics {
+  margin-top: 2px !important;
+}
+
+body[data-page="publications"] .publication-card .metric-chip {
+  padding: 5px 9px !important;
+  font-size: 0.8rem !important;
+}
+
+@media (max-width: 820px) {
+  body[data-page="publications"] .publication-card {
+    padding: 10px 14px !important;
+  }
+}
