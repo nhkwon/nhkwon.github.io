@@ -119,12 +119,12 @@ h3 {
 .sidebar-education {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: linear-gradient(180deg, rgba(248, 251, 255, 0.94), rgba(243, 247, 252, 0.94));
-  text-align: left;
+  text-align: center;
 }
 
 .sidebar-name,
@@ -156,6 +156,14 @@ h3 {
   line-height: 1.55;
 }
 
+.sidebar-education-summary {
+  color: var(--text);
+  font-size: 0.94rem;
+  font-weight: 600;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+
 .sidebar-role {
   color: var(--accent);
   font-weight: 700;
@@ -173,6 +181,16 @@ h3 {
 .mark-subtitle {
   color: var(--muted);
   line-height: 1.75;
+}
+
+.sidebar-affiliation,
+.sidebar-summary {
+  word-break: keep-all;
+  overflow-wrap: normal;
+}
+
+.sidebar-affiliation {
+  font-size: 0.94rem;
 }
 
 .sidebar-mark,

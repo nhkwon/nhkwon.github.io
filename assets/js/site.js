@@ -366,6 +366,48 @@
     ...SITE_DATA.scholarMetrics
   };
 
+  PAGE_META.home.description = {
+    ko: "권나현의 연구 개요와 주요 논문실적을 정리한 메인 페이지입니다.",
+    en: "Main page summarizing Nahyun Kwon's research and journal publications."
+  };
+
+  PROFILE.educationHeading = { ko: "학위", en: "Degrees" };
+  PROFILE.educationSummary = { ko: "건축학사 · 공학석사 · 공학박사", en: "B.Arch. · M.Eng. · Ph.D." };
+  PROFILE.affiliation = {
+    ko: "한양대학교 인공지능건설기술 연구센터",
+    en: "AI Construction Technology Research Center, Hanyang University"
+  };
+  PROFILE.summary = {
+    ko: "건설 AI·데이터 인텔리전스 연구그룹",
+    en: "Construction AI & Data Intelligence Lab"
+  };
+
+  CONTENT.hero.kicker = { ko: "Academic Website", en: "Academic Website" };
+  CONTENT.hero.title = {
+    ko: "건설 AI·데이터 인텔리전스 연구그룹",
+    en: "Construction AI & Data Intelligence Lab"
+  };
+  CONTENT.hero.description = {
+    ko: "건축과 건설 데이터를 바탕으로 유지관리, 성능평가, 예측모형을 연결하는 연구를 소개합니다.",
+    en: "This site highlights research connecting maintenance, performance assessment, and predictive modeling for the built environment."
+  };
+  CONTENT.intro[0].body = {
+    ko: "2011.02 한양대학교 건축학과 졸업(학사학위, 건축학사), 2014.02 서울대학교 건축학과 건축시공 및 건설관리 전공(석사학위, 공학석사), 2018.08 서울대학교 건축학과 건축시공 및 건설관리 전공(박사학위, 공학박사)을 거쳐 한양대학교 인공지능건설기술 연구센터에서 연구를 이어가고 있습니다.",
+    en: "She received a Bachelor of Architecture from Hanyang University in February 2011, an M.Eng. in Architectural Construction and Construction Management from Seoul National University in February 2014, and a Ph.D. in the same field in August 2018, and now continues her work at the AI Construction Technology Research Center at Hanyang University."
+  };
+  CONTENT.intro[1].body = {
+    ko: "건축물 유지관리, 건설환경 리스크, 건물 성능평가, 도시·건축 데이터 분석을 실제 의사결정과 연결하는 연구를 수행하고 있습니다.",
+    en: "Current work connects building maintenance, construction risk, performance assessment, and urban or building data analytics with practical decision-making."
+  };
+  CONTENT.timeline[0].title = {
+    ko: "한양대학교 인공지능건설기술 연구센터",
+    en: "AI Construction Technology Research Center, Hanyang University"
+  };
+  CONTENT.timeline[0].body = {
+    ko: "건축물 유지관리, 건설관리, 에너지, 도시 분석을 연결하는 데이터 기반 연구를 수행하고 있습니다.",
+    en: "Conducting data-driven research connecting building maintenance, construction management, energy, and urban analytics."
+  };
+
   document.title = `${text(PROFILE.name)} | ${text(PAGE_META[page].label)}`;
 
   app.innerHTML = `
@@ -520,9 +562,8 @@
           <p class="sidebar-name">${text(PROFILE.name)}</p>
           <div class="sidebar-education">
             <p class="sidebar-education-title">${text(PROFILE.educationHeading)}</p>
-            ${PROFILE.education.map((item) => `<p class="sidebar-education-item">${text(item)}</p>`).join("")}
+            <p class="sidebar-education-summary">${PROFILE.educationSummary ? text(PROFILE.educationSummary) : PROFILE.education.map((item) => text(item)).join(" · ")}</p>
           </div>
-          <p class="sidebar-role">${text(PROFILE.title)}</p>
           <p class="sidebar-affiliation">${text(PROFILE.affiliation)}</p>
           <p class="sidebar-summary">${text(PROFILE.summary)}</p>
         </div>
@@ -587,9 +628,9 @@
         <h1 class="hero-title">${text(CONTENT.hero.title)}</h1>
         <p class="hero-description">${text(CONTENT.hero.description)}</p>
         <div class="meta-row">
-          <span class="meta-pill">${icon("building")} Hanyang University ERICA</span>
-          <span class="meta-pill">${icon("research")} Center for AI Technology in Construction</span>
-          <span class="meta-pill">${icon("spark")} Built Environment Data Research</span>
+          <span class="meta-pill">${icon("building")} ${text({ ko: "한양대학교", en: "Hanyang University" })}</span>
+          <span class="meta-pill">${icon("research")} ${text({ ko: "인공지능건설기술 연구센터", en: "AI Construction Technology Research Center" })}</span>
+          <span class="meta-pill">${icon("spark")} ${text({ ko: "건설 AI·데이터 인텔리전스 연구그룹", en: "Construction AI & Data Intelligence Lab" })}</span>
         </div>
         <div class="summary-grid hero-summary">
           ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
@@ -851,6 +892,7 @@
           <div class="publication-badges">
             <span class="badge ${badgeClass(kind)}">${kind === "OTHER" ? text({ ko: "기타", en: "Other" }) : kind}</span>
             <span class="badge badge-neutral">${item.year}</span>
+            ${item.metrics?.impactFactor ? `<span class="badge badge-neutral">IF ${item.metrics.impactFactor}</span>` : ""}
             ${typeof item.citations === "number" ? `<span class="badge badge-neutral">${item.citations} ${text({ ko: "인용", en: "citations" })}</span>` : ""}
           </div>
         </div>
@@ -874,7 +916,6 @@
     return `
       <div class="publication-metrics">
         ${item.metrics.indexType ? `<span class="metric-chip">${item.metrics.indexType}</span>` : ""}
-        ${item.metrics.impactFactor ? `<span class="metric-chip">IF ${item.metrics.impactFactor}</span>` : ""}
         ${item.metrics.percentile ? `<span class="metric-chip">${text({ ko: `Percentile ${item.metrics.percentile}`, en: `Percentile ${item.metrics.percentile}` })}</span>` : ""}
         ${item.metrics.topPercent ? `<span class="metric-chip">${text({ ko: `상위 ${item.metrics.topPercent}%`, en: `Top ${item.metrics.topPercent}%` })}</span>` : ""}
       </div>
