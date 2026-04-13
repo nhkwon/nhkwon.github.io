@@ -644,7 +644,7 @@
           <div class="mark-badge">NK</div>
           <div class="mark-copy">
             <p class="mark-title">Research Profile</p>
-            <p class="mark-subtitle">Academic Website</p>
+            <p class="mark-subtitle">Research Archive</p>
           </div>
         </div>
         <div class="sidebar-social">
@@ -696,7 +696,7 @@
           <div class="mark-badge hero-badge">NK</div>
           <div class="mark-copy">
             <p class="mark-title">${text(PROFILE.name)}</p>
-            <p class="mark-subtitle">Academic Website</p>
+            <p class="mark-subtitle">Research Archive</p>
           </div>
         </div>
         <p class="hero-kicker">${text(CONTENT.hero.kicker)}</p>
@@ -1457,12 +1457,12 @@
         <div class="schematic-ring schematic-ring-outer"></div>
         <div class="schematic-ring schematic-ring-inner"></div>
         <section class="schematic-node schematic-node-data">
-          <span class="schematic-label">Data Sources</span>
+          <span class="schematic-label">Data Layer</span>
           <strong>BIM / Text / Sensors</strong>
           <p>Field records and digital assets</p>
         </section>
         <section class="schematic-node schematic-node-twin">
-          <span class="schematic-label">Digital Twin</span>
+          <span class="schematic-label">Built Asset Model</span>
           <div class="schematic-building">
             <span></span>
             <span></span>
@@ -1474,12 +1474,12 @@
           <p>Monitoring and simulation</p>
         </section>
         <section class="schematic-node schematic-node-core">
-          <span class="schematic-label">AI Core</span>
+          <span class="schematic-label">Intelligence Core</span>
           <div class="schematic-core-badge">AI</div>
           <p>Inference<br>Prediction</p>
         </section>
         <section class="schematic-node schematic-node-analytics">
-          <span class="schematic-label">Analytics</span>
+          <span class="schematic-label">Model Layer</span>
           <div class="schematic-bars">
             <span></span>
             <span></span>
@@ -1489,7 +1489,7 @@
           <p>Risk and performance modeling</p>
         </section>
         <section class="schematic-node schematic-node-output">
-          <span class="schematic-label">Decision Support</span>
+          <span class="schematic-label">Decision Layer</span>
           <div class="schematic-trend">
             <span></span>
             <span></span>
@@ -1511,7 +1511,7 @@
               <div class="mark-badge hero-badge">NK</div>
               <div class="mark-copy">
                 <p class="mark-title">${text(PROFILE.name)}</p>
-                <p class="mark-subtitle">Academic Website</p>
+                <p class="mark-subtitle">Research Archive</p>
               </div>
             </div>
             <p class="hero-kicker">${text({ ko: "Toward", en: "Toward" })}</p>
