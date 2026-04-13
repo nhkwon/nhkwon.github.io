@@ -1688,6 +1688,14 @@ const DOI_BY_TITLE = {
   "Physics-Regularized Deep Learning Framework for Floor Impact Sound Prediction in Residential Buildings: A Civil Engineering Approach": "10.1016/j.rineng.2026.109400"
 };
 
+const PAPER_URL_BY_TITLE = {
+  "Compensation cost estimation model for construction noise claims using case-based reasoning": "https://ascelibrary.org/doi/full/10.1061/%28ASCE%29CO.1943-7862.0001675",
+  "Construction noise risk assessment model focusing on construction equipment": "https://ascelibrary.org/doi/10.1061/%28ASCE%29CO.1943-7862.0001480",
+  "Construction noise prediction model based on case-based reasoning in the preconstruction phase": "https://ascelibrary.org/doi/10.1061/%28ASCE%29CO.1943-7862.0001291",
+  "Developing a machine learning-based building repair time estimation model considering weight assigning methods": "https://www.sciencedirect.com/science/article/pii/S235271022100485X?dgcid=coauthor",
+  "Moderating effect of project type on the relationship between project delivery systems and cost performance": "https://ascelibrary.org/doi/full/10.1061/%28ASCE%29ME.1943-5479.0001097"
+};
+
 const JOURNAL_METRICS_BY_VENUE = {
   "Advances in Civil Engineering": {
     indexType: "SCIE",
@@ -1807,5 +1815,6 @@ SITE_DATA.scholarMetrics = {
 SITE_DATA.outputs.publications = SITE_DATA.outputs.publications.map((item) => ({
   ...item,
   doi: DOI_BY_TITLE[item.title] || item.doi,
+  paperUrl: PAPER_URL_BY_TITLE[item.title] || item.paperUrl,
   metrics: JOURNAL_METRICS_BY_VENUE[normalizeVenueKey(item.venue)] || item.metrics
 }));

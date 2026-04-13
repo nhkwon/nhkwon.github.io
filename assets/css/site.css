@@ -403,6 +403,48 @@ h3 {
   border: 1px solid var(--line);
 }
 
+.publication-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.publication-toolbar-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.sort-switch {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sort-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  color: var(--accent);
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.sort-chip:hover {
+  transform: translateY(-1px);
+  border-color: var(--line-strong);
+}
+
+.sort-chip.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
 .summary-value {
   margin-top: 10px;
   font-size: 1.95rem;
@@ -505,9 +547,19 @@ h3 {
   gap: 14px;
 }
 
+.citation-list {
+  grid-template-columns: 1fr;
+}
+
 .publication-title {
   font-size: 1.15rem;
   line-height: 1.5;
+}
+
+.publication-title a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .publication-metrics {
@@ -553,6 +605,152 @@ h3 {
 
 .note-banner {
   background: linear-gradient(180deg, #f9fbfe, #f3f7fc);
+}
+
+.publication-card-list {
+  display: grid;
+  gap: 22px;
+}
+
+.publication-card {
+  padding: 34px 36px;
+  border: 1px solid #dfe6f1;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(17, 41, 71, 0.04);
+}
+
+.publication-card-header,
+.publication-card-footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.publication-card-body {
+  display: grid;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.publication-card-heading {
+  display: grid;
+  gap: 12px;
+}
+
+.publication-year {
+  font-size: clamp(3rem, 5vw, 4.2rem);
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  color: #10284b;
+}
+
+.citation-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #245bff;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.publication-card-labels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.publication-kind-badge {
+  min-width: 84px;
+  justify-content: center;
+}
+
+.publication-card-title {
+  max-width: 1100px;
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  line-height: 1.28;
+  font-weight: 800;
+}
+
+.publication-card-title a {
+  color: #235cff;
+}
+
+.publication-card-title a:hover {
+  color: #1845c9;
+}
+
+.publication-card-authors {
+  font-size: 1.05rem;
+  color: #314865;
+}
+
+.publication-venue-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #8196b6;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.publication-venue-row .icon {
+  width: 18px;
+  height: 18px;
+  color: #9ab0cf;
+}
+
+.publication-card-metrics {
+  margin-top: 8px;
+}
+
+.publication-card .metric-chip {
+  padding: 7px 12px;
+  background: #f5f8fd;
+  color: #435b79;
+}
+
+.publication-card-footer {
+  margin-top: 34px;
+  padding-top: 4px;
+}
+
+.publication-detail-link,
+.publication-secondary-links {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.publication-detail-link {
+  color: #10284b;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.publication-detail-link:hover {
+  color: #235cff;
+}
+
+.detail-arrow {
+  color: #7f95b4;
+}
+
+.publication-secondary-links a {
+  color: #6b80a0;
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.publication-secondary-links a:hover {
+  color: #235cff;
 }
 
 .cta-panel {
@@ -615,6 +813,9 @@ h3 {
   }
 
   .section-heading,
+  .publication-toolbar,
+  .publication-card-header,
+  .publication-card-footer,
   .cta-panel {
     flex-direction: column;
     align-items: flex-start;
@@ -623,5 +824,14 @@ h3 {
   .hero-title,
   .page-title {
     font-size: 2rem;
+  }
+
+  .publication-card {
+    padding: 26px 22px;
+    border-radius: 24px;
+  }
+
+  .publication-card-title {
+    font-size: 1.65rem;
   }
 }

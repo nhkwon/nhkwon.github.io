@@ -7,6 +7,10 @@
 
   const page = document.body.dataset.page || "home";
   const lang = document.body.dataset.lang === "en" ? "en" : "ko";
+  const publicationSort =
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("sort") === "citations"
+      ? "citations"
+      : "year";
 
   const ROUTES = {
     home: { ko: "ko.html", en: "en.html" },
@@ -430,6 +434,11 @@
     return ROUTES[name][locale || lang];
   }
 
+  function publicationSortHref(sortKey) {
+    const base = route("publications");
+    return sortKey === "citations" ? `${base}?sort=citations` : base;
+  }
+
   function externalAttrs(url) {
     return url && !url.startsWith("mailto:") ? ' target="_blank" rel="noreferrer"' : "";
   }
@@ -465,6 +474,18 @@
     return String(a.title).localeCompare(String(b.title));
   }
 
+  function byCitationsThenYear(a, b) {
+    const aCitations = typeof a.citations === "number" ? a.citations : -1;
+    const bCitations = typeof b.citations === "number" ? b.citations : -1;
+    if (bCitations !== aCitations) return bCitations - aCitations;
+    if ((b.year || 0) !== (a.year || 0)) return (b.year || 0) - (a.year || 0);
+    return String(a.title).localeCompare(String(b.title));
+  }
+
+  function sortPublications(items) {
+    return items.slice().sort(publicationSort === "citations" ? byCitationsThenYear : byYearThenCitations);
+  }
+
   function getJournalPublications() {
     return (SITE_DATA.outputs?.publications || [])
       .map((item, index) => ({
@@ -494,6 +515,7 @@
 
     return {
       total: journals.length,
+      international: counts.SCI + counts.OTHER,
       SCI: counts.SCI,
       KCI: counts.KCI,
       OTHER: counts.OTHER,
@@ -655,13 +677,10 @@
           pageKey === "publications"
             ? `
               <div class="meta-row">
-                <span class="meta-pill">${icon("papers")}SCI ${publicationSummary.SCI}</span>
+                <span class="meta-pill">${icon("papers")}${text({ ko: `국제저널 ${publicationSummary.international}편`, en: `Intl. journals ${publicationSummary.international}` })}</span>
+                <span class="meta-pill">${icon("research")}SCI(E) ${publicationSummary.SCI}</span>
+                ${publicationSummary.OTHER ? `<span class="meta-pill">${icon("link")}Scopus ${publicationSummary.OTHER}</span>` : ""}
                 <span class="meta-pill">${icon("book")}KCI ${publicationSummary.KCI}</span>
-                ${
-                  publicationSummary.OTHER
-                    ? `<span class="meta-pill">${icon("link")}${text({ ko: `기타 ${publicationSummary.OTHER}편`, en: `Other ${publicationSummary.OTHER}` })}</span>`
-                    : ""
-                }
               </div>
             `
             : ""
@@ -731,6 +750,35 @@
     const sciPublications = getPublicationsByClass("SCI");
     const kciPublications = getPublicationsByClass("KCI");
     const otherPublications = getPublicationsByClass("OTHER");
+    const summaryNote = text({
+      ko: `국제 저널 ${publicationSummary.international}편을 기준으로 정리했으며, 이 가운데 SCI(E) ${publicationSummary.SCI}편과 Scopus ${publicationSummary.OTHER}편(Results in Engineering)을 분리해 표시했습니다. KCI 논문 ${publicationSummary.KCI}편은 별도 구간으로 유지했고, 학술대회논문·proceeding·학위논문은 제외했습니다.`,
+      en: `This page organizes ${publicationSummary.international} international journal papers, separated into SCI(E) ${publicationSummary.SCI} and Scopus ${publicationSummary.OTHER}. The ${publicationSummary.KCI} KCI papers are shown in a separate section, while conference papers, proceedings, and thesis work are excluded.`
+    });
+
+    return `
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "吏묎퀎 媛쒖슂", en: "Publication Summary" }, { ko: "Summary", en: "Summary" })}
+        <div class="summary-grid page-summary">
+          ${getSummaryCards()
+            .concat([
+              {
+                label: { ko: "寃뚯옱 ?곕룄", en: "Year Span" },
+                value: publicationSummary.span,
+                detail: { ko: "????쇰Ц 湲곗?", en: "Journal papers only" }
+              }
+            ])
+            .map((item) => renderSummaryCard(item))
+            .join("")}
+        </div>
+        <div class="note-banner">${summaryNote}</div>
+      </section>
+      <section class="content-section">
+        ${renderPublicationSortControls()}
+      </section>
+      ${renderPublicationSection({ ko: "SCI(E) 논문실적", en: "SCI(E) Publications" }, { ko: `${sciPublications.length}편`, en: `${sciPublications.length} papers` }, sciPublications, "SCI")}
+      ${otherPublications.length ? renderPublicationSection({ ko: "Scopus 논문실적", en: "Scopus Publications" }, { ko: `${otherPublications.length}편`, en: `${otherPublications.length} paper` }, otherPublications, "OTHER") : ""}
+      ${renderPublicationSection({ ko: "KCI 논문실적", en: "KCI Publications" }, { ko: `${kciPublications.length}편`, en: `${kciPublications.length} papers` }, kciPublications, "KCI")}
+    `;
 
     return `
       <section class="content-section">
@@ -834,6 +882,25 @@
     `;
   }
 
+  function renderPublicationSortControls() {
+    return `
+      <div class="panel publication-toolbar">
+        <div class="publication-toolbar-copy">
+          <p class="page-kicker">${text({ ko: "정렬", en: "Sort" })}</p>
+          <h2 class="section-title">${text({ ko: "논문 보기 방식 선택", en: "Choose how to view publications" })}</h2>
+          <p class="page-description">${text({
+            ko: "연도별 보기에서는 연도 구간별로 정리되고, 인용순 보기에서는 인용 수가 높은 논문부터 한 번에 확인할 수 있습니다.",
+            en: "Year view groups papers by publication year, while citation view shows the most-cited papers first."
+          })}</p>
+        </div>
+        <div class="sort-switch" role="tablist" aria-label="${text({ ko: "논문 정렬", en: "Publication sorting" })}">
+          <a class="sort-chip ${publicationSort === "year" ? "is-active" : ""}" href="${publicationSortHref("year")}">${text({ ko: "연도별", en: "By year" })}</a>
+          <a class="sort-chip ${publicationSort === "citations" ? "is-active" : ""}" href="${publicationSortHref("citations")}">${text({ ko: "인용순", en: "By citations" })}</a>
+        </div>
+      </div>
+    `;
+  }
+
   function renderPublicationHomeSummary() {
     return `
       <div class="publication-home-grid">
@@ -846,11 +913,11 @@
               (item) => `
                 <article class="publication-preview">
                   <div class="publication-badges">
-                    <span class="badge ${badgeClass(item.journalClass)}">${item.journalClass}</span>
+                    <span class="badge ${badgeClass(item.journalClass)}">${publicationKindLabel(item.journalClass)}</span>
                     ${typeof item.citations === "number" ? `<span class="badge badge-neutral">${item.citations} ${text({ ko: "인용", en: "citations" })}</span>` : ""}
                     ${item.metrics?.impactFactor ? `<span class="badge badge-neutral">IF ${item.metrics.impactFactor}</span>` : ""}
                   </div>
-                  <h3 class="publication-title"><a href="${route("publications")}#${item.id}">${item.title}</a></h3>
+                  <h3 class="publication-title"><a href="${getPublicationPrimaryLink(item)}" target="_blank" rel="noreferrer">${item.title}</a></h3>
                   <p class="publication-authors">${item.authors}</p>
                   <p class="publication-venue">${item.venue}</p>
                 </article>
@@ -863,6 +930,35 @@
   }
 
   function renderPublicationSection(title, subtitle, items, kind) {
+    const sortedItems = sortPublications(items);
+
+    return `
+      <section class="content-section">
+        ${renderSectionHeading(title, subtitle)}
+        ${
+          publicationSort === "citations"
+            ? `<div class="publication-list citation-list">${sortedItems
+                .map((item) => renderPublicationItem(item, kind))
+                .join("")}</div>`
+            : `<div class="year-stack">
+                ${groupByYear(sortedItems)
+                  .map(
+                    (group) => `
+                      <article class="year-block">
+                        <div class="year-head">
+                          <h3 class="year-title">${group.year}</h3>
+                          <span class="tiny-badge">${text({ ko: `${group.items.length}편`, en: `${group.items.length} papers` })}</span>
+                        </div>
+                        <div class="publication-list">${group.items.map((item) => renderPublicationItem(item, kind)).join("")}</div>
+                      </article>
+                    `
+                  )
+                  .join("")}
+              </div>`
+        }
+      </section>
+    `;
+
     return `
       <section class="content-section">
         ${renderSectionHeading(title, subtitle)}
@@ -886,6 +982,27 @@
   }
 
   function renderPublicationItem(item, kind) {
+    return `
+      <article class="publication-item" id="${item.id}">
+        <div class="publication-top">
+          <div class="publication-badges">
+            <span class="badge ${badgeClass(kind)}">${publicationKindLabel(kind)}</span>
+            <span class="badge badge-neutral">${item.year}</span>
+            ${item.metrics?.impactFactor ? `<span class="badge badge-neutral">IF ${item.metrics.impactFactor}</span>` : ""}
+            ${typeof item.citations === "number" ? `<span class="badge badge-neutral">${item.citations} ${text({ ko: "인용", en: "citations" })}</span>` : ""}
+          </div>
+        </div>
+        <h3 class="publication-title">${item.title}</h3>
+        <p class="publication-authors">${item.authors}</p>
+        <p class="publication-venue">${item.venue}</p>
+        ${renderPublicationMetrics(item)}
+        <div class="link-row">
+          <a href="${scholarSearchUrl(item.title)}" target="_blank" rel="noreferrer">Google Scholar</a>
+          ${item.doi ? `<a href="https://doi.org/${item.doi}" target="_blank" rel="noreferrer">DOI</a>` : ""}
+        </div>
+      </article>
+    `;
+
     return `
       <article class="publication-item" id="${item.id}">
         <div class="publication-top">
@@ -922,6 +1039,47 @@
     `;
   }
 
+  function getPublicationPrimaryLink(item) {
+    if (item.paperUrl) return item.paperUrl;
+    if (item.doi) return `https://doi.org/${item.doi}`;
+    return scholarSearchUrl(item.title);
+  }
+
+  function getPublicationPrimaryLabel(item) {
+    if (item.paperUrl || item.doi) {
+      return text({ ko: "원문 보기", en: "Open paper" });
+    }
+    return "Google Scholar";
+  }
+
+  function renderPublicationItem(item, kind) {
+    const primaryLink = getPublicationPrimaryLink(item);
+    const doiLink = item.doi ? `https://doi.org/${item.doi}` : "";
+    const scholarLink = scholarSearchUrl(item.title);
+
+    return `
+      <article class="publication-item" id="${item.id}">
+        <div class="publication-top">
+          <div class="publication-badges">
+            <span class="badge ${badgeClass(kind)}">${publicationKindLabel(kind)}</span>
+            <span class="badge badge-neutral">${item.year}</span>
+            ${item.metrics?.impactFactor ? `<span class="badge badge-neutral">IF ${item.metrics.impactFactor}</span>` : ""}
+            ${typeof item.citations === "number" ? `<span class="badge badge-neutral">${item.citations} ${text({ ko: "인용", en: "citations" })}</span>` : ""}
+          </div>
+        </div>
+        <h3 class="publication-title"><a href="${primaryLink}" target="_blank" rel="noreferrer">${item.title}</a></h3>
+        <p class="publication-authors">${item.authors}</p>
+        <p class="publication-venue">${item.venue}</p>
+        ${renderPublicationMetrics(item)}
+        <div class="link-row">
+          <a href="${primaryLink}" target="_blank" rel="noreferrer">${getPublicationPrimaryLabel(item)}</a>
+          ${doiLink && doiLink !== primaryLink ? `<a href="${doiLink}" target="_blank" rel="noreferrer">DOI</a>` : ""}
+          ${scholarLink !== primaryLink ? `<a href="${scholarLink}" target="_blank" rel="noreferrer">Google Scholar</a>` : ""}
+        </div>
+      </article>
+    `;
+  }
+
   function renderContactCta() {
     return `
       <section class="panel cta-panel">
@@ -935,6 +1093,100 @@
           <a class="button button-secondary" href="${route("contact")}">${icon("link")}<span>${text({ ko: "연락처 페이지", en: "Open contact page" })}</span></a>
         </div>
       </section>
+    `;
+  }
+
+  function renderPublicationSortControls() {
+    return `
+      <div class="panel publication-toolbar">
+        <div class="publication-toolbar-copy">
+          <p class="page-kicker">${text({ ko: "정렬", en: "Sort" })}</p>
+          <h2 class="section-title">${text({ ko: "논문 보기 방식 선택", en: "Choose how to view publications" })}</h2>
+          <p class="page-description">${text({
+            ko: "연도별 보기는 최신 연도부터 정렬해 보여주고, 인용순 보기는 인용 수가 높은 논문부터 확인할 수 있습니다.",
+            en: "Year view orders papers from newest to oldest, while citation view ranks them by citation count."
+          })}</p>
+        </div>
+        <div class="sort-switch" role="tablist" aria-label="${text({ ko: "논문 정렬", en: "Publication sorting" })}">
+          <a class="sort-chip ${publicationSort === "year" ? "is-active" : ""}" href="${publicationSortHref("year")}">${text({ ko: "연도별", en: "By year" })}</a>
+          <a class="sort-chip ${publicationSort === "citations" ? "is-active" : ""}" href="${publicationSortHref("citations")}">${text({ ko: "인용순", en: "By citations" })}</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPublicationSection(title, subtitle, items, kind) {
+    const sortedItems = sortPublications(items);
+
+    return `
+      <section class="content-section">
+        ${renderSectionHeading(title, subtitle)}
+        <div class="publication-card-list">
+          ${sortedItems.map((item) => renderPublicationItem(item, kind)).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderPublicationMetrics(item) {
+    if (!item.metrics) {
+      return "";
+    }
+
+    return `
+      <div class="publication-metrics publication-card-metrics">
+        <span class="metric-chip">${publicationKindLabel(item.journalClass || "SCI")}</span>
+        ${item.metrics.indexType ? `<span class="metric-chip">${item.metrics.indexType}</span>` : ""}
+        ${item.metrics.impactFactor ? `<span class="metric-chip">IF ${item.metrics.impactFactor}</span>` : ""}
+        ${item.metrics.percentile ? `<span class="metric-chip">Percentile ${item.metrics.percentile}</span>` : ""}
+        ${item.metrics.topPercent ? `<span class="metric-chip">${text({ ko: `상위 ${item.metrics.topPercent}%`, en: `Top ${item.metrics.topPercent}%` })}</span>` : ""}
+      </div>
+    `;
+  }
+
+  function getPublicationPrimaryLink(item) {
+    if (item.paperUrl) return item.paperUrl;
+    if (item.doi) return `https://doi.org/${item.doi}`;
+    return scholarSearchUrl(item.title);
+  }
+
+  function getPublicationPrimaryLabel() {
+    return "Details";
+  }
+
+  function renderPublicationItem(item, kind) {
+    const primaryLink = getPublicationPrimaryLink(item);
+    const doiLink = item.doi ? `https://doi.org/${item.doi}` : "";
+    const scholarLink = scholarSearchUrl(item.title);
+    const secondaryLinks = [
+      doiLink && doiLink !== primaryLink ? `<a href="${doiLink}" target="_blank" rel="noreferrer">DOI</a>` : "",
+      scholarLink !== primaryLink ? `<a href="${scholarLink}" target="_blank" rel="noreferrer">Google Scholar</a>` : ""
+    ]
+      .filter(Boolean)
+      .join("");
+
+    return `
+      <article class="publication-item publication-card" id="${item.id}">
+        <div class="publication-card-header">
+          <div class="publication-card-heading">
+            <p class="publication-year">${item.year || ""}</p>
+            ${typeof item.citations === "number" ? `<span class="citation-pill">${item.citations} Citations</span>` : ""}
+          </div>
+          <div class="publication-card-labels">
+            <span class="badge ${badgeClass(kind)} publication-kind-badge">${publicationKindLabel(kind)}</span>
+          </div>
+        </div>
+        <div class="publication-card-body">
+          <h3 class="publication-title publication-card-title"><a href="${primaryLink}" target="_blank" rel="noreferrer">${item.title}</a></h3>
+          <p class="publication-authors publication-card-authors">${item.authors}</p>
+          <p class="publication-venue publication-venue-row">${icon("book")}<span>${item.venue}</span></p>
+          ${renderPublicationMetrics(item)}
+        </div>
+        <div class="publication-card-footer">
+          <a class="publication-detail-link" href="${primaryLink}" target="_blank" rel="noreferrer"><span>${getPublicationPrimaryLabel()}</span><span class="detail-arrow">&gt;</span></a>
+          ${secondaryLinks ? `<div class="publication-secondary-links">${secondaryLinks}</div>` : ""}
+        </div>
+      </article>
     `;
   }
 
@@ -971,12 +1223,54 @@
     ];
   }
 
+  function getSummaryCards() {
+    return [
+      {
+        label: { ko: "국제 저널", en: "Intl. Journals" },
+        value: String(publicationSummary.international),
+        detail: { ko: `SCI(E) ${publicationSummary.SCI} + Scopus ${publicationSummary.OTHER}`, en: `SCI(E) ${publicationSummary.SCI} + Scopus ${publicationSummary.OTHER}` }
+      },
+      {
+        label: { ko: "KCI 논문", en: "KCI Papers" },
+        value: String(publicationSummary.KCI),
+        detail: { ko: "국내 등재 학술지", en: "Domestic indexed journals" }
+      },
+      {
+        label: { ko: "총 저널 논문", en: "Total Journals" },
+        value: String(publicationSummary.total),
+        detail: { ko: `국제 ${publicationSummary.international} + KCI ${publicationSummary.KCI}`, en: `International ${publicationSummary.international} + KCI ${publicationSummary.KCI}` }
+      },
+      {
+        label: { ko: "총 인용", en: "Total Citations" },
+        value: String(scholarMetrics.citationsAll || publicationSummary.totalCitations),
+        detail: {
+          ko: scholarMetrics.citationsSince2021 ? `2021년 이후 ${scholarMetrics.citationsSince2021}` : "Google Scholar 기준",
+          en: scholarMetrics.citationsSince2021 ? `Since 2021: ${scholarMetrics.citationsSince2021}` : "Based on Google Scholar"
+        }
+      },
+      {
+        label: { ko: "h-index", en: "h-index" },
+        value: String(scholarMetrics.hIndexAll || ""),
+        detail: {
+          ko: scholarMetrics.hIndexSince2021 ? `2021년 이후 ${scholarMetrics.hIndexSince2021}` : "Google Scholar 기준",
+          en: scholarMetrics.hIndexSince2021 ? `Since 2021: ${scholarMetrics.hIndexSince2021}` : "Based on Google Scholar"
+        }
+      }
+    ];
+  }
+
   function renderSummaryCard(item) {
     return `<article class="summary-card"><p class="summary-label">${text(item.label)}</p><p class="summary-value">${item.value}</p><p class="summary-detail">${text(item.detail)}</p></article>`;
   }
 
   function collectKeywords() {
     return Array.from(new Set(CONTENT.research.flatMap((item) => item.tags)));
+  }
+
+  function publicationKindLabel(kind) {
+    if (kind === "SCI") return "SCI(E)";
+    if (kind === "OTHER") return "Scopus";
+    return kind;
   }
 
   function badgeClass(kind) {
