@@ -1447,6 +1447,61 @@
     return `<article class="info-card${item.cardClass ? ` ${item.cardClass}` : ""}"><h3 class="card-title">${text(item.title)}</h3><div class="card-body">${body}</div></article>`;
   }
 
+  function renderHeroSchematic() {
+    return `
+      <div class="hero-visual hero-schematic" aria-hidden="true">
+        <span class="schematic-link schematic-link-a"></span>
+        <span class="schematic-link schematic-link-b"></span>
+        <span class="schematic-link schematic-link-c"></span>
+        <span class="schematic-link schematic-link-d"></span>
+        <div class="schematic-ring schematic-ring-outer"></div>
+        <div class="schematic-ring schematic-ring-inner"></div>
+        <section class="schematic-node schematic-node-data">
+          <span class="schematic-label">Data Sources</span>
+          <strong>BIM / Text / Sensors</strong>
+          <p>Field records and digital assets</p>
+        </section>
+        <section class="schematic-node schematic-node-twin">
+          <span class="schematic-label">Digital Twin</span>
+          <div class="schematic-building">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <p>Monitoring and simulation</p>
+        </section>
+        <section class="schematic-node schematic-node-core">
+          <span class="schematic-label">AI Core</span>
+          <div class="schematic-core-badge">AI</div>
+          <p>Inference<br>Prediction</p>
+        </section>
+        <section class="schematic-node schematic-node-analytics">
+          <span class="schematic-label">Analytics</span>
+          <div class="schematic-bars">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <p>Risk and performance modeling</p>
+        </section>
+        <section class="schematic-node schematic-node-output">
+          <span class="schematic-label">Decision Support</span>
+          <div class="schematic-trend">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <p>Planning, safety, energy, maintenance</p>
+        </section>
+      </div>
+    `;
+  }
+
   function renderHeroPanel() {
     return `
       <section class="panel hero-panel">
@@ -1475,9 +1530,7 @@
               <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
             </div>
           </div>
-          <div class="hero-visual">
-            <img class="hero-illustration" src="assets/images/construction-ai-orbit.svg" alt="Abstract construction AI illustration">
-          </div>
+          ${renderHeroSchematic()}
         </div>
         <div class="summary-grid hero-summary">
           ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
