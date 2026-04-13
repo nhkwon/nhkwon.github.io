@@ -1403,7 +1403,7 @@ SITE_DATA.profile.links = [
     url: "https://scholar.google.com/citations?hl=en&view_op=search_authors&mauthors=Nahyun+Kwon+Hanyang+University+ERICA"
   },
   {
-    label: "Lab Profile",
+    label: "Center Profile",
     url: "https://sbcml.hanyang.ac.kr/index.php?gubun=RP&hCode=STAFF_LIST"
   },
   {
@@ -1642,11 +1642,11 @@ SITE_DATA.contact.cards = [
   {
     title: {
       ko: "연구실 프로필",
-      en: "Lab profile"
+      en: "Center profile"
     },
     body: {
       ko: "한양대학교 ERICA 연구실 공개 페이지를 통해 현재 연구 맥락을 이어서 볼 수 있습니다.",
-      en: "The public Hanyang ERICA lab page gives additional context around the current research environment."
+      en: "The public Hanyang ERICA center page gives additional context around the current research environment."
     },
     action: {
       label: {

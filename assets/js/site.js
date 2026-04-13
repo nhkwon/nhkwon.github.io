@@ -387,6 +387,11 @@
     en: "Research toward Construction AI & Data Intelligence"
   };
 
+  PROFILE.summary = {
+    ko: "Construction AI & Data Intelligence Research Group",
+    en: "Construction AI & Data Intelligence Research Group"
+  };
+
   CONTENT.hero.kicker = { ko: "Toward", en: "Toward" };
   CONTENT.hero.title = {
     ko: "Construction AI & Data Intelligence",
@@ -680,7 +685,7 @@
         <div class="meta-row">
           <span class="meta-pill">${icon("building")} ${text({ ko: "한양대학교", en: "Hanyang University" })}</span>
           <span class="meta-pill">${icon("research")} ${text({ ko: "인공지능건설기술 연구센터", en: "AI Construction Technology Research Center" })}</span>
-          <span class="meta-pill">${icon("spark")} ${text({ ko: "건설 AI·데이터 인텔리전스 연구그룹", en: "Construction AI & Data Intelligence Lab" })}</span>
+          <span class="meta-pill">${icon("spark")} ${text({ ko: "Construction AI & Data Intelligence Research Group", en: "Construction AI & Data Intelligence Research Group" })}</span>
         </div>
         <div class="summary-grid hero-summary">
           ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
@@ -863,11 +868,17 @@
   }
 
   function renderSectionHeading(title, subtitle, href, actionLabel) {
+    const subtitleText =
+      page === "publications" &&
+      ((typeof subtitle === "object" && (subtitle.ko === "Summary" || subtitle.en === "Summary")) || subtitle === "Summary")
+        ? { ko: `Summary · ${publicationSummary.span}`, en: `Summary · ${publicationSummary.span}` }
+        : subtitle;
+
     return `
       <div class="section-heading">
         <div class="section-heading-copy">
           <h2 class="section-title">${text(title)}</h2>
-          <p class="section-subtitle">${text(subtitle)}</p>
+          <p class="section-subtitle">${text(subtitleText)}</p>
         </div>
         ${href && actionLabel ? `<a class="section-action" href="${href}">${text(actionLabel)}</a>` : ""}
       </div>
@@ -1288,6 +1299,13 @@
   }
 
   function renderSummaryCard(item) {
+    const labelKo = typeof item.label === "object" ? String(item.label.ko || "") : "";
+    const labelEn = typeof item.label === "object" ? String(item.label.en || "") : String(item.label || "");
+
+    if (labelKo.includes("게재 연도") || labelEn === "Year Span") {
+      return "";
+    }
+
     return `<article class="summary-card"><p class="summary-label">${text(item.label)}</p><p class="summary-value">${item.value}</p><p class="summary-detail">${text(item.detail)}</p></article>`;
   }
 
@@ -1334,27 +1352,16 @@
   function renderPublicationsPage() {
     const sciPublications = getPublicationsByClass("SCI");
     const kciPublications = getPublicationsByClass("KCI");
-    const summaryNote = text({
-      ko: `국제 저널 ${publicationSummary.international}편 기준. Results in Engineering(2026) 논문을 SCI 구간에 포함해 SCI(E) ${publicationSummary.SCI}편으로 표시. KCI ${publicationSummary.KCI}편은 별도 구간, 학술대회논문·proceeding·학위논문은 제외.`,
-      en: `Organized around ${publicationSummary.international} international journal papers. The 2026 Results in Engineering paper is included in the SCI(E) section, bringing that section to ${publicationSummary.SCI} papers. KCI ${publicationSummary.KCI} remains separate, while conference papers, proceedings, and thesis work are excluded.`
-    });
 
     return `
       <section class="content-section">
-        ${renderSectionHeading({ ko: "논문 개요", en: "Publication Summary" }, { ko: "Summary", en: "Summary" })}
+        ${renderSectionHeading(
+          { ko: "논문 개요", en: "Publication Summary" },
+          { ko: `Summary · ${publicationSummary.span}`, en: `Summary · ${publicationSummary.span}` }
+        )}
         <div class="summary-grid page-summary">
-          ${getSummaryCards()
-            .concat([
-              {
-                label: { ko: "게재 연도", en: "Year Span" },
-                value: publicationSummary.span,
-                detail: { ko: "저널 논문 기준", en: "Journal papers only" }
-              }
-            ])
-            .map((item) => renderSummaryCard(item))
-            .join("")}
+          ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
         </div>
-        <div class="note-banner">${summaryNote}</div>
       </section>
       <section class="content-section">
         ${renderPublicationSortControls()}
