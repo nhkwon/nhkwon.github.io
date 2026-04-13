@@ -28,7 +28,7 @@
       label: { ko: "Home", en: "Home" },
       subtitle: { ko: "Overview", en: "Overview" },
       description: {
-        ko: "권나현 연구교수의 연구 개요와 주요 논문실적을 정리한 메인 페이지입니다.",
+        ko: "권나현 연구 개요와 주요 논문실적 요약",
         en: "A compact landing page for Nahyun Kwon's research profile."
       }
     },
@@ -37,7 +37,7 @@
       label: { ko: "소개", en: "Biography" },
       subtitle: { ko: "Biography", en: "Biography" },
       description: {
-        ko: "학력, 경력, 연구 배경을 중심으로 연구자 이력을 정리했습니다.",
+        ko: "학력, 경력, 연구 배경 중심의 이력 정리",
         en: "Education, career history, and the broader research background."
       }
     },
@@ -46,7 +46,7 @@
       label: { ko: "연구", en: "Research" },
       subtitle: { ko: "Research", en: "Research" },
       description: {
-        ko: "주요 연구 축과 방법론, 적용 분야를 중심으로 현재 연구 방향을 정리했습니다.",
+        ko: "주요 연구 축, 방법론, 적용 분야 중심의 현재 연구 방향",
         en: "Current research directions, methods, and application domains."
       }
     },
@@ -64,7 +64,7 @@
       label: { ko: "활동", en: "Activities" },
       subtitle: { ko: "Activities", en: "Activities" },
       description: {
-        ko: "최근 연구 활동과 사이트 업데이트를 모았습니다.",
+        ko: "최근 연구 활동과 사이트 업데이트",
         en: "Recent research activities and site updates."
       }
     },
@@ -73,7 +73,7 @@
       label: { ko: "연락처", en: "Contact" },
       subtitle: { ko: "Contact", en: "Contact" },
       description: {
-        ko: "공동연구, 논문 문의, 연구 관련 연락에 활용할 수 있는 연결 창구입니다.",
+        ko: "공동연구, 논문 문의, 연구 관련 연락 채널",
         en: "Official contact channels for collaboration and research inquiries."
       }
     }
@@ -1571,7 +1571,7 @@
         en: "Development of a building defect and maintenance platform using KoBERT-based NLP and Transformer algorithms"
       },
       summary: {
-        ko: "건축물 하자 정보와 유지관리 이력, 비정형 텍스트를 구조화하여 진단, 우선순위 결정, 유지관리 의사결정을 지원하는 AI 플랫폼을 구축하는 연구입니다.",
+        ko: "건축물 하자 정보와 유지관리 이력, 비정형 텍스트를 구조화해 진단, 우선순위 결정, 유지관리 의사결정을 지원함",
         en: "This project develops an AI platform that structures defect records, maintenance histories, and unstructured text for diagnosis, prioritization, and maintenance decision support."
       }
     },
@@ -1584,7 +1584,7 @@
         en: "Development of a deep learning-based productivity estimation system for construction workers using behavior pattern recognition"
       },
       summary: {
-        ko: "행동 인식과 딥러닝을 결합하여 건설 작업자의 작업 상태와 생산성을 정량적으로 추정하고, 현장 인력관리 고도화에 연결하는 연구입니다.",
+        ko: "행동 인식과 딥러닝을 결합해 건설 작업자의 작업 상태와 생산성을 정량 추정하고 현장 인력관리 고도화에 연결함",
         en: "This project combines behavior recognition and deep learning to estimate worker productivity and support smarter workforce management on site."
       }
     },
@@ -1597,7 +1597,7 @@
         en: "Development of deep learning-based integrated fatigue-risk workforce monitoring technology for accident prevention in construction"
       },
       summary: {
-        ko: "웨어러블 기반 생체·행동 데이터를 활용해 근로자의 피로도와 위험도를 통합 평가하고, 사고 예방을 위한 실시간 모니터링 체계를 구축하는 연구입니다.",
+        ko: "웨어러블 기반 생체·행동 데이터를 활용해 근로자의 피로도와 위험도를 통합 평가하고 사고 예방용 실시간 모니터링 체계를 구축함",
         en: "This project builds a real-time monitoring framework that integrates fatigue and risk assessment using wearable biometric and behavioral data."
       }
     }
@@ -1612,13 +1612,13 @@
       subtitle: { ko: "BIM-based maintenance platform", en: "BIM-based maintenance platform" },
       tags: ["BIM", "CBR", "GA", "Maintenance"],
       summary: {
-        ko: "BIM 객체와 유지관리 데이터를 연계하여 비용, 시기, 공종을 예측하고 의사결정을 지원하는 연구를 수행합니다.",
+        ko: "BIM 객체와 유지관리 데이터를 연계해 비용, 시기, 공종을 예측하고 의사결정을 지원함",
         en: "This area focuses on linking BIM objects and maintenance data to predict cost, timing, and work packages for decision support."
       },
       bodyHtml: {
         ko: `<div class="research-copy">
-          <p>건축물의 생애주기 동안 발생 가능한 관리비용, 시기, 관련 공종을 예측하기 위해 인공신경망(GA), 사례기반추론(CBR), budget allocation 기법을 접목한 유지관리 연구를 수행하였습니다.</p>
-          <p>향후에는 BIM 모델로부터 추출된 객체 속성값과 드론, 레이저 스캐닝 기술을 유지관리 시스템과 연계하여 구성요소의 노후화를 사전에 파악하고, 자산을 효율적으로 관리·배분하기 위한 BIM 기반 객체 연동형 유지관리 의사결정 플랫폼으로 확장하고자 합니다.</p>
+          <p>건축물 생애주기 전반의 관리비용, 시기, 관련 공종 예측을 위해 인공신경망, 사례기반추론, budget allocation 기법을 결합한 유지관리 연구 수행</p>
+          <p>BIM 모델 객체 속성값과 드론, 레이저 스캐닝 기술을 연계해 노후화를 조기 파악하고 자산 관리·배분을 지원하는 BIM 기반 객체 연동형 유지관리 의사결정 플랫폼으로 확장 예정</p>
         </div>`,
         en: `<div class="research-copy">
           <p>This research stream predicts maintenance cost, timing, and related trades across the building life cycle by combining genetic algorithms, case-based reasoning, and budget allocation methods.</p>
@@ -1632,14 +1632,14 @@
       subtitle: { ko: "Safety and productivity intelligence", en: "Safety and productivity intelligence" },
       tags: ["Wearables", "Deep Learning", "Safety", "Productivity"],
       summary: {
-        ko: "웨어러블 데이터와 딥러닝을 활용해 근로자의 피로도, 위험도, 행동 패턴, 생산성을 통합적으로 분석합니다.",
+        ko: "웨어러블 데이터와 딥러닝을 활용해 근로자의 피로도, 위험도, 행동 패턴, 생산성을 통합 분석함",
         en: "This area integrates wearable data and deep learning to assess fatigue, risk, behavior patterns, and worker productivity."
       },
       bodyHtml: {
         ko: `<div class="research-copy">
-          <p>건설근로자 사고 예방을 위한 피로도-위험도 모니터링 연구에서는 웨어러블 디바이스로부터 수신된 데이터와 딥러닝, 생태순간평가 기법을 접목하여 근로자의 위험도와 피로도를 평가하였습니다.</p>
-          <p>또한 웨어러블 데이터 기반 행동 패턴 인식과 딥러닝 알고리즘을 활용하여 작업자의 생산성을 추정하는 통합 시스템을 연구책임자로 수행하였습니다. 이러한 연구는 안전관리뿐 아니라 환경관리, 공정관리, 인력관리까지 연결되는 실증형 프로젝트 관리 연구입니다.</p>
-          <p>앞으로도 건설현장과 IT 기술을 접목한 안전·작업효율 중심의 연구를 지속적으로 확장할 계획입니다.</p>
+          <p>웨어러블 디바이스 데이터, 딥러닝, 생태순간평가 기법을 접목해 근로자의 위험도와 피로도를 평가함</p>
+          <p>행동 패턴 인식과 딥러닝 알고리즘을 활용해 작업자 생산성을 추정하는 통합 시스템을 연구책임자로 수행함. 안전관리뿐 아니라 환경관리, 공정관리, 인력관리까지 연결되는 실증형 프로젝트 관리 연구임</p>
+          <p>건설현장과 IT 기술을 접목한 안전·작업효율 중심 연구로 지속 확장 예정</p>
         </div>`,
         en: `<div class="research-copy">
           <p>This work evaluates worker fatigue and risk by integrating wearable-device data, deep learning, and ecological momentary assessment techniques.</p>
@@ -1654,13 +1654,13 @@
       subtitle: { ko: "Smart safety platform with BIM and sensing", en: "Smart safety platform with BIM and sensing" },
       tags: ["4D-BIM", "AI CCTV", "AR/VR", "Smart Safety"],
       summary: {
-        ko: "4D-BIM, 웨어러블 센싱, AI CCTV, AR/VR을 통합하여 건설현장 안전관리를 자동화하는 플랫폼을 구상합니다.",
+        ko: "4D-BIM, 웨어러블 센싱, AI CCTV, AR/VR을 통합한 건설현장 안전관리 자동화 플랫폼 구상",
         en: "This area proposes an integrated smart-safety platform using 4D-BIM, wearable sensing, AI CCTV, and AR/VR."
       },
       bodyHtml: {
         ko: `<div class="research-copy">
-          <p>건설 안전의 중요성이 커짐에 따라 계획 단계부터 현장 안전관리를 지원할 수 있는 효과적인 대책이 필요합니다. 이를 위해 4D-BIM 모델과 웨어러블 디바이스 센싱 기술, AI CCTV 기술을 활용하여 공사 중 발생 가능한 위험요인을 사전에 예측하고자 합니다.</p>
-          <p>근로자의 심박수, 가속도, 각속도, 체온, 근육 피로도 등 생체신호를 AR/VR 및 BIM 모델과 통합함으로써, 현장 안전관리를 자동화하는 스마트 플랫폼으로 발전시키는 것이 목표입니다.</p>
+          <p>건설 안전 중요성 증대에 따라 계획 단계부터 현장 안전관리를 지원할 대책이 필요함. 4D-BIM 모델, 웨어러블 센싱, AI CCTV를 활용해 공사 중 위험요인을 사전 예측함</p>
+          <p>심박수, 가속도, 각속도, 체온, 근육 피로도 등 생체신호를 AR/VR 및 BIM 모델과 통합해 현장 안전관리를 자동화하는 스마트 플랫폼으로 확장하는 것이 목표임</p>
         </div>`,
         en: `<div class="research-copy">
           <p>This direction addresses the growing need for safety planning from the earliest project stages by integrating 4D-BIM, wearable sensing, and AI CCTV to predict field hazards in advance.</p>
@@ -1674,13 +1674,13 @@
       subtitle: { ko: "Drone and digital twin building management", en: "Drone and digital twin building management" },
       tags: ["Drone", "Digital Twin", "Laser Scanning", "Inspection"],
       summary: {
-        ko: "드론, 레이저 스캐닝, 디지털 트윈을 활용해 건축물의 결함과 균열을 자동 탐지·예측하는 유지관리 시스템을 연구합니다.",
+        ko: "드론, 레이저 스캐닝, 디지털 트윈을 활용한 건축물 결함·균열 자동 탐지·예측 유지관리 시스템 연구",
         en: "This area studies maintenance systems that use drones, laser scanning, and digital twins to detect and predict building defects and cracks."
       },
       bodyHtml: {
         ko: `<div class="research-copy">
-          <p>대형·복합 건축물의 증가에 따라 안전 점검과 유지관리의 중요성이 커지고 있지만, 관리인력의 전문성 부족과 시스템 부재로 인해 점검의 객관성과 효율성에 한계가 존재합니다.</p>
-          <p>이를 보완하기 위해 드론, 레이저 스캐닝, 디지털 트윈 기술을 기반으로 건축물의 결함과 균열을 자동으로 탐지, 식별, 예측하는 건축물 관리 시스템을 구현하고자 합니다.</p>
+          <p>대형·복합 건축물 증가에 따라 안전 점검과 유지관리 중요성이 커지고 있으나 관리인력 전문성 부족과 시스템 부재로 객관성·효율성 한계가 존재함</p>
+          <p>드론, 레이저 스캐닝, 디지털 트윈 기술을 기반으로 건축물 결함과 균열을 자동 탐지·식별·예측하는 관리 시스템 구현 목표</p>
         </div>`,
         en: `<div class="research-copy">
           <p>As large and complex buildings become more common, professional inspection and maintenance technologies are increasingly important, yet current practice still suffers from limited expertise and fragmented systems.</p>
@@ -1694,14 +1694,14 @@
       subtitle: { ko: "Autonomous decision-making smart construction systems", en: "Autonomous decision-making smart construction systems" },
       tags: ["AI Agent", "Physical AI", "IoT", "Closed-loop"],
       summary: {
-        ko: "AI agent와 피지컬AI를 연결해 설계, 시공, 안전, 유지관리 전 단계의 자율 의사결정을 지원하는 통합 시스템을 연구합니다.",
+        ko: "AI agent와 피지컬AI를 연결해 설계, 시공, 안전, 유지관리 전 단계의 자율 의사결정을 지원하는 통합 시스템 연구",
         en: "This area explores integrated systems where AI agents and physical AI support autonomous decision-making across design, construction, safety, and maintenance."
       },
       bodyHtml: {
         ko: `<div class="research-copy">
-          <p>향후에는 BIM, 디지털 트윈, 드론, 웨어러블, IoT 연구를 확장하여 AI agent가 현장 및 자산관리 데이터를 해석하고 의사결정을 보조하며, 피지컬AI가 실제 공간에서 점검, 탐지, 경보, 대응을 수행하는 통합형 시스템을 연구하고자 합니다.</p>
-          <p>다중 에이전트가 공정 지연, 안전위험, 결함 발생 가능성, 에너지 성능 저하를 예측하고 대응 시나리오를 제안하는 프레임워크를 구축하고, 드론, 이동로봇, 고정형 센서, 웨어러블 장치와 디지털 트윈을 연계한 폐쇄루프(closed-loop) 운영체계를 구현하는 것이 목표입니다.</p>
-          <p>이 연구축은 스마트 건설안전, 스마트 유지관리, 스마트시티 운영 분야로 확장 가능한 핵심 기반이 될 것입니다.</p>
+          <p>BIM, 디지털 트윈, 드론, 웨어러블, IoT를 연계해 AI agent가 현장 및 자산관리 데이터를 해석하고 의사결정을 보조하며 피지컬AI가 실제 공간에서 점검, 탐지, 경보, 대응을 수행하는 통합형 시스템 연구</p>
+          <p>다중 에이전트가 공정 지연, 안전위험, 결함 발생 가능성, 에너지 성능 저하를 예측하고 대응 시나리오를 제안하는 프레임워크 구축. 드론, 이동로봇, 고정형 센서, 웨어러블 장치와 디지털 트윈을 연계한 폐쇄루프 운영체계 구현 목표</p>
+          <p>스마트 건설안전, 스마트 유지관리, 스마트시티 운영 분야로 확장 가능한 핵심 기반임</p>
         </div>`,
         en: `<div class="research-copy">
           <p>The long-term vision is an integrated system in which AI agents interpret field and asset-management data for decision support while physical AI performs inspection, detection, alerting, and response in real environments.</p>
@@ -1719,7 +1719,7 @@
       label: { ko: "Research Project", en: "Research Project" },
       subtitle: { ko: "Projects & Interests", en: "Projects & Interests" },
       description: {
-        ko: "국가연구과제와 중점 연구주제를 정리한 페이지입니다.",
+        ko: "국가연구과제와 중점 연구주제 정리",
         en: "A structured overview of funded projects and ongoing research interests in construction AI, safety, BIM, and maintenance."
       }
     };
