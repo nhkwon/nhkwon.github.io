@@ -1,0 +1,70 @@
+<svg width="1200" height="780" viewBox="0 0 1200 780" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="118" y1="68" x2="1082" y2="712" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FBFF"/>
+      <stop offset="1" stop-color="#EAF2FB"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="200" y1="140" x2="910" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EEF5FD"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="262" y1="188" x2="626" y2="580" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#245BFF"/>
+      <stop offset="1" stop-color="#123D9B"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="692" y1="218" x2="935" y2="447" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB347"/>
+      <stop offset="1" stop-color="#FF7A00"/>
+    </linearGradient>
+    <filter id="shadow" x="94" y="80" width="1012" height="620" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="20"/>
+      <feGaussianBlur stdDeviation="28"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0666667 0 0 0 0 0.160784 0 0 0 0 0.278431 0 0 0 0.12 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_2"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_2" result="shape"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="780" rx="48" fill="url(#bg)"/>
+  <g opacity="0.55">
+    <circle cx="134" cy="112" r="88" fill="#D9E9FB"/>
+    <circle cx="1044" cy="134" r="120" fill="#E1EDFA"/>
+    <circle cx="1032" cy="630" r="154" fill="#DDEBFA"/>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="150" y="120" width="900" height="500" rx="36" fill="url(#panel)"/>
+  </g>
+  <g opacity="0.9">
+    <path d="M240 606H960" stroke="#D4E1F0" stroke-width="6" stroke-linecap="round"/>
+    <path d="M298 326V606" stroke="#9CBCE4" stroke-width="10" stroke-linecap="round"/>
+    <path d="M362 270V606" stroke="#9CBCE4" stroke-width="10" stroke-linecap="round"/>
+    <path d="M426 214V606" stroke="#9CBCE4" stroke-width="10" stroke-linecap="round"/>
+    <path d="M490 374V606" stroke="#9CBCE4" stroke-width="10" stroke-linecap="round"/>
+    <rect x="264" y="346" width="68" height="210" rx="16" fill="url(#blue)"/>
+    <rect x="328" y="290" width="68" height="266" rx="16" fill="#1C4CB8"/>
+    <rect x="392" y="234" width="68" height="322" rx="16" fill="#173F98"/>
+    <rect x="456" y="394" width="68" height="162" rx="16" fill="#2B6FEA"/>
+    <rect x="546" y="194" width="180" height="180" rx="34" fill="#EFF5FC" stroke="#D2E0F2" stroke-width="4"/>
+    <rect x="572" y="224" width="58" height="58" rx="16" fill="#D6E6FA"/>
+    <rect x="646" y="224" width="58" height="58" rx="16" fill="#C8DCF6"/>
+    <rect x="572" y="298" width="58" height="58" rx="16" fill="#BFD8FA"/>
+    <rect x="646" y="298" width="58" height="58" rx="16" fill="#DCE9F9"/>
+  </g>
+  <g>
+    <circle cx="806" cy="232" r="22" fill="url(#orange)"/>
+    <circle cx="892" cy="278" r="26" fill="#245BFF"/>
+    <circle cx="842" cy="352" r="18" fill="#245BFF"/>
+    <circle cx="964" cy="368" r="24" fill="url(#orange)"/>
+    <circle cx="888" cy="440" r="20" fill="#245BFF"/>
+    <circle cx="770" cy="420" r="16" fill="#8DB7F2"/>
+    <path d="M806 232L892 278L842 352L770 420" stroke="#8DB7F2" stroke-width="8" stroke-linecap="round"/>
+    <path d="M892 278L964 368L888 440L770 420" stroke="#245BFF" stroke-width="8" stroke-linecap="round"/>
+    <path d="M806 232L842 352L964 368" stroke="url(#orange)" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <g opacity="0.85">
+    <rect x="734" y="492" width="220" height="18" rx="9" fill="#D6E5F6"/>
+    <rect x="734" y="528" width="164" height="18" rx="9" fill="#C3D8F6"/>
+    <rect x="734" y="564" width="128" height="18" rx="9" fill="#B0CCF3"/>
+  </g>
+</svg>

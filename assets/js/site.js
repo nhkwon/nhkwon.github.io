@@ -11,6 +11,7 @@
     typeof window !== "undefined" && new URLSearchParams(window.location.search).get("sort") === "citations"
       ? "citations"
       : "year";
+  let currentPublicationSort = publicationSort;
 
   const ROUTES = {
     home: { ko: "ko.html", en: "en.html" },
@@ -412,6 +413,31 @@
     en: "Conducting data-driven research connecting building maintenance, construction management, energy, and urban analytics."
   };
 
+  CONTENT.hero.title = { ko: "Construction AI & Data Intelligence Lab", en: "Construction AI & Data Intelligence Lab" };
+  CONTENT.hero.description = {
+    ko: "Data-driven research for maintenance, performance assessment, and predictive modeling in the built environment.",
+    en: "Data-driven research for maintenance, performance assessment, and predictive modeling in the built environment."
+  };
+  CONTENT.intro = [
+    {
+      title: { ko: "학력 및 경력", en: "Education & Career" },
+      bodyHtml: {
+        ko: `<div class="education-list">
+          <div class="education-row"><span class="education-year">2011.02</span><span class="education-text">한양대학교 건축학과 졸업</span></div>
+          <div class="education-row"><span class="education-year">2014.02</span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
+          <div class="education-row"><span class="education-year">2018.08</span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
+          <div class="education-row"><span class="education-year">Present</span><span class="education-text">한양대학교 인공지능건설기술 연구센터</span></div>
+        </div>`,
+        en: `<div class="education-list">
+          <div class="education-row"><span class="education-year">2011.02</span><span class="education-text">Department of Architecture, Hanyang University</span></div>
+          <div class="education-row"><span class="education-year">2014.02</span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
+          <div class="education-row"><span class="education-year">2018.08</span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
+          <div class="education-row"><span class="education-year">Present</span><span class="education-text">AI Construction Technology Research Center, Hanyang University</span></div>
+        </div>`
+      }
+    }
+  ];
+
   document.title = `${text(PROFILE.name)} | ${text(PAGE_META[page].label)}`;
 
   app.innerHTML = `
@@ -422,6 +448,7 @@
       </main>
     </div>
   `;
+  app.addEventListener("click", handleAppClick);
 
   function text(value) {
     if (value === null || value === undefined) return "";
@@ -462,7 +489,6 @@
     const venueKey = normalizeVenue(item.venue);
     if (item.type !== "journal") return "EXCLUDED";
     if (KCI_VENUES.has(venueKey)) return "KCI";
-    if (OTHER_VENUES.has(venueKey)) return "OTHER";
     return "SCI";
   }
 
@@ -483,7 +509,7 @@
   }
 
   function sortPublications(items) {
-    return items.slice().sort(publicationSort === "citations" ? byCitationsThenYear : byYearThenCitations);
+    return items.slice().sort(currentPublicationSort === "citations" ? byCitationsThenYear : byYearThenCitations);
   }
 
   function getJournalPublications() {
@@ -1263,6 +1289,117 @@
     return `<article class="summary-card"><p class="summary-label">${text(item.label)}</p><p class="summary-value">${item.value}</p><p class="summary-detail">${text(item.detail)}</p></article>`;
   }
 
+  function handleAppClick(event) {
+    const sortChip = event.target.closest("[data-publication-sort]");
+
+    if (!sortChip || page !== "publications") {
+      return;
+    }
+
+    event.preventDefault();
+
+    const nextSort = sortChip.dataset.publicationSort === "citations" ? "citations" : "year";
+
+    if (nextSort === currentPublicationSort) {
+      return;
+    }
+
+    currentPublicationSort = nextSort;
+
+    const siteMain = app.querySelector(".site-main");
+    if (siteMain) {
+      siteMain.innerHTML = renderPage();
+    }
+  }
+
+  function renderPublicationSortControls() {
+    return `
+      <div class="panel publication-toolbar">
+        <div class="publication-toolbar-copy">
+          <p class="page-kicker">${text({ ko: "정렬", en: "Sort" })}</p>
+          <h2 class="section-title">${text({ ko: "논문 보기 방식 선택", en: "Choose how to view publications" })}</h2>
+          <p class="page-description">${text({
+            ko: "버튼을 한 번 클릭하면 같은 화면에서 바로 정렬이 바뀝니다.",
+            en: "A single click updates the ordering immediately on the same page."
+          })}</p>
+        </div>
+        <div class="sort-switch" role="tablist" aria-label="${text({ ko: "논문 정렬", en: "Publication sorting" })}">
+          <button class="sort-chip ${currentPublicationSort === "year" ? "is-active" : ""}" type="button" data-publication-sort="year">${text({ ko: "연도별", en: "By year" })}</button>
+          <button class="sort-chip ${currentPublicationSort === "citations" ? "is-active" : ""}" type="button" data-publication-sort="citations">${text({ ko: "인용순", en: "By citations" })}</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPublicationsPage() {
+    const sciPublications = getPublicationsByClass("SCI");
+    const kciPublications = getPublicationsByClass("KCI");
+    const summaryNote = text({
+      ko: `국제 저널 ${publicationSummary.international}편을 기준으로 정리했으며, Results in Engineering(2026) 논문도 SCI 구간에 포함해 총 SCI(E) ${publicationSummary.SCI}편으로 표시했습니다. KCI 논문 ${publicationSummary.KCI}편은 별도 구간으로 유지했고, 학술대회논문·proceeding·학위논문은 제외했습니다.`,
+      en: `This page organizes ${publicationSummary.international} international journal papers. The 2026 Results in Engineering paper is also included in the SCI(E) section, bringing that section to ${publicationSummary.SCI} papers. The ${publicationSummary.KCI} KCI papers remain separate, while conference papers, proceedings, and thesis work are excluded.`
+    });
+
+    return `
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "논문 개요", en: "Publication Summary" }, { ko: "Summary", en: "Summary" })}
+        <div class="summary-grid page-summary">
+          ${getSummaryCards()
+            .concat([
+              {
+                label: { ko: "게재 연도", en: "Year Span" },
+                value: publicationSummary.span,
+                detail: { ko: "저널 논문 기준", en: "Journal papers only" }
+              }
+            ])
+            .map((item) => renderSummaryCard(item))
+            .join("")}
+        </div>
+        <div class="note-banner">${summaryNote}</div>
+      </section>
+      <section class="content-section">
+        ${renderPublicationSortControls()}
+      </section>
+      ${renderPublicationSection({ ko: "SCI(E) 논문실적", en: "SCI(E) Publications" }, { ko: `${sciPublications.length}편`, en: `${sciPublications.length} papers` }, sciPublications, "SCI")}
+      ${renderPublicationSection({ ko: "KCI 논문실적", en: "KCI Publications" }, { ko: `${kciPublications.length}편`, en: `${kciPublications.length} papers` }, kciPublications, "KCI")}
+    `;
+  }
+
+  function getSummaryCards() {
+    return [
+      {
+        label: { ko: "국제 저널", en: "Intl. Journals" },
+        value: String(publicationSummary.international),
+        detail: { ko: `SCI(E) ${publicationSummary.SCI}`, en: `SCI(E) ${publicationSummary.SCI}` }
+      },
+      {
+        label: { ko: "KCI 논문", en: "KCI Papers" },
+        value: String(publicationSummary.KCI),
+        detail: { ko: "국내 등재 학술지", en: "Domestic indexed journals" }
+      },
+      {
+        label: { ko: "총 저널 논문", en: "Total Journals" },
+        value: String(publicationSummary.total),
+        detail: { ko: `국제 ${publicationSummary.international} + KCI ${publicationSummary.KCI}`, en: `International ${publicationSummary.international} + KCI ${publicationSummary.KCI}` }
+      },
+      {
+        label: { ko: "총 인용", en: "Total Citations" },
+        value: String(scholarMetrics.citationsAll || publicationSummary.totalCitations),
+        detail: {
+          ko: scholarMetrics.citationsSince2021 ? `2021년 이후 ${scholarMetrics.citationsSince2021}` : "Google Scholar 기준",
+          en: scholarMetrics.citationsSince2021 ? `Since 2021: ${scholarMetrics.citationsSince2021}` : "Based on Google Scholar"
+        }
+      },
+      {
+        label: { ko: "h-index", en: "h-index" },
+        value: String(scholarMetrics.hIndexAll || ""),
+        detail: {
+          ko: scholarMetrics.hIndexSince2021 ? `2021년 이후 ${scholarMetrics.hIndexSince2021}` : "Google Scholar 기준",
+          en: scholarMetrics.hIndexSince2021 ? `Since 2021: ${scholarMetrics.hIndexSince2021}` : "Based on Google Scholar"
+        }
+      }
+    ];
+  }
+
   function collectKeywords() {
     return Array.from(new Set(CONTENT.research.flatMap((item) => item.tags)));
   }
@@ -1276,6 +1413,121 @@
   function badgeClass(kind) {
     const classes = { SCI: "badge-sci", KCI: "badge-kci", OTHER: "badge-other" };
     return classes[kind] || "badge-other";
+  }
+
+  function renderInfoCard(item) {
+    const body = item.bodyHtml ? text(item.bodyHtml) : text(item.body);
+    return `<article class="info-card${item.cardClass ? ` ${item.cardClass}` : ""}"><h3 class="card-title">${text(item.title)}</h3><div class="card-body">${body}</div></article>`;
+  }
+
+  function renderHeroPanel() {
+    return `
+      <section class="panel hero-panel">
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <div class="hero-mark">
+              <div class="mark-badge hero-badge">NK</div>
+              <div class="mark-copy">
+                <p class="mark-title">${text(PROFILE.name)}</p>
+                <p class="mark-subtitle">Academic Website</p>
+              </div>
+            </div>
+            <p class="hero-kicker">${text({ ko: "Research Group", en: "Research Group" })}</p>
+            <h1 class="hero-title">Construction AI & Data Intelligence Lab</h1>
+            <p class="hero-description">Data-driven research for maintenance, performance assessment, and predictive modeling in the built environment.</p>
+            <div class="meta-row">
+              <span class="meta-pill">${icon("building")} Hanyang University</span>
+              <span class="meta-pill">${icon("research")} AI Construction Technology Research Center</span>
+              <span class="meta-pill">${icon("spark")} Construction Data Intelligence</span>
+            </div>
+            <div class="button-row">
+              <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "전체 논문 보기", en: "View publications" })}</span></a>
+              <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <img class="hero-illustration" src="assets/images/construction-ai-data-lab.svg" alt="Construction AI and data illustration">
+          </div>
+        </div>
+        <div class="summary-grid hero-summary">
+          ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderHomePage() {
+    const introItems = [
+      {
+        title: { ko: "학력 및 경력", en: "Education & Career" },
+        bodyHtml: {
+          ko: `<div class="education-list">
+            <div class="education-row"><span class="education-year">2011.02</span><span class="education-text">한양대학교 건축학과 졸업</span></div>
+            <div class="education-row"><span class="education-year">2014.02</span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
+            <div class="education-row"><span class="education-year">2018.08</span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
+            <div class="education-row"><span class="education-year">Present</span><span class="education-text">한양대학교 인공지능건설기술 연구센터</span></div>
+          </div>`,
+          en: `<div class="education-list">
+            <div class="education-row"><span class="education-year">2011.02</span><span class="education-text">Department of Architecture, Hanyang University</span></div>
+            <div class="education-row"><span class="education-year">2014.02</span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
+            <div class="education-row"><span class="education-year">2018.08</span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
+            <div class="education-row"><span class="education-year">Present</span><span class="education-text">AI Construction Technology Research Center, Hanyang University</span></div>
+          </div>`
+        },
+        cardClass: "education-card"
+      }
+    ];
+
+    return `
+      ${renderHeroPanel()}
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "소개", en: "Biography" }, { ko: "Biography", en: "Biography" }, route("bio"), { ko: "소개 자세히 보기", en: "Open biography" })}
+        <div class="card-grid one-column">${introItems.map((item) => renderInfoCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "연구", en: "Research" }, { ko: "Research Themes", en: "Research Themes" }, route("teaching"), { ko: "연구 페이지 보기", en: "Open research" })}
+        <div class="card-grid two-column">${CONTENT.research.map((item) => renderTopicCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "논문실적", en: "Publications" }, { ko: "Selected Publications", en: "Selected Publications" }, route("publications"), { ko: "전체 논문 보기", en: "View all publications" })}
+        ${renderPublicationHomeSummary()}
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Activities", en: "Activities" }, route("news"), { ko: "활동 더 보기", en: "Open activities" })}
+        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+      </section>
+      ${renderContactCta()}
+    `;
+  }
+
+  function getSummaryCards() {
+    return [
+      {
+        label: "SCI(E) Papers",
+        value: String(publicationSummary.SCI),
+        detail: "Journal articles"
+      },
+      {
+        label: "KCI Papers",
+        value: String(publicationSummary.KCI),
+        detail: "Domestic journals"
+      },
+      {
+        label: "Total Journal Papers",
+        value: String(publicationSummary.total),
+        detail: `SCI(E) ${publicationSummary.SCI} + KCI ${publicationSummary.KCI}`
+      },
+      {
+        label: "Total Citations",
+        value: String(scholarMetrics.citationsAll || publicationSummary.totalCitations),
+        detail: scholarMetrics.citationsSince2021 ? `Since 2021: ${scholarMetrics.citationsSince2021}` : "Google Scholar"
+      },
+      {
+        label: "h-index",
+        value: String(scholarMetrics.hIndexAll || ""),
+        detail: scholarMetrics.hIndexSince2021 ? `Since 2021: ${scholarMetrics.hIndexSince2021}` : "Google Scholar"
+      }
+    ];
   }
 
   function icon(name) {
