@@ -128,7 +128,7 @@ h3 {
 }
 
 .sidebar-education {
-  display: none;
+  display: none !important;
 }
 
 .sidebar-name,

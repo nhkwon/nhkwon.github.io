@@ -613,10 +613,6 @@
         </div>
         <div class="sidebar-identity">
           <p class="sidebar-name">${text(PROFILE.name)}</p>
-          <div class="sidebar-education">
-            <p class="sidebar-education-title">${text(PROFILE.educationHeading)}</p>
-            <p class="sidebar-education-summary">${PROFILE.educationSummary ? text(PROFILE.educationSummary) : PROFILE.education.map((item) => text(item)).join(" · ")}</p>
-          </div>
           <p class="sidebar-affiliation">${text(PROFILE.affiliation)}</p>
           <p class="sidebar-summary">${text(PROFILE.summary)}</p>
         </div>
