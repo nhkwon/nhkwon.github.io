@@ -1302,7 +1302,8 @@ body {
 }
 
 body[data-page="publications"] .publication-card {
-  padding: 10px 20px !important;
+  padding: 8px 16px !important;
+  border-radius: 20px !important;
 }
 
 body[data-page="publications"] .publication-card-header,
@@ -1310,46 +1311,76 @@ body[data-page="publications"] .publication-card-footer {
   gap: 8px !important;
 }
 
+body[data-page="publications"] .publication-card-header {
+  align-items: center !important;
+}
+
+body[data-page="publications"] .publication-card-heading {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
 body[data-page="publications"] .publication-card-body {
-  gap: 6px !important;
-  margin-top: 4px !important;
+  gap: 4px !important;
+  margin-top: 2px !important;
 }
 
 body[data-page="publications"] .publication-card-footer {
-  margin-top: 6px !important;
+  margin-top: 4px !important;
 }
 
 body[data-page="publications"] .publication-year {
-  font-size: clamp(2rem, 3vw, 2.8rem) !important;
+  font-size: clamp(1.35rem, 2vw, 1.9rem) !important;
+  line-height: 1 !important;
 }
 
 body[data-page="publications"] .citation-pill {
-  padding: 4px 10px !important;
-  font-size: 0.8rem !important;
+  padding: 3px 8px !important;
+  font-size: 0.72rem !important;
 }
 
 body[data-page="publications"] .publication-card-title {
-  font-size: clamp(1.18rem, 1.6vw, 1.55rem) !important;
-  line-height: 1.22 !important;
+  max-width: none !important;
+  font-size: clamp(0.98rem, 1.2vw, 1.22rem) !important;
+  line-height: 1.16 !important;
 }
 
 body[data-page="publications"] .publication-card-authors,
 body[data-page="publications"] .publication-venue-row {
-  font-size: 0.9rem !important;
-  line-height: 1.45 !important;
+  font-size: 0.8rem !important;
+  line-height: 1.28 !important;
 }
 
 body[data-page="publications"] .publication-card-metrics {
-  margin-top: 2px !important;
+  margin-top: 0 !important;
 }
 
 body[data-page="publications"] .publication-card .metric-chip {
-  padding: 5px 9px !important;
+  padding: 4px 8px !important;
+  font-size: 0.72rem !important;
+}
+
+body[data-page="publications"] .publication-card-labels {
+  gap: 6px !important;
+}
+
+body[data-page="publications"] .publication-kind-badge {
+  min-width: auto !important;
+  padding: 4px 10px !important;
+  font-size: 0.74rem !important;
+}
+
+body[data-page="publications"] .publication-detail-link,
+body[data-page="publications"] .publication-secondary-links,
+body[data-page="publications"] .publication-secondary-links a {
+  gap: 10px !important;
   font-size: 0.8rem !important;
 }
 
 @media (max-width: 820px) {
   body[data-page="publications"] .publication-card {
-    padding: 10px 14px !important;
+    padding: 8px 12px !important;
   }
 }
