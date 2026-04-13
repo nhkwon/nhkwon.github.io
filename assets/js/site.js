@@ -1530,6 +1530,300 @@
     ];
   }
 
+  function fundedResearchProjects() {
+    return [
+    {
+      period: "2024-2029",
+      role: { ko: "연구책임자", en: "Principal Investigator" },
+      program: { ko: "연구재단 세종과학펠로우십 연구과제 선정", en: "NRF Sejong Science Fellowship" },
+      title: {
+        ko: "KoBERT 기반 자연어처리 및 Transformer 알고리즘을 활용한 건축물하자 및 유지관리 플랫폼 개발",
+        en: "Development of a building defect and maintenance platform using KoBERT-based NLP and Transformer algorithms"
+      },
+      summary: {
+        ko: "건축물 하자 정보와 유지관리 이력, 비정형 텍스트를 구조화하여 진단, 우선순위 결정, 유지관리 의사결정을 지원하는 AI 플랫폼을 구축하는 연구입니다.",
+        en: "This project develops an AI platform that structures defect records, maintenance histories, and unstructured text for diagnosis, prioritization, and maintenance decision support."
+      }
+    },
+    {
+      period: "2020-2022",
+      role: { ko: "연구책임자", en: "Principal Investigator" },
+      program: { ko: "연구재단 창의도전 연구과제 선정", en: "NRF Creative Challenge Program" },
+      title: {
+        ko: "행동패턴인식 기술을 활용한 딥러닝 기반 건설작업자 생산성 추정 시스템 개발",
+        en: "Development of a deep learning-based productivity estimation system for construction workers using behavior pattern recognition"
+      },
+      summary: {
+        ko: "행동 인식과 딥러닝을 결합하여 건설 작업자의 작업 상태와 생산성을 정량적으로 추정하고, 현장 인력관리 고도화에 연결하는 연구입니다.",
+        en: "This project combines behavior recognition and deep learning to estimate worker productivity and support smarter workforce management on site."
+      }
+    },
+    {
+      period: "2019-2020",
+      role: { ko: "연구책임자", en: "Principal Investigator" },
+      program: { ko: "국토교통과학진흥원 국토교통기술촉진사업 선정", en: "KAIA Transportation and Construction Technology Promotion Program" },
+      title: {
+        ko: "건설근로자 사고예방을 위한 딥러닝 기반 피로도-위험도 통합형 인력 모니터링 원천기술 개발",
+        en: "Development of deep learning-based integrated fatigue-risk workforce monitoring technology for accident prevention in construction"
+      },
+      summary: {
+        ko: "웨어러블 기반 생체·행동 데이터를 활용해 근로자의 피로도와 위험도를 통합 평가하고, 사고 예방을 위한 실시간 모니터링 체계를 구축하는 연구입니다.",
+        en: "This project builds a real-time monitoring framework that integrates fatigue and risk assessment using wearable biometric and behavioral data."
+      }
+    }
+    ];
+  }
+
+  function researchInterestAreas() {
+    return [
+    {
+      code: "A",
+      title: { ko: "시공-BIM-IT 융합", en: "Construction-BIM-IT Convergence" },
+      subtitle: { ko: "BIM-based maintenance platform", en: "BIM-based maintenance platform" },
+      tags: ["BIM", "CBR", "GA", "Maintenance"],
+      summary: {
+        ko: "BIM 객체와 유지관리 데이터를 연계하여 비용, 시기, 공종을 예측하고 의사결정을 지원하는 연구를 수행합니다.",
+        en: "This area focuses on linking BIM objects and maintenance data to predict cost, timing, and work packages for decision support."
+      },
+      bodyHtml: {
+        ko: `<div class="research-copy">
+          <p>건축물의 생애주기 동안 발생 가능한 관리비용, 시기, 관련 공종을 예측하기 위해 인공신경망(GA), 사례기반추론(CBR), budget allocation 기법을 접목한 유지관리 연구를 수행하였습니다.</p>
+          <p>향후에는 BIM 모델로부터 추출된 객체 속성값과 드론, 레이저 스캐닝 기술을 유지관리 시스템과 연계하여 구성요소의 노후화를 사전에 파악하고, 자산을 효율적으로 관리·배분하기 위한 BIM 기반 객체 연동형 유지관리 의사결정 플랫폼으로 확장하고자 합니다.</p>
+        </div>`,
+        en: `<div class="research-copy">
+          <p>This research stream predicts maintenance cost, timing, and related trades across the building life cycle by combining genetic algorithms, case-based reasoning, and budget allocation methods.</p>
+          <p>The next step is an object-linked BIM maintenance decision platform that connects BIM attributes with drone and laser-scanning data to detect deterioration earlier and allocate assets more efficiently.</p>
+        </div>`
+      }
+    },
+    {
+      code: "B",
+      title: { ko: "시공-안전-IT 융합", en: "Construction-Safety-IT Convergence" },
+      subtitle: { ko: "Safety and productivity intelligence", en: "Safety and productivity intelligence" },
+      tags: ["Wearables", "Deep Learning", "Safety", "Productivity"],
+      summary: {
+        ko: "웨어러블 데이터와 딥러닝을 활용해 근로자의 피로도, 위험도, 행동 패턴, 생산성을 통합적으로 분석합니다.",
+        en: "This area integrates wearable data and deep learning to assess fatigue, risk, behavior patterns, and worker productivity."
+      },
+      bodyHtml: {
+        ko: `<div class="research-copy">
+          <p>건설근로자 사고 예방을 위한 피로도-위험도 모니터링 연구에서는 웨어러블 디바이스로부터 수신된 데이터와 딥러닝, 생태순간평가 기법을 접목하여 근로자의 위험도와 피로도를 평가하였습니다.</p>
+          <p>또한 웨어러블 데이터 기반 행동 패턴 인식과 딥러닝 알고리즘을 활용하여 작업자의 생산성을 추정하는 통합 시스템을 연구책임자로 수행하였습니다. 이러한 연구는 안전관리뿐 아니라 환경관리, 공정관리, 인력관리까지 연결되는 실증형 프로젝트 관리 연구입니다.</p>
+          <p>앞으로도 건설현장과 IT 기술을 접목한 안전·작업효율 중심의 연구를 지속적으로 확장할 계획입니다.</p>
+        </div>`,
+        en: `<div class="research-copy">
+          <p>This work evaluates worker fatigue and risk by integrating wearable-device data, deep learning, and ecological momentary assessment techniques.</p>
+          <p>It also extends to productivity estimation through behavior recognition and deep learning, providing a practical framework that connects safety, environmental control, scheduling, and workforce management.</p>
+          <p>The long-term goal is to keep advancing construction safety and productivity through tightly integrated IT-enabled field systems.</p>
+        </div>`
+      }
+    },
+    {
+      code: "C",
+      title: { ko: "시공-설계-IT 융합", en: "Construction-Design-IT Convergence" },
+      subtitle: { ko: "Smart safety platform with BIM and sensing", en: "Smart safety platform with BIM and sensing" },
+      tags: ["4D-BIM", "AI CCTV", "AR/VR", "Smart Safety"],
+      summary: {
+        ko: "4D-BIM, 웨어러블 센싱, AI CCTV, AR/VR을 통합하여 건설현장 안전관리를 자동화하는 플랫폼을 구상합니다.",
+        en: "This area proposes an integrated smart-safety platform using 4D-BIM, wearable sensing, AI CCTV, and AR/VR."
+      },
+      bodyHtml: {
+        ko: `<div class="research-copy">
+          <p>건설 안전의 중요성이 커짐에 따라 계획 단계부터 현장 안전관리를 지원할 수 있는 효과적인 대책이 필요합니다. 이를 위해 4D-BIM 모델과 웨어러블 디바이스 센싱 기술, AI CCTV 기술을 활용하여 공사 중 발생 가능한 위험요인을 사전에 예측하고자 합니다.</p>
+          <p>근로자의 심박수, 가속도, 각속도, 체온, 근육 피로도 등 생체신호를 AR/VR 및 BIM 모델과 통합함으로써, 현장 안전관리를 자동화하는 스마트 플랫폼으로 발전시키는 것이 목표입니다.</p>
+        </div>`,
+        en: `<div class="research-copy">
+          <p>This direction addresses the growing need for safety planning from the earliest project stages by integrating 4D-BIM, wearable sensing, and AI CCTV to predict field hazards in advance.</p>
+          <p>By connecting physiological signals such as heart rate, acceleration, angular velocity, body temperature, and muscle fatigue with AR/VR and BIM, the goal is to automate site safety management through a smart integrated platform.</p>
+        </div>`
+      }
+    },
+    {
+      code: "D",
+      title: { ko: "시공-안전-유지관리-IT 융합", en: "Construction-Safety-Maintenance-IT Convergence" },
+      subtitle: { ko: "Drone and digital twin building management", en: "Drone and digital twin building management" },
+      tags: ["Drone", "Digital Twin", "Laser Scanning", "Inspection"],
+      summary: {
+        ko: "드론, 레이저 스캐닝, 디지털 트윈을 활용해 건축물의 결함과 균열을 자동 탐지·예측하는 유지관리 시스템을 연구합니다.",
+        en: "This area studies maintenance systems that use drones, laser scanning, and digital twins to detect and predict building defects and cracks."
+      },
+      bodyHtml: {
+        ko: `<div class="research-copy">
+          <p>대형·복합 건축물의 증가에 따라 안전 점검과 유지관리의 중요성이 커지고 있지만, 관리인력의 전문성 부족과 시스템 부재로 인해 점검의 객관성과 효율성에 한계가 존재합니다.</p>
+          <p>이를 보완하기 위해 드론, 레이저 스캐닝, 디지털 트윈 기술을 기반으로 건축물의 결함과 균열을 자동으로 탐지, 식별, 예측하는 건축물 관리 시스템을 구현하고자 합니다.</p>
+        </div>`,
+        en: `<div class="research-copy">
+          <p>As large and complex buildings become more common, professional inspection and maintenance technologies are increasingly important, yet current practice still suffers from limited expertise and fragmented systems.</p>
+          <p>This research therefore develops building management systems that automatically detect, identify, and predict defects and cracks using drones, laser scanning, and digital twins.</p>
+        </div>`
+      }
+    },
+    {
+      code: "E",
+      title: { ko: "AI agent-피지컬AI 융합", en: "AI Agent-Physical AI Convergence" },
+      subtitle: { ko: "Autonomous decision-making smart construction systems", en: "Autonomous decision-making smart construction systems" },
+      tags: ["AI Agent", "Physical AI", "IoT", "Closed-loop"],
+      summary: {
+        ko: "AI agent와 피지컬AI를 연결해 설계, 시공, 안전, 유지관리 전 단계의 자율 의사결정을 지원하는 통합 시스템을 연구합니다.",
+        en: "This area explores integrated systems where AI agents and physical AI support autonomous decision-making across design, construction, safety, and maintenance."
+      },
+      bodyHtml: {
+        ko: `<div class="research-copy">
+          <p>향후에는 BIM, 디지털 트윈, 드론, 웨어러블, IoT 연구를 확장하여 AI agent가 현장 및 자산관리 데이터를 해석하고 의사결정을 보조하며, 피지컬AI가 실제 공간에서 점검, 탐지, 경보, 대응을 수행하는 통합형 시스템을 연구하고자 합니다.</p>
+          <p>다중 에이전트가 공정 지연, 안전위험, 결함 발생 가능성, 에너지 성능 저하를 예측하고 대응 시나리오를 제안하는 프레임워크를 구축하고, 드론, 이동로봇, 고정형 센서, 웨어러블 장치와 디지털 트윈을 연계한 폐쇄루프(closed-loop) 운영체계를 구현하는 것이 목표입니다.</p>
+          <p>이 연구축은 스마트 건설안전, 스마트 유지관리, 스마트시티 운영 분야로 확장 가능한 핵심 기반이 될 것입니다.</p>
+        </div>`,
+        en: `<div class="research-copy">
+          <p>The long-term vision is an integrated system in which AI agents interpret field and asset-management data for decision support while physical AI performs inspection, detection, alerting, and response in real environments.</p>
+          <p>This includes a multi-agent framework for predicting schedule delays, safety risks, defect occurrence, and energy-performance degradation, linked to drones, mobile robots, fixed sensors, wearables, and digital twins in a closed-loop operating system.</p>
+          <p>It is intended to become a core research axis for smart construction safety, smart maintenance, and future smart-city operations.</p>
+        </div>`
+      }
+    }
+    ];
+  }
+
+  function researchVision() {
+    return {
+      ko: "서울과학기술대학교에 임용된다면 지금까지 수행해 온 연구를 더욱 확장하고 개선하여, 글로벌 환경과 국내 건설산업의 변화에 능동적으로 대응할 수 있는 스마트 융복합 연구를 수행하고자 합니다. 이는 스마트시티 계획, 시공 및 관리 분야의 핵심 기반이 될 수 있을 것으로 판단합니다.",
+      en: "If appointed at Seoul National University of Science and Technology, I plan to extend and refine the research developed so far into a smart convergent research agenda that can respond proactively to changes in both the global environment and the Korean construction industry. This will provide a strong foundation for planning, construction, and management in future smart cities."
+    };
+  }
+
+  function teachingPageMeta() {
+    return {
+      icon: "research",
+      label: { ko: "Research Project", en: "Research Project" },
+      subtitle: { ko: "Projects & Interests", en: "Projects & Interests" },
+      description: {
+        ko: "국가연구과제와 중점 연구주제를 정리한 페이지입니다.",
+        en: "A structured overview of funded projects and ongoing research interests in construction AI, safety, BIM, and maintenance."
+      }
+    };
+  }
+
+  function collectKeywords() {
+    return Array.from(new Set(researchInterestAreas().flatMap((item) => item.tags)));
+  }
+
+  function renderPageLead(pageKey) {
+    const meta = pageKey === "teaching" ? teachingPageMeta() : PAGE_META[pageKey];
+
+    return `
+      <section class="panel page-lead">
+        <p class="page-kicker">${text(meta.subtitle)}</p>
+        <h1 class="page-title">${text(meta.label)}</h1>
+        <p class="page-description">${text(meta.description)}</p>
+        ${
+          pageKey === "publications"
+            ? `
+              <div class="meta-row">
+                <span class="meta-pill">${icon("papers")}${text({ ko: `국제저널 ${publicationSummary.international}`, en: `Intl. journals ${publicationSummary.international}` })}</span>
+                <span class="meta-pill">${icon("research")}SCI(E) ${publicationSummary.SCI}</span>
+                ${publicationSummary.OTHER ? `<span class="meta-pill">${icon("link")}Scopus ${publicationSummary.OTHER}</span>` : ""}
+                <span class="meta-pill">${icon("book")}KCI ${publicationSummary.KCI}</span>
+              </div>
+            `
+            : ""
+        }
+      </section>
+    `;
+  }
+
+  function renderResearchProjectCard(item) {
+    return `
+      <article class="info-card project-card">
+        <div class="project-card-meta">
+          <span class="tiny-badge">${item.period}</span>
+          <span class="tiny-badge">${text(item.role)}</span>
+        </div>
+        <p class="project-program">${text(item.program)}</p>
+        <h3 class="project-focus">${text(item.title)}</h3>
+        <p class="card-body project-summary">${text(item.summary)}</p>
+      </article>
+    `;
+  }
+
+  function renderResearchInterestCard(item) {
+    return `
+      <article class="topic-card interest-card">
+        <div class="interest-header">
+          <div class="interest-heading">
+            <span class="interest-code">${item.code}</span>
+            <p class="interest-subtitle">${text(item.subtitle)}</p>
+            <h3 class="card-title">${text(item.title)}</h3>
+          </div>
+          <div class="tag-list">${item.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}</div>
+        </div>
+        ${text(item.bodyHtml)}
+      </article>
+    `;
+  }
+
+  function renderResearchPage() {
+    const projects = fundedResearchProjects();
+    const interests = researchInterestAreas();
+
+    return `
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "Research Project", en: "Research Project" }, { ko: "Funded Projects", en: "Funded Projects" })}
+        <div class="card-grid three-column research-project-grid">${projects.map((item) => renderResearchProjectCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "관심연구", en: "Research Interests" }, { ko: "Research Interests", en: "Research Interests" })}
+        <div class="card-grid two-column research-interest-grid">${interests.map((item) => renderResearchInterestCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        <div class="note-banner research-note">${text(researchVision())}</div>
+      </section>
+    `;
+  }
+
+  function renderHomePage() {
+    const projects = fundedResearchProjects();
+    const introItems = [
+      {
+        title: { ko: "학력 및 경력", en: "Education & Career" },
+        bodyHtml: {
+          ko: `<div class="education-list">
+            <div class="education-row"><span class="education-year">2011.02</span><span class="education-text">한양대학교 건축학과 졸업</span></div>
+            <div class="education-row"><span class="education-year">2014.02</span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
+            <div class="education-row"><span class="education-year">2018.08</span><span class="education-text">서울대학교 건축학과 건축시공 및 건설관리 전공</span></div>
+            <div class="education-row"><span class="education-year">Present</span><span class="education-text">한양대학교 인공지능건설기술 연구센터</span></div>
+          </div>`,
+          en: `<div class="education-list">
+            <div class="education-row"><span class="education-year">2011.02</span><span class="education-text">Department of Architecture, Hanyang University</span></div>
+            <div class="education-row"><span class="education-year">2014.02</span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
+            <div class="education-row"><span class="education-year">2018.08</span><span class="education-text">Architectural Construction and Construction Management, Seoul National University</span></div>
+            <div class="education-row"><span class="education-year">Present</span><span class="education-text">AI Construction Technology Research Center, Hanyang University</span></div>
+          </div>`
+        },
+        cardClass: "education-card"
+      }
+    ];
+
+    return `
+      ${renderHeroPanel()}
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "소개", en: "Biography" }, { ko: "Biography", en: "Biography" }, route("bio"), { ko: "소개 자세히 보기", en: "Open biography" })}
+        <div class="card-grid one-column">${introItems.map((item) => renderInfoCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "Research Project", en: "Research Project" }, { ko: "Funded Projects", en: "Funded Projects" }, route("teaching"), { ko: "Open research page", en: "Open research page" })}
+        <div class="card-grid three-column research-project-grid">${projects.map((item) => renderResearchProjectCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "논문실적", en: "Publications" }, { ko: "Selected Publications", en: "Selected Publications" }, route("publications"), { ko: "전체 논문 보기", en: "View all publications" })}
+        ${renderPublicationHomeSummary()}
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Activities", en: "Activities" }, route("news"), { ko: "활동 더 보기", en: "Open activities" })}
+        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+      </section>
+      ${renderContactCta()}
+    `;
+  }
+
   function icon(name) {
     const paths = {
       home: '<path d="M2.5 7.5 8 3l5.5 4.5v5a1 1 0 0 1-1 1h-3v-3H6.5v3h-3a1 1 0 0 1-1-1z"></path>',
