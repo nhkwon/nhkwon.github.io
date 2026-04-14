@@ -2518,4 +2518,101 @@
 
     return `<svg class="icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">${paths[name] || paths.link}</svg>`;
   }
+
+  function renderSidebar() {
+    const navOrder = ["home", "bio", "teaching", "publications", "news", "contact"];
+
+    return `
+      <aside class="site-sidebar">
+        <div class="sidebar-photo-frame">
+          <img class="profile-portrait" src="${SITE_DATA.profile?.photo || "assets/images/profile-portrait.svg"}" alt="${text(PROFILE.name)}">
+        </div>
+        <div class="sidebar-identity">
+          <p class="sidebar-name">${text(PROFILE.name)}</p>
+          <p class="sidebar-affiliation">${text(PROFILE.affiliation)}</p>
+          <section class="sidebar-contact-card" aria-label="Contact details">
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Address</span>
+              <p class="sidebar-contact-value">${text({
+                ko: "15588 경기도 안산시 상록구 한양대학로 55",
+                en: "55 Hanyangdaehak-ro, Sangnok-gu, Ansan-si, Gyeonggi-do 15588"
+              })}</p>
+            </div>
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Email</span>
+              <p class="sidebar-contact-value"><a class="sidebar-contact-link" href="mailto:nhkwon@hanyang.ac.kr">nhkwon@hanyang.ac.kr</a></p>
+            </div>
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Tel.</span>
+              <p class="sidebar-contact-value">+82 10-7392-9933</p>
+            </div>
+          </section>
+          <section class="sidebar-signature" aria-label="Research signature">
+            <p class="sidebar-signature-kicker">${text({ ko: "Research Signature", en: "Research Signature" })}</p>
+            <p class="sidebar-signature-title">Construction AI & Data Intelligence</p>
+            <p class="sidebar-signature-note">${text({
+              ko: "Maintenance · Performance · Prediction · Decision",
+              en: "Maintenance · Performance · Prediction · Decision"
+            })}</p>
+          </section>
+        </div>
+        <div class="sidebar-social">
+          ${getProfileLinks().map((item) => renderSocialLink(item)).join("")}
+        </div>
+        <div class="sidebar-label">Navigation</div>
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          ${navOrder
+            .map(
+              (item) => `
+                <a class="nav-item ${page === item ? "is-active" : ""}" href="${route(item)}" ${page === item ? 'aria-current="page"' : ""}>
+                  ${icon(PAGE_META[item].icon)}
+                  <span>${PAGE_META[item].label?.en || text(PAGE_META[item].label)}</span>
+                </a>
+              `
+            )
+            .join("")}
+        </nav>
+        <div class="sidebar-label">Language</div>
+        <div class="language-switch">
+          <a class="lang-pill ${lang === "ko" ? "is-active" : ""}" href="${route(page, "ko")}">KO</a>
+          <a class="lang-pill ${lang === "en" ? "is-active" : ""}" href="${route(page, "en")}">EN</a>
+        </div>
+      </aside>
+    `;
+  }
+
+  function renderHeroPanel() {
+    return `
+      <section class="panel hero-panel hero-panel-premium">
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <p class="hero-kicker">${text({
+              ko: "Hanyang University ERICA · AI Construction Technology Research Center",
+              en: "Hanyang University ERICA · AI Construction Technology Research Center"
+            })}</p>
+            <h1 class="hero-title">Construction AI & Data Intelligence</h1>
+            <p class="hero-caption">${text({ ko: "with Codex and Vibe Coding", en: "with Codex and Vibe Coding" })}</p>
+            <p class="hero-lead">${text({
+              ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구를 수행합니다.",
+              en: "Data-driven research connecting maintenance, performance assessment, predictive modeling, and decision support across the built environment."
+            })}</p>
+            <div class="hero-pill-row" aria-label="Research keywords">
+              <span class="hero-pill">${text({ ko: "유지관리", en: "Maintenance" })}</span>
+              <span class="hero-pill">${text({ ko: "성능평가", en: "Performance" })}</span>
+              <span class="hero-pill">${text({ ko: "예측모형", en: "Prediction" })}</span>
+              <span class="hero-pill">${text({ ko: "의사결정", en: "Decision Support" })}</span>
+            </div>
+            <div class="button-row">
+              <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "?꾩껜 ?쇰Ц 蹂닿린", en: "View publications" })}</span></a>
+              <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
+            </div>
+          </div>
+          ${renderHeroSchematic()}
+        </div>
+        <div class="summary-grid hero-summary">
+          ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
+        </div>
+      </section>
+    `;
+  }
 })();
