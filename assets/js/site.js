@@ -542,7 +542,12 @@
 
     const heroCaption = siteMain.querySelector(".hero-panel .hero-caption");
     if (heroCaption) {
-      heroCaption.textContent = "with Codex and Vibe Coding";
+      heroCaption.remove();
+    }
+
+    const heroLead = siteMain.querySelector(".hero-panel .hero-lead");
+    if (heroLead) {
+      heroLead.remove();
     }
   }
 
@@ -2392,11 +2397,6 @@
           <div class="hero-copy">
             <p class="hero-kicker">${text({ ko: "Research Profile", en: "Research Profile" })}</p>
             <h1 class="hero-title">Construction AI & Data Intelligence</h1>
-            <p class="hero-caption">with Codex and Vibe Coding</p>
-            <p class="hero-lead">${text({
-              ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
-              en: "Data-driven research connecting maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
-            })}</p>
             <div class="button-row">
               <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "전체 논문 보기", en: "View publications" })}</span></a>
               <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
