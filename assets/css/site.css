@@ -1,5 +1,6 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 @import url("https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.css");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap");
@@ -4086,6 +4087,133 @@ body {
 
   .summary-card {
     min-height: 138px !important;
+  }
+}
+
+/* Final typography lock: English Inter, Korean Pretendard */
+:root {
+  --font-global-ui: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+html,
+body,
+button,
+input,
+textarea,
+select,
+.site-sidebar,
+.panel,
+.button,
+.section-action,
+.nav-item,
+.lang-pill,
+.card-body,
+.timeline-body,
+.publication-authors,
+.publication-venue,
+.summary-detail,
+.hero-caption,
+.hero-lead,
+.sidebar-affiliation,
+.sidebar-contact-value,
+.sidebar-signature-note,
+.section-subtitle,
+.page-kicker,
+.summary-label,
+.timeline-period,
+.activity-date,
+.hero-kicker,
+.tag,
+.meta-pill,
+.publication-kind-badge,
+.project-program {
+  font-family: var(--font-global-ui) !important;
+}
+
+.sidebar-name,
+.hero-title,
+.page-title,
+.section-title,
+.card-title,
+.project-focus,
+.publication-title,
+.publication-card-title,
+.summary-value,
+.sidebar-signature-title,
+.year-title,
+.mark-title {
+  font-family: var(--font-global-ui) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.hero-kicker,
+.page-kicker,
+.section-subtitle,
+.sidebar-label,
+.sidebar-contact-label,
+.sidebar-signature-kicker,
+.summary-label,
+.timeline-period,
+.activity-date,
+.tag,
+.meta-pill,
+.publication-kind-badge,
+.project-program {
+  font-family: var(--font-global-ui) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+}
+
+.hero-panel .hero-title {
+  font-family: var(--font-global-ui) !important;
+  font-size: clamp(3.18rem, 5.85vw, 5.18rem) !important;
+  font-weight: 800 !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.08em !important;
+}
+
+.hero-panel .hero-caption {
+  display: block !important;
+  width: auto !important;
+  margin-top: 1rem !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  font-family: var(--font-global-ui) !important;
+  font-size: clamp(1rem, 1.08vw, 1.14rem) !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.45 !important;
+  color: #35597f !important;
+}
+
+.hero-panel .hero-caption::before {
+  content: none !important;
+}
+
+.hero-panel .button-row {
+  margin-top: 1.4rem !important;
+}
+
+.button,
+.section-action,
+.publication-detail-link,
+.publication-secondary-links a {
+  font-family: var(--font-global-ui) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+@media (max-width: 820px) {
+  .hero-panel .hero-title {
+    font-size: clamp(2.56rem, 9.2vw, 3.72rem) !important;
+  }
+
+  .hero-panel .hero-caption {
+    font-size: 0.98rem !important;
+    line-height: 1.5 !important;
   }
 }
 
