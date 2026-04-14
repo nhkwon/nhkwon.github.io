@@ -1,7 +1,7 @@
 (function () {
-  const app = document.getElementById("app");
+  const mountNode = document.getElementById("app");
 
-  if (!app || !document.body) {
+  if (!mountNode || !document.body) {
     return;
   }
 
@@ -40,17 +40,17 @@
     return;
   }
 
-  elements.launcher.addEventListener("click", () => setOpen(true));
-  elements.close.addEventListener("click", () => setOpen(false));
+  elements.launcher.addEventListener("click", () => {
+    setOpen(!state.isOpen);
+  });
+  elements.close.addEventListener("click", () => {
+    setOpen(false);
+  });
   elements.form.addEventListener("submit", handleSubmit);
   elements.input.addEventListener("keydown", handleInputKeydown);
   elements.suggestions.addEventListener("click", handleSuggestionClick);
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && state.isOpen) {
-      setOpen(false);
-    }
-  });
+  document.addEventListener("click", handleDocumentClick);
+  document.addEventListener("keydown", handleDocumentKeydown);
 
   render();
 
@@ -66,10 +66,10 @@
         en: "Ask about research topics, publications, and collaboration."
       },
       launcherLabel: { ko: "AI Chat", en: "AI Chat" },
-      launcherHint: { ko: "Research guide", en: "Research guide" },
+      launcherHint: { ko: "클릭해서 열기", en: "Click to open" },
       placeholder: {
-        ko: "연구 분야나 논문에 대해 물어보세요",
-        en: "Ask about research topics or publications"
+        ko: "연구 분야나 논문에 대해 물어보세요.",
+        en: "Ask about research topics or publications."
       },
       sendLabel: { ko: "보내기", en: "Send" },
       closeLabel: { ko: "닫기", en: "Close" },
@@ -78,19 +78,18 @@
         en: "Hi. I can help you explore the site's research themes, selected publications, and collaboration info."
       },
       missingEndpointMessage: {
-        ko: "Gemini API 엔드포인트가 아직 연결되지 않았습니다. `assets/js/site-config.js`에서 `endpoint`를 서버리스 주소로 바꿔주세요.",
-        en: "The Gemini endpoint is not configured yet. Update `endpoint` in `assets/js/site-config.js` with your deployed serverless URL."
+        ko: "아직 Gemini API 엔드포인트가 연결되지 않았습니다. assets/js/site-config.js 의 endpoint 값을 서버 주소로 바꿔주세요.",
+        en: "The Gemini endpoint is not configured yet. Update the endpoint in assets/js/site-config.js."
       },
       githubPagesHint: {
-        ko: "GitHub Pages에서는 `/api/chat`가 동작하지 않습니다. 별도 서버리스 URL을 넣어주세요.",
-        en: "On GitHub Pages, `/api/chat` will not exist. Point `endpoint` to a separate serverless URL."
+        ko: "GitHub Pages에서는 /api/chat 가 직접 동작하지 않습니다. 별도 서버리스 URL을 endpoint 에 넣어주세요.",
+        en: "On GitHub Pages, /api/chat will not exist. Point endpoint to a separate serverless URL."
       },
       errorMessage: {
         ko: "응답을 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.",
-        en: "I couldn't get a response. Please try again in a moment."
+        en: "I could not get a response. Please try again in a moment."
       },
       typingLabel: { ko: "답변 생성 중...", en: "Generating response..." },
-      readyLabel: { ko: "연결됨", en: "Connected" },
       setupLabel: { ko: "설정 필요", en: "Setup needed" },
       disclaimer: {
         ko: "민감한 개인정보나 비공개 자료는 입력하지 마세요.",
@@ -141,12 +140,11 @@
           data-ai-chat-launcher
           aria-expanded="false"
           aria-controls="site-ai-chat-panel"
+          aria-label="${escapeHtml(localize(config.launcherLabel))}"
         >
           <span class="ai-chat-launcher-mark">AI</span>
-          <span class="ai-chat-launcher-copy">
-            <strong>${escapeHtml(localize(config.launcherLabel))}</strong>
-            <span>${escapeHtml(localize(config.launcherHint))}</span>
-          </span>
+          <span class="sr-only">${escapeHtml(localize(config.launcherLabel))}</span>
+          <span class="ai-chat-launcher-tooltip">${escapeHtml(localize(config.launcherHint))}</span>
         </button>
 
         <section
@@ -167,9 +165,7 @@
               type="button"
               data-ai-chat-close
               aria-label="${escapeHtml(localize(config.closeLabel))}"
-            >
-              ×
-            </button>
+            >&times;</button>
           </header>
 
           <div class="ai-chat-toolbar">
@@ -180,9 +176,7 @@
           </div>
 
           <div class="ai-chat-messages" data-ai-chat-messages aria-live="polite"></div>
-
           <div class="ai-chat-suggestions" data-ai-chat-suggestions></div>
-
           <p class="ai-chat-hint" data-ai-chat-hint></p>
 
           <form class="ai-chat-form" data-ai-chat-form>
@@ -224,6 +218,7 @@
     if (state.isOpen) {
       requestAnimationFrame(() => {
         elements.messages.scrollTop = elements.messages.scrollHeight;
+
         if (!state.isSending) {
           elements.input.focus();
         }
@@ -233,9 +228,13 @@
 
   function renderMessages() {
     const bubbles = state.messages.map((message) => {
+      const roleLabel = message.role === "user"
+        ? lang === "en" ? "You" : "나"
+        : localize(config.assistantName);
+
       return `
         <article class="ai-chat-bubble ${message.role === "user" ? "is-user" : "is-assistant"}">
-          <p class="ai-chat-bubble-role">${escapeHtml(message.role === "user" ? (lang === "en" ? "You" : "나") : localize(config.assistantName))}</p>
+          <p class="ai-chat-bubble-role">${escapeHtml(roleLabel)}</p>
           <div class="ai-chat-bubble-text">${formatText(message.text)}</div>
         </article>
       `;
@@ -261,13 +260,13 @@
         : [];
 
     return prompts
-      .map(
-        (prompt) => `
+      .map((prompt) => {
+        return `
           <button class="ai-chat-suggestion" type="button" data-ai-chat-prompt="${escapeAttribute(prompt)}">
             ${escapeHtml(prompt)}
           </button>
-        `
-      )
+        `;
+      })
       .join("");
   }
 
@@ -281,6 +280,24 @@
     setOpen(true);
     elements.input.value = button.getAttribute("data-ai-chat-prompt") || "";
     elements.input.focus();
+  }
+
+  function handleDocumentClick(event) {
+    if (!state.isOpen) {
+      return;
+    }
+
+    if (elements.root.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  }
+
+  function handleDocumentKeydown(event) {
+    if (event.key === "Escape" && state.isOpen) {
+      setOpen(false);
+    }
   }
 
   function handleInputKeydown(event) {
@@ -343,7 +360,10 @@
         message: userText,
         history: state.messages
           .slice(-config.maxHistory * 2)
-          .map((message) => ({ role: message.role, text: message.text })),
+          .map((message) => ({
+            role: message.role,
+            text: message.text
+          })),
         lang,
         page,
         url: window.location.href,
@@ -453,7 +473,7 @@
 
   function clipText(value, limit) {
     const text = String(value || "");
-    return text.length > limit ? `${text.slice(0, limit)}…` : text;
+    return text.length > limit ? `${text.slice(0, limit)}...` : text;
   }
 
   function escapeHtml(value) {
