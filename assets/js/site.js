@@ -495,6 +495,7 @@
     </div>
     ${renderAiChat()}
   `;
+  finalizeRenderedPage();
   app.addEventListener("click", handleAppClick);
   app.addEventListener("submit", handleAppSubmit);
   app.addEventListener("input", handleAppInput);
@@ -511,6 +512,33 @@
     if (typeof value === "string") return value;
     if (typeof value === "object") return value[lang] || value.ko || value.en || "";
     return String(value);
+  }
+
+  function finalizeRenderedPage() {
+    if (page !== "home") {
+      return;
+    }
+
+    const siteMain = app.querySelector(".site-main");
+    if (!siteMain) {
+      return;
+    }
+
+    const sections = Array.from(siteMain.querySelectorAll(".content-section"));
+    sections.forEach((section) => {
+      const titleText = String(section.querySelector(".section-title")?.textContent || "").trim().toLowerCase();
+      const bioAction = section.querySelector('.section-action[href*="bio"]');
+      const isIntroSection = Boolean(bioAction) || titleText === "biography" || titleText === "소개";
+
+      if (isIntroSection) {
+        section.remove();
+      }
+    });
+
+    const firstSection = siteMain.querySelector(".content-section");
+    if (firstSection) {
+      firstSection.classList.add("home-primary-section");
+    }
   }
 
   function route(name, locale) {
@@ -1464,6 +1492,7 @@
     const siteMain = app.querySelector(".site-main");
     if (siteMain) {
       siteMain.innerHTML = renderPage();
+      finalizeRenderedPage();
     }
   }
 
@@ -1829,54 +1858,56 @@
   function renderHeroSchematic() {
     return `
       <div class="hero-visual hero-schematic" aria-hidden="true">
-        <span class="schematic-link schematic-link-a"></span>
-        <span class="schematic-link schematic-link-b"></span>
-        <span class="schematic-link schematic-link-c"></span>
-        <span class="schematic-link schematic-link-d"></span>
-        <div class="schematic-ring schematic-ring-outer"></div>
-        <div class="schematic-ring schematic-ring-inner"></div>
-        <section class="schematic-node schematic-node-data">
-          <span class="schematic-label">Data Layer</span>
-          <strong>BIM / Text / Sensors</strong>
-          <p>Field records and digital assets</p>
-        </section>
-        <section class="schematic-node schematic-node-twin">
-          <span class="schematic-label">Built Asset Model</span>
-          <div class="schematic-building">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+        <div class="hero-schematic-shell">
+          <div class="hero-schematic-glow hero-schematic-glow-a"></div>
+          <div class="hero-schematic-glow hero-schematic-glow-b"></div>
+          <div class="hero-schematic-grid">
+            <section class="hero-schematic-card hero-schematic-card-data">
+              <span class="hero-schematic-label">Data Layer</span>
+              <strong>BIM / Text / Sensors</strong>
+              <p>Field records and digital assets</p>
+            </section>
+            <section class="hero-schematic-card hero-schematic-card-model">
+              <span class="hero-schematic-label">Model Layer</span>
+              <strong>Prediction & Ranking</strong>
+              <div class="hero-schematic-bars" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </section>
+            <section class="hero-schematic-core hero-schematic-core-grid">
+              <span class="hero-schematic-core-ring"></span>
+              <span class="hero-schematic-core-ring hero-schematic-core-ring-inner"></span>
+              <div class="hero-schematic-core-badge">AI</div>
+              <p class="hero-schematic-core-title">Intelligence Core</p>
+              <p class="hero-schematic-core-copy">Inference / Optimization / Decision Support</p>
+            </section>
+            <section class="hero-schematic-card hero-schematic-card-asset">
+              <span class="hero-schematic-label">Built Asset</span>
+              <strong>Monitoring & Simulation</strong>
+              <div class="hero-schematic-buildings" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </section>
+            <section class="hero-schematic-card hero-schematic-card-decision">
+              <span class="hero-schematic-label">Decision Layer</span>
+              <strong>Planning / Safety / Maintenance</strong>
+              <p>Operational action and support</p>
+            </section>
           </div>
-          <p>Monitoring and simulation</p>
-        </section>
-        <section class="schematic-node schematic-node-core">
-          <span class="schematic-label">Intelligence Core</span>
-          <div class="schematic-core-badge">AI</div>
-          <p>Inference<br>Prediction</p>
-        </section>
-        <section class="schematic-node schematic-node-analytics">
-          <span class="schematic-label">Model Layer</span>
-          <div class="schematic-bars">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <p>Risk and performance modeling</p>
-        </section>
-        <section class="schematic-node schematic-node-output">
-          <span class="schematic-label">Decision Layer</span>
-          <div class="schematic-trend">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <p>Planning, safety, energy, maintenance</p>
-        </section>
+          <section class="hero-schematic-core">
+            <span class="hero-schematic-core-ring"></span>
+            <span class="hero-schematic-core-ring hero-schematic-core-ring-inner"></span>
+            <div class="hero-schematic-core-badge">AI</div>
+            <p class="hero-schematic-core-title">Intelligence Core</p>
+            <p class="hero-schematic-core-copy">Inference · Optimization · Decision Support</p>
+          </section>
+        </div>
       </div>
     `;
   }
@@ -2307,6 +2338,42 @@
       </section>
       <section class="content-section">
         ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Activities", en: "Activities" }, route("news"), { ko: "활동 더 보기", en: "Open activities" })}
+        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+      </section>
+      ${renderContactCta()}
+    `;
+  }
+
+  function renderHomePage() {
+    const projects = fundedResearchProjects();
+
+    return `
+      ${renderHeroPanel()}
+      <section class="content-section home-primary-section">
+        ${renderSectionHeading(
+          { ko: "연구 과제", en: "Research Projects" },
+          { ko: "Funded Projects", en: "Funded Projects" },
+          route("teaching"),
+          { ko: "연구 페이지 보기", en: "Open research" }
+        )}
+        <div class="card-grid three-column research-project-grid">${projects.map((item) => renderResearchProjectCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading(
+          { ko: "논문 실적", en: "Publications" },
+          { ko: "Selected Publications", en: "Selected Publications" },
+          route("publications"),
+          { ko: "전체 논문 보기", en: "View all publications" }
+        )}
+        ${renderPublicationHomeSummary()}
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading(
+          { ko: "최근 활동", en: "Recent Activities" },
+          { ko: "Activities", en: "Activities" },
+          route("news"),
+          { ko: "활동 더 보기", en: "Open activities" }
+        )}
         <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
       </section>
       ${renderContactCta()}
