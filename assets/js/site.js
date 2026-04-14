@@ -2380,6 +2380,77 @@
     `;
   }
 
+  function renderHeroSchematic() {
+    return `
+      <div class="hero-visual hero-schematic" aria-hidden="true">
+        <div class="hero-framework">
+          <div class="hero-framework-header">
+            <span class="hero-framework-kicker">Research System</span>
+            <strong class="hero-framework-title">Construction AI Pipeline</strong>
+          </div>
+          <div class="hero-framework-flow">
+            <section class="hero-framework-step hero-framework-step-data">
+              <span class="hero-framework-index">01</span>
+              <div class="hero-framework-copy">
+                <span class="hero-framework-label">Data Layer</span>
+                <strong>BIM / Text / Sensors</strong>
+                <p>Field records, digital assets, and operational traces</p>
+              </div>
+              <div class="hero-framework-visual hero-framework-visual-dots" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </section>
+            <section class="hero-framework-step hero-framework-step-model">
+              <span class="hero-framework-index">02</span>
+              <div class="hero-framework-copy">
+                <span class="hero-framework-label">Model Layer</span>
+                <strong>Prediction / Ranking</strong>
+                <p>Learning patterns from heterogeneous construction data</p>
+              </div>
+              <div class="hero-framework-visual hero-framework-visual-bars" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </section>
+            <section class="hero-framework-step hero-framework-step-core">
+              <span class="hero-framework-index">03</span>
+              <div class="hero-framework-copy">
+                <span class="hero-framework-label">Intelligence Core</span>
+                <strong>Inference / Optimization</strong>
+                <p>Decision support connecting analysis, simulation, and action</p>
+              </div>
+              <div class="hero-framework-core-badge" aria-hidden="true">AI</div>
+            </section>
+            <section class="hero-framework-step hero-framework-step-decision">
+              <span class="hero-framework-index">04</span>
+              <div class="hero-framework-copy">
+                <span class="hero-framework-label">Decision Layer</span>
+                <strong>Planning / Safety / Maintenance</strong>
+                <p>Operational outputs for the built environment lifecycle</p>
+              </div>
+              <div class="hero-framework-visual hero-framework-visual-buildings" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </section>
+          </div>
+          <div class="hero-framework-footer">
+            <span>Data foundation</span>
+            <span>Applied AI models</span>
+            <span>Research to decision making</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   function icon(name) {
     const paths = {
       home: '<path d="M2.5 7.5 8 3l5.5 4.5v5a1 1 0 0 1-1 1h-3v-3H6.5v3h-3a1 1 0 0 1-1-1z"></path>',
