@@ -3955,15 +3955,28 @@ body {
 
 .hero-panel .hero-caption {
   display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.9rem !important;
   width: fit-content !important;
-  margin-top: 1.05rem !important;
-  padding: 0.68rem 1rem !important;
+  margin-top: 1.24rem !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: none !important;
+  font-family: "Fraunces", "Noto Serif KR", serif !important;
+  font-size: clamp(1.02rem, 1.15vw, 1.2rem) !important;
+  font-style: italic !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.015em !important;
+  color: #2d4d72 !important;
+}
+
+.hero-panel .hero-caption::before {
+  content: "" !important;
+  width: 58px !important;
+  height: 1px !important;
   border-radius: 999px !important;
-  background: rgba(22, 56, 93, 0.08) !important;
-  font-size: 0.95rem !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
-  color: #23476d !important;
+  background: linear-gradient(90deg, rgba(141, 106, 67, 0.9), rgba(141, 106, 67, 0.18)) !important;
+  flex: 0 0 auto !important;
 }
 
 .hero-panel .hero-lead {
@@ -4059,7 +4072,12 @@ body {
   }
 
   .hero-panel .hero-caption {
-    font-size: 0.9rem !important;
+    gap: 0.72rem !important;
+    font-size: 0.96rem !important;
+  }
+
+  .hero-panel .hero-caption::before {
+    width: 40px !important;
   }
 
   .hero-summary {
