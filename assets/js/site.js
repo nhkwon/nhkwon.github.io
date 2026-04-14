@@ -2380,72 +2380,115 @@
     `;
   }
 
+  function renderHeroPanel() {
+    return `
+      <section class="panel hero-panel hero-panel-premium">
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <p class="hero-kicker">${text({ ko: "Research Profile", en: "Research Profile" })}</p>
+            <h1 class="hero-title">Construction AI & Data Intelligence</h1>
+            <p class="hero-caption">with Codex and 바이브코딩</p>
+            <p class="hero-lead">${text({
+              ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
+              en: "Data-driven research connecting maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
+            })}</p>
+            <div class="button-row">
+              <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "전체 논문 보기", en: "View publications" })}</span></a>
+              <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
+            </div>
+          </div>
+          ${renderHeroSchematic()}
+        </div>
+        <div class="summary-grid hero-summary">
+          ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
+        </div>
+      </section>
+    `;
+  }
+
   function renderHeroSchematic() {
     return `
       <div class="hero-visual hero-schematic" aria-hidden="true">
-        <div class="hero-framework">
-          <div class="hero-framework-header">
-            <span class="hero-framework-kicker">Research System</span>
-            <strong class="hero-framework-title">Construction AI Pipeline</strong>
-          </div>
-          <div class="hero-framework-flow">
-            <section class="hero-framework-step hero-framework-step-data">
-              <span class="hero-framework-index">01</span>
-              <div class="hero-framework-copy">
-                <span class="hero-framework-label">Data Layer</span>
-                <strong>BIM / Text / Sensors</strong>
-                <p>Field records, digital assets, and operational traces</p>
-              </div>
-              <div class="hero-framework-visual hero-framework-visual-dots" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </section>
-            <section class="hero-framework-step hero-framework-step-model">
-              <span class="hero-framework-index">02</span>
-              <div class="hero-framework-copy">
-                <span class="hero-framework-label">Model Layer</span>
-                <strong>Prediction / Ranking</strong>
-                <p>Learning patterns from heterogeneous construction data</p>
-              </div>
-              <div class="hero-framework-visual hero-framework-visual-bars" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </section>
-            <section class="hero-framework-step hero-framework-step-core">
-              <span class="hero-framework-index">03</span>
-              <div class="hero-framework-copy">
-                <span class="hero-framework-label">Intelligence Core</span>
-                <strong>Inference / Optimization</strong>
-                <p>Decision support connecting analysis, simulation, and action</p>
-              </div>
-              <div class="hero-framework-core-badge" aria-hidden="true">AI</div>
-            </section>
-            <section class="hero-framework-step hero-framework-step-decision">
-              <span class="hero-framework-index">04</span>
-              <div class="hero-framework-copy">
-                <span class="hero-framework-label">Decision Layer</span>
-                <strong>Planning / Safety / Maintenance</strong>
-                <p>Operational outputs for the built environment lifecycle</p>
-              </div>
-              <div class="hero-framework-visual hero-framework-visual-buildings" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </section>
-          </div>
-          <div class="hero-framework-footer">
-            <span>Data foundation</span>
-            <span>Applied AI models</span>
-            <span>Research to decision making</span>
-          </div>
+        <div class="hero-diagram-shell">
+          <svg class="hero-diagram-svg" viewBox="0 0 620 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Construction AI pipeline">
+            <defs>
+              <linearGradient id="hero-bg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#f2f7fc"/>
+              </linearGradient>
+              <linearGradient id="hero-border" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#dbe6f4"/>
+                <stop offset="100%" stop-color="#c6d6e8"/>
+              </linearGradient>
+              <linearGradient id="hero-blue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d7e7ff"/>
+                <stop offset="100%" stop-color="#7ba4e0"/>
+              </linearGradient>
+              <linearGradient id="hero-gold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#efd3a3"/>
+                <stop offset="100%" stop-color="#bf8240"/>
+              </linearGradient>
+              <linearGradient id="hero-navy" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#21456f"/>
+                <stop offset="100%" stop-color="#102744"/>
+              </linearGradient>
+              <filter id="hero-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#102744" flood-opacity="0.12"/>
+              </filter>
+            </defs>
+            <rect x="18" y="18" width="584" height="484" rx="38" fill="url(#hero-bg)" stroke="url(#hero-border)" stroke-width="1.5"/>
+            <circle cx="504" cy="66" r="94" fill="#d8c4a1" opacity="0.18"/>
+            <circle cx="112" cy="432" r="108" fill="#cadef5" opacity="0.26"/>
+            <g filter="url(#hero-shadow)" font-family="'SUIT Variable','Pretendard Variable','Pretendard',sans-serif">
+              <rect x="56" y="86" width="214" height="120" rx="24" fill="#ffffff" fill-opacity="0.9" stroke="#cfdbeb"/>
+              <text x="80" y="122" fill="#9b744a" font-size="13" font-weight="800" letter-spacing="3">DATA LAYER</text>
+              <text x="80" y="154" fill="#17304e" font-size="18" font-weight="800">BIM / Text / Sensors</text>
+              <text x="80" y="184" fill="#678099" font-size="13.5" font-weight="500">Field records and digital assets</text>
+              <circle cx="222" cy="150" r="7" fill="url(#hero-blue)"/>
+              <circle cx="240" cy="150" r="10" fill="url(#hero-blue)"/>
+              <circle cx="261" cy="150" r="13" fill="url(#hero-blue)"/>
+              <circle cx="286" cy="150" r="10" fill="url(#hero-gold)"/>
+
+              <rect x="350" y="86" width="214" height="120" rx="24" fill="#ffffff" fill-opacity="0.9" stroke="#cfdbeb"/>
+              <text x="374" y="122" fill="#9b744a" font-size="13" font-weight="800" letter-spacing="3">MODEL LAYER</text>
+              <text x="374" y="154" fill="#17304e" font-size="18" font-weight="800">Prediction / Ranking</text>
+              <text x="374" y="184" fill="#678099" font-size="13.5" font-weight="500">Risk, quality, and performance</text>
+              <rect x="498" y="136" width="16" height="40" rx="8" fill="url(#hero-gold)"/>
+              <rect x="472" y="124" width="16" height="52" rx="8" fill="url(#hero-blue)"/>
+              <rect x="446" y="114" width="16" height="62" rx="8" fill="url(#hero-blue)"/>
+              <rect x="420" y="132" width="16" height="44" rx="8" fill="url(#hero-blue)"/>
+
+              <rect x="56" y="314" width="214" height="120" rx="24" fill="#ffffff" fill-opacity="0.9" stroke="#cfdbeb"/>
+              <text x="80" y="350" fill="#9b744a" font-size="13" font-weight="800" letter-spacing="3">BUILT ASSET</text>
+              <text x="80" y="382" fill="#17304e" font-size="18" font-weight="800">Monitoring / Simulation</text>
+              <text x="80" y="412" fill="#678099" font-size="13.5" font-weight="500">Performance signals and lifecycle context</text>
+              <rect x="204" y="352" width="18" height="56" rx="9" fill="url(#hero-blue)"/>
+              <rect x="178" y="334" width="18" height="74" rx="9" fill="url(#hero-blue)"/>
+              <rect x="152" y="364" width="18" height="44" rx="9" fill="url(#hero-blue)"/>
+              <rect x="230" y="322" width="18" height="86" rx="9" fill="url(#hero-gold)"/>
+
+              <rect x="350" y="314" width="214" height="120" rx="24" fill="#ffffff" fill-opacity="0.9" stroke="#cfdbeb"/>
+              <text x="374" y="350" fill="#9b744a" font-size="13" font-weight="800" letter-spacing="3">DECISION LAYER</text>
+              <text x="374" y="382" fill="#17304e" font-size="18" font-weight="800">Planning / Safety / Maintenance</text>
+              <text x="374" y="412" fill="#678099" font-size="13.5" font-weight="500">Research outputs applied to practice</text>
+              <rect x="500" y="352" width="18" height="56" rx="9" fill="url(#hero-gold)"/>
+              <rect x="474" y="366" width="18" height="42" rx="9" fill="url(#hero-blue)"/>
+              <rect x="448" y="358" width="18" height="50" rx="9" fill="url(#hero-blue)"/>
+              <rect x="422" y="374" width="18" height="34" rx="9" fill="url(#hero-blue)"/>
+
+              <path d="M270 146 C308 164 322 188 330 220" stroke="#b9c9dc" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M350 146 C312 164 298 188 290 220" stroke="#b9c9dc" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M270 374 C308 356 322 332 330 300" stroke="#b9c9dc" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <path d="M350 374 C312 356 298 332 290 300" stroke="#b9c9dc" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+              <circle cx="310" cy="260" r="84" fill="url(#hero-navy)"/>
+              <circle cx="310" cy="260" r="104" fill="none" stroke="#d1deeb" stroke-dasharray="4 6"/>
+              <circle cx="310" cy="260" r="48" fill="url(#hero-gold)"/>
+              <text x="310" y="248" text-anchor="middle" fill="#eff4fa" font-size="14" font-weight="800" letter-spacing="3">INTELLIGENCE</text>
+              <text x="310" y="264" text-anchor="middle" fill="#eff4fa" font-size="14" font-weight="800" letter-spacing="3">CORE</text>
+              <text x="310" y="300" text-anchor="middle" fill="#13253c" font-size="28" font-weight="900">AI</text>
+            </g>
+          </svg>
         </div>
       </div>
     `;
