@@ -662,14 +662,25 @@
         <div class="sidebar-identity">
           <p class="sidebar-name">${text(PROFILE.name)}</p>
           <p class="sidebar-affiliation">${text(PROFILE.affiliation)}</p>
-          <p class="sidebar-summary">${text(PROFILE.summary)}</p>
-        </div>
-        <div class="sidebar-mark">
-          <div class="mark-badge">NK</div>
-          <div class="mark-copy">
-            <p class="mark-title">Research Profile</p>
-            <p class="mark-subtitle">Research Archive</p>
-          </div>
+          <section class="sidebar-contact-card" aria-label="Contact details">
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Address</span>
+              <p class="sidebar-contact-value">15588 경기도 안산시 상록구 한양대학로 55</p>
+            </div>
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Email</span>
+              <p class="sidebar-contact-value"><a class="sidebar-contact-link" href="mailto:nhkwon@hanyang.ac.kr">nhkwon@hanyang.ac.kr</a></p>
+            </div>
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Tel.</span>
+              <p class="sidebar-contact-value">01073929933</p>
+            </div>
+          </section>
+          <section class="sidebar-signature">
+            <p class="sidebar-signature-kicker">Toward</p>
+            <h2 class="sidebar-signature-title">Construction AI & Data Intelligence</h2>
+            <p class="sidebar-signature-note">with Codex and vibe coding</p>
+          </section>
         </div>
         <div class="sidebar-social">
           ${getProfileLinks().map((item) => renderSocialLink(item)).join("")}
@@ -779,11 +790,12 @@
           <div class="mark-badge hero-badge">NK</div>
           <div class="mark-copy">
             <p class="mark-title">${text(PROFILE.name)}</p>
-            <p class="mark-subtitle">Research Archive</p>
+            <p class="mark-subtitle">with Codex and vibe coding</p>
           </div>
         </div>
         <p class="hero-kicker">${text(CONTENT.hero.kicker)}</p>
         <h1 class="hero-title">${text(CONTENT.hero.title)}</h1>
+        <p class="hero-caption">with Codex and vibe coding</p>
         <p class="hero-description">${text(CONTENT.hero.description)}</p>
         <div class="meta-row">
           <span class="meta-pill">${icon("building")} ${text({ ko: "한양대학교", en: "Hanyang University" })}</span>
@@ -1868,11 +1880,12 @@
               <div class="mark-badge hero-badge">NK</div>
               <div class="mark-copy">
                 <p class="mark-title">${text(PROFILE.name)}</p>
-                <p class="mark-subtitle">Research Archive</p>
+                <p class="mark-subtitle">with Codex and vibe coding</p>
               </div>
             </div>
             <p class="hero-kicker">${text({ ko: "Toward", en: "Toward" })}</p>
             <h1 class="hero-title">Construction AI & Data Intelligence</h1>
+            <p class="hero-caption">with Codex and vibe coding</p>
             <p class="hero-description">${text({
               ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
               en: "Data-driven research linking maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
