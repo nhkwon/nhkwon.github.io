@@ -495,6 +495,7 @@
     </div>
     ${renderAiChat()}
   `;
+  ensureRuntimeStyleOverrides();
   finalizeRenderedPage();
   app.addEventListener("click", handleAppClick);
   app.addEventListener("submit", handleAppSubmit);
@@ -512,6 +513,193 @@
     if (typeof value === "string") return value;
     if (typeof value === "object") return value[lang] || value.ko || value.en || "";
     return String(value);
+  }
+
+  function ensureRuntimeStyleOverrides() {
+    const styleId = "site-runtime-overrides";
+    let styleEl = document.getElementById(styleId);
+
+    if (!styleEl) {
+      styleEl = document.createElement("style");
+      styleEl.id = styleId;
+      document.head.appendChild(styleEl);
+    }
+
+    styleEl.textContent = `
+      .hero-panel .hero-kicker {
+        max-width: 38rem !important;
+        margin: 0 0 0.25rem !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: clamp(0.9rem, 1.05vw, 1rem) !important;
+        font-weight: 600 !important;
+        line-height: 1.42 !important;
+        letter-spacing: 0.01em !important;
+        text-transform: none !important;
+        color: #8f6d4c !important;
+      }
+
+      .hero-panel .hero-title {
+        max-width: 9.2ch !important;
+        font-size: clamp(3.18rem, 6vw, 5.15rem) !important;
+        font-weight: 780 !important;
+        line-height: 0.94 !important;
+        letter-spacing: -0.06em !important;
+        color: #132741 !important;
+      }
+
+      .hero-panel .hero-caption {
+        display: inline-flex !important;
+        width: fit-content !important;
+        margin-top: 1rem !important;
+        padding: 0.76rem 1.18rem !important;
+        border-radius: 999px !important;
+        background: linear-gradient(180deg, rgba(224, 232, 241, 0.96), rgba(214, 223, 235, 0.88)) !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.015em !important;
+        text-transform: none !important;
+        color: #26486e !important;
+      }
+
+      .hero-summary {
+        margin-top: 1.5rem !important;
+        gap: 18px !important;
+        align-items: stretch !important;
+      }
+
+      .summary-card {
+        display: grid !important;
+        grid-template-rows: minmax(3.55rem, auto) auto 1fr !important;
+        align-content: start !important;
+        gap: 0.82rem !important;
+        min-height: 214px !important;
+        padding: 26px 26px 24px !important;
+      }
+
+      .summary-label {
+        display: block !important;
+        min-height: 3.55rem !important;
+        margin: 0 !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: 0.98rem !important;
+        font-weight: 600 !important;
+        line-height: 1.32 !important;
+        letter-spacing: -0.01em !important;
+        text-transform: none !important;
+        color: #8f6d4c !important;
+      }
+
+      .summary-value {
+        margin: 0 !important;
+        align-self: start !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: clamp(3rem, 3.3vw, 3.95rem) !important;
+        font-weight: 730 !important;
+        line-height: 0.9 !important;
+        letter-spacing: -0.055em !important;
+        color: #132741 !important;
+      }
+
+      .summary-detail {
+        margin: 0 !important;
+        align-self: end !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: 0.98rem !important;
+        line-height: 1.5 !important;
+        color: #667d93 !important;
+      }
+
+      .hero-diagram-shell {
+        width: 100% !important;
+        padding: 10px !important;
+        border-radius: 40px !important;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(242, 247, 252, 0.98)),
+          radial-gradient(circle at top right, rgba(219, 193, 156, 0.14), rgba(219, 193, 156, 0) 44%) !important;
+        border: 1px solid rgba(201, 212, 225, 0.92) !important;
+        box-shadow: 0 30px 70px rgba(17, 41, 71, 0.1) !important;
+      }
+
+      .hero-diagram-svg {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        border-radius: 30px !important;
+      }
+
+      .section-subtitle,
+      .mark-subtitle,
+      .interest-subtitle,
+      .page-kicker,
+      .meta-pill,
+      .metric-chip {
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        letter-spacing: 0.01em !important;
+        text-transform: none !important;
+      }
+
+      .section-subtitle,
+      .mark-subtitle,
+      .interest-subtitle,
+      .page-kicker {
+        font-size: 0.82rem !important;
+        font-weight: 600 !important;
+        color: #7f6244 !important;
+      }
+
+      .meta-pill,
+      .metric-chip {
+        font-size: 0.78rem !important;
+        font-weight: 600 !important;
+      }
+
+      @media (max-width: 1120px) {
+        .summary-card {
+          min-height: 198px !important;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .hero-panel .hero-kicker {
+          max-width: none !important;
+          font-size: 0.84rem !important;
+        }
+
+        .hero-panel .hero-title {
+          max-width: none !important;
+          font-size: clamp(2.5rem, 10vw, 3.75rem) !important;
+        }
+
+        .hero-panel .hero-caption {
+          font-size: 0.95rem !important;
+        }
+
+        .summary-card {
+          grid-template-rows: minmax(2.9rem, auto) auto 1fr !important;
+          min-height: 172px !important;
+          padding: 22px 20px 20px !important;
+        }
+
+        .summary-label {
+          min-height: 2.9rem !important;
+          font-size: 0.92rem !important;
+        }
+
+        .summary-value {
+          font-size: clamp(2.6rem, 11vw, 3.25rem) !important;
+        }
+
+        .summary-detail {
+          font-size: 0.92rem !important;
+        }
+
+        .hero-diagram-shell {
+          padding: 8px !important;
+        }
+      }
+    `;
   }
 
   function finalizeRenderedPage() {
@@ -534,6 +722,10 @@
         lang === "ko"
           ? "Maintenance · Performance · Prediction · Decision"
           : "Maintenance · Performance · Prediction · Decision";
+    }
+
+    if (signatureNote) {
+      signatureNote.textContent = "Maintenance · Performance · Prediction · Decision";
     }
 
     if (page !== "home") {
@@ -582,6 +774,11 @@
       heroTitle.textContent = "Construction AI & Data Intelligence";
     }
 
+    if (heroKicker) {
+      heroKicker.textContent =
+        "Hanyang University ERICA · AI Construction Technology Research Center";
+    }
+
     if (!heroCaption && heroTitle) {
       heroCaption = document.createElement("p");
       heroCaption.className = "hero-caption";
@@ -602,6 +799,10 @@
 
     if (buttonRow) {
       const buttonLabels = buttonRow.querySelectorAll("span");
+      if (buttonLabels[0]) {
+        buttonLabels[0].textContent = lang === "ko" ? "전체 논문 보기" : "View publications";
+      }
+
       if (buttonLabels[0]) {
         buttonLabels[0].textContent = lang === "ko" ? "전체 논문 보기" : "View publications";
       }
@@ -2476,83 +2677,101 @@
     return `
       <div class="hero-visual hero-schematic" aria-hidden="true">
         <div class="hero-diagram-shell">
-          <svg class="hero-diagram-svg" viewBox="0 0 620 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Construction AI pipeline">
+          <svg class="hero-diagram-svg" viewBox="0 0 620 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Coding, data science, AI, and smart construction illustration">
             <defs>
               <linearGradient id="hero-bg" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stop-color="#ffffff"/>
-                <stop offset="100%" stop-color="#f2f7fc"/>
+                <stop offset="100%" stop-color="#f4f8fc"/>
               </linearGradient>
-              <linearGradient id="hero-border" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#dbe6f4"/>
-                <stop offset="100%" stop-color="#c6d6e8"/>
+              <linearGradient id="hero-frame" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#dbe5f0"/>
+                <stop offset="100%" stop-color="#c4d3e3"/>
+              </linearGradient>
+              <linearGradient id="hero-ink" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#17385d"/>
+                <stop offset="100%" stop-color="#0f2743"/>
               </linearGradient>
               <linearGradient id="hero-blue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#d7e7ff"/>
-                <stop offset="100%" stop-color="#7ba4e0"/>
+                <stop offset="0%" stop-color="#e4f0ff"/>
+                <stop offset="100%" stop-color="#89addd"/>
               </linearGradient>
               <linearGradient id="hero-gold" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#efd3a3"/>
-                <stop offset="100%" stop-color="#bf8240"/>
-              </linearGradient>
-              <linearGradient id="hero-navy" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#21456f"/>
-                <stop offset="100%" stop-color="#102744"/>
+                <stop offset="0%" stop-color="#f4ddbb"/>
+                <stop offset="100%" stop-color="#c89259"/>
               </linearGradient>
               <filter id="hero-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#102744" flood-opacity="0.12"/>
+                <feDropShadow dx="0" dy="22" stdDeviation="22" flood-color="#102744" flood-opacity="0.12"/>
+              </filter>
+              <pattern id="hero-grid" width="34" height="34" patternUnits="userSpaceOnUse">
+                <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#dfe8f2" stroke-width="1"/>
+              </pattern>
+              <filter id="hero-soft-blur" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="22"/>
               </filter>
             </defs>
-            <rect x="18" y="18" width="584" height="484" rx="38" fill="url(#hero-bg)" stroke="url(#hero-border)" stroke-width="1.5"/>
-            <circle cx="504" cy="66" r="94" fill="#d8c4a1" opacity="0.18"/>
-            <circle cx="112" cy="432" r="108" fill="#cadef5" opacity="0.26"/>
-            <g filter="url(#hero-shadow)" font-family="'SUIT Variable','Pretendard Variable','Pretendard',sans-serif">
-              <rect x="56" y="86" width="214" height="120" rx="24" fill="#ffffff" fill-opacity="0.9" stroke="#cfdbeb"/>
-              <text x="80" y="122" fill="#9b744a" font-size="13" font-weight="800" letter-spacing="3">DATA LAYER</text>
-              <text x="80" y="154" fill="#17304e" font-size="18" font-weight="800">BIM / Text / Sensors</text>
-              <text x="80" y="184" fill="#678099" font-size="13.5" font-weight="500">Field records and digital assets</text>
-              <circle cx="222" cy="150" r="7" fill="url(#hero-blue)"/>
-              <circle cx="240" cy="150" r="10" fill="url(#hero-blue)"/>
-              <circle cx="261" cy="150" r="13" fill="url(#hero-blue)"/>
-              <circle cx="286" cy="150" r="10" fill="url(#hero-gold)"/>
+            <rect x="18" y="18" width="584" height="484" rx="40" fill="url(#hero-bg)" stroke="url(#hero-frame)" stroke-width="1.5"/>
+            <rect x="42" y="42" width="536" height="436" rx="34" fill="url(#hero-grid)" opacity="0.55"/>
+            <circle cx="510" cy="94" r="96" fill="#e2cfb1" opacity="0.2" filter="url(#hero-soft-blur)"/>
+            <circle cx="116" cy="408" r="116" fill="#d4e4f8" opacity="0.42" filter="url(#hero-soft-blur)"/>
+            <g filter="url(#hero-shadow)" font-family="'Inter','Pretendard Variable','Pretendard',sans-serif">
+              <rect x="56" y="70" width="228" height="164" rx="28" fill="#ffffff" fill-opacity="0.96" stroke="#d7e2ee"/>
+              <text x="82" y="106" fill="#7f6141" font-size="13" font-weight="700">Coding workflow</text>
+              <text x="82" y="132" fill="#153453" font-size="22" font-weight="700">Python, agents, APIs</text>
+              <text x="82" y="156" fill="#72879b" font-size="13.5" font-weight="500">From prompt design to automation</text>
+              <rect x="82" y="176" width="176" height="40" rx="14" fill="url(#hero-ink)"/>
+              <circle cx="100" cy="196" r="4" fill="#f4ddbb"/>
+              <circle cx="114" cy="196" r="4" fill="#89addd"/>
+              <circle cx="128" cy="196" r="4" fill="#d6e7fb"/>
+              <rect x="144" y="190" width="38" height="6" rx="3" fill="#f4ddbb" fill-opacity="0.95"/>
+              <rect x="92" y="208" width="76" height="5" rx="2.5" fill="#7fa6d9"/>
+              <rect x="176" y="208" width="58" height="5" rx="2.5" fill="#d8e7fa" fill-opacity="0.95"/>
+              <rect x="82" y="232" width="72" height="22" rx="11" fill="#edf4fc" stroke="#d5e3f0"/>
+              <text x="98" y="247" fill="#3f6388" font-size="11.5" font-weight="600">Git sync</text>
+              <path d="M284 150 C304 162 308 188 308 214" stroke="#cad7e5" stroke-width="3.5" fill="none" stroke-linecap="round"/>
 
-              <rect x="350" y="86" width="214" height="120" rx="24" fill="#ffffff" fill-opacity="0.9" stroke="#cfdbeb"/>
-              <text x="374" y="122" fill="#9b744a" font-size="13" font-weight="800" letter-spacing="3">MODEL LAYER</text>
-              <text x="374" y="154" fill="#17304e" font-size="18" font-weight="800">Prediction / Ranking</text>
-              <text x="374" y="184" fill="#678099" font-size="13.5" font-weight="500">Risk, quality, and performance</text>
-              <rect x="498" y="136" width="16" height="40" rx="8" fill="url(#hero-gold)"/>
-              <rect x="472" y="124" width="16" height="52" rx="8" fill="url(#hero-blue)"/>
-              <rect x="446" y="114" width="16" height="62" rx="8" fill="url(#hero-blue)"/>
-              <rect x="420" y="132" width="16" height="44" rx="8" fill="url(#hero-blue)"/>
+              <rect x="336" y="70" width="228" height="164" rx="28" fill="#ffffff" fill-opacity="0.96" stroke="#d7e2ee"/>
+              <text x="362" y="106" fill="#7f6141" font-size="13" font-weight="700">Data science</text>
+              <text x="362" y="132" fill="#153453" font-size="22" font-weight="700">Signals, forecasts, insight</text>
+              <text x="362" y="156" fill="#72879b" font-size="13.5" font-weight="500">Sensor streams and model outputs</text>
+              <path d="M364 202 C386 184 404 212 424 194 C440 180 456 178 476 190 C494 200 512 178 534 188" fill="none" stroke="#7ea7dd" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="386" cy="184" r="6.5" fill="#ffffff" stroke="#7ea7dd" stroke-width="3"/>
+              <circle cx="424" cy="194" r="6.5" fill="#ffffff" stroke="#7ea7dd" stroke-width="3"/>
+              <circle cx="476" cy="190" r="6.5" fill="#ffffff" stroke="#c89259" stroke-width="3"/>
+              <circle cx="534" cy="188" r="6.5" fill="#ffffff" stroke="#7ea7dd" stroke-width="3"/>
+              <rect x="362" y="208" width="18" height="24" rx="9" fill="#dceafd"/>
+              <rect x="388" y="196" width="18" height="36" rx="9" fill="#7ea7dd"/>
+              <rect x="414" y="184" width="18" height="48" rx="9" fill="#dceafd"/>
+              <rect x="440" y="172" width="18" height="60" rx="9" fill="#c89259"/>
+              <rect x="466" y="190" width="18" height="42" rx="9" fill="#a8c3e8"/>
+              <rect x="492" y="200" width="18" height="32" rx="9" fill="#dceafd"/>
+              <path d="M336 150 C318 162 314 188 314 214" stroke="#cad7e5" stroke-width="3.5" fill="none" stroke-linecap="round"/>
 
-              <rect x="56" y="314" width="214" height="120" rx="24" fill="#ffffff" fill-opacity="0.9" stroke="#cfdbeb"/>
-              <text x="80" y="350" fill="#9b744a" font-size="13" font-weight="800" letter-spacing="3">BUILT ASSET</text>
-              <text x="80" y="382" fill="#17304e" font-size="18" font-weight="800">Monitoring / Simulation</text>
-              <text x="80" y="412" fill="#678099" font-size="13.5" font-weight="500">Performance signals and lifecycle context</text>
-              <rect x="204" y="352" width="18" height="56" rx="9" fill="url(#hero-blue)"/>
-              <rect x="178" y="334" width="18" height="74" rx="9" fill="url(#hero-blue)"/>
-              <rect x="152" y="364" width="18" height="44" rx="9" fill="url(#hero-blue)"/>
-              <rect x="230" y="322" width="18" height="86" rx="9" fill="url(#hero-gold)"/>
+              <circle cx="310" cy="258" r="86" fill="#edf4fb" stroke="#d5e2ef"/>
+              <circle cx="310" cy="258" r="58" fill="url(#hero-ink)"/>
+              <circle cx="310" cy="258" r="34" fill="url(#hero-gold)"/>
+              <circle cx="310" cy="258" r="104" fill="none" stroke="#d6e2ee" stroke-dasharray="5 8"/>
+              <text x="310" y="234" text-anchor="middle" fill="#ecf3fb" font-size="13" font-weight="700">AI reasoning</text>
+              <text x="310" y="250" text-anchor="middle" fill="#ecf3fb" font-size="13" font-weight="700">hub</text>
+              <text x="310" y="286" text-anchor="middle" fill="#12304e" font-size="27" font-weight="900">AI</text>
 
-              <rect x="350" y="314" width="214" height="120" rx="24" fill="#ffffff" fill-opacity="0.9" stroke="#cfdbeb"/>
-              <text x="374" y="350" fill="#9b744a" font-size="13" font-weight="800" letter-spacing="3">DECISION LAYER</text>
-              <text x="374" y="382" fill="#17304e" font-size="18" font-weight="800">Planning / Safety / Maintenance</text>
-              <text x="374" y="412" fill="#678099" font-size="13.5" font-weight="500">Research outputs applied to practice</text>
-              <rect x="500" y="352" width="18" height="56" rx="9" fill="url(#hero-gold)"/>
-              <rect x="474" y="366" width="18" height="42" rx="9" fill="url(#hero-blue)"/>
-              <rect x="448" y="358" width="18" height="50" rx="9" fill="url(#hero-blue)"/>
-              <rect x="422" y="374" width="18" height="34" rx="9" fill="url(#hero-blue)"/>
-
-              <path d="M270 146 C308 164 322 188 330 220" stroke="#b9c9dc" stroke-width="3" fill="none" stroke-linecap="round"/>
-              <path d="M350 146 C312 164 298 188 290 220" stroke="#b9c9dc" stroke-width="3" fill="none" stroke-linecap="round"/>
-              <path d="M270 374 C308 356 322 332 330 300" stroke="#b9c9dc" stroke-width="3" fill="none" stroke-linecap="round"/>
-              <path d="M350 374 C312 356 298 332 290 300" stroke="#b9c9dc" stroke-width="3" fill="none" stroke-linecap="round"/>
-
-              <circle cx="310" cy="260" r="84" fill="url(#hero-navy)"/>
-              <circle cx="310" cy="260" r="104" fill="none" stroke="#d1deeb" stroke-dasharray="4 6"/>
-              <circle cx="310" cy="260" r="48" fill="url(#hero-gold)"/>
-              <text x="310" y="248" text-anchor="middle" fill="#eff4fa" font-size="14" font-weight="800" letter-spacing="3">INTELLIGENCE</text>
-              <text x="310" y="264" text-anchor="middle" fill="#eff4fa" font-size="14" font-weight="800" letter-spacing="3">CORE</text>
-              <text x="310" y="300" text-anchor="middle" fill="#13253c" font-size="28" font-weight="900">AI</text>
+              <rect x="96" y="308" width="428" height="140" rx="30" fill="#ffffff" fill-opacity="0.97" stroke="#d7e2ee"/>
+              <text x="124" y="346" fill="#7f6141" font-size="13" font-weight="700">Smart construction</text>
+              <text x="124" y="372" fill="#153453" font-size="22" font-weight="700">BIM, safety, maintenance</text>
+              <text x="124" y="396" fill="#72879b" font-size="13.5" font-weight="500">Digital twin signals connected to field decisions</text>
+              <path d="M178 430 L224 386 L252 406 L298 358 L332 386" fill="none" stroke="#b7cbe2" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="178" cy="430" r="6" fill="#7ea7dd"/>
+              <circle cx="224" cy="386" r="6" fill="#c89259"/>
+              <circle cx="252" cy="406" r="6" fill="#7ea7dd"/>
+              <circle cx="298" cy="358" r="6" fill="#7ea7dd"/>
+              <circle cx="332" cy="386" r="6" fill="#c89259"/>
+              <rect x="392" y="352" width="34" height="72" rx="10" fill="#dce9f8" stroke="#bcd0e5"/>
+              <rect x="430" y="334" width="40" height="90" rx="10" fill="#a6c2e7" stroke="#8fb0d8"/>
+              <rect x="474" y="316" width="26" height="108" rx="10" fill="#e7d4b8" stroke="#d6b28a"/>
+              <path d="M448 320 H520" stroke="#7f9cc3" stroke-width="3" stroke-linecap="round"/>
+              <path d="M494 320 V288" stroke="#7f9cc3" stroke-width="3" stroke-linecap="round"/>
+              <path d="M494 288 L532 304" stroke="#7f9cc3" stroke-width="3" stroke-linecap="round"/>
+              <path d="M310 316 C310 332 310 340 310 352" stroke="#cad7e5" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+              <circle cx="310" cy="352" r="6.5" fill="#ffffff" stroke="#c89259" stroke-width="3"/>
             </g>
           </svg>
         </div>
