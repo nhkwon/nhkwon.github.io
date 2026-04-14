@@ -515,6 +515,27 @@
   }
 
   function finalizeRenderedPage() {
+    const sidebarRows = Array.from(app.querySelectorAll(".sidebar-contact-row"));
+    const signatureNote = app.querySelector(".sidebar-signature-note");
+
+    if (sidebarRows[0]?.querySelector(".sidebar-contact-value")) {
+      sidebarRows[0].querySelector(".sidebar-contact-value").textContent =
+        lang === "ko"
+          ? "15588 경기도 안산시 상록구 한양대학로 55"
+          : "55 Hanyangdaehak-ro, Sangnok-gu, Ansan-si, Gyeonggi-do 15588";
+    }
+
+    if (sidebarRows[2]?.querySelector(".sidebar-contact-value")) {
+      sidebarRows[2].querySelector(".sidebar-contact-value").textContent = "+82 10-7392-9933";
+    }
+
+    if (signatureNote) {
+      signatureNote.textContent =
+        lang === "ko"
+          ? "Maintenance · Performance · Prediction · Decision"
+          : "Maintenance · Performance · Prediction · Decision";
+    }
+
     if (page !== "home") {
       return;
     }
@@ -540,14 +561,77 @@
       firstSection.classList.add("home-primary-section");
     }
 
-    const heroCaption = siteMain.querySelector(".hero-panel .hero-caption");
-    if (heroCaption) {
-      heroCaption.remove();
+    const heroCopy = siteMain.querySelector(".hero-panel .hero-copy");
+    if (!heroCopy) {
+      return;
     }
 
-    const heroLead = siteMain.querySelector(".hero-panel .hero-lead");
+    const heroKicker = heroCopy.querySelector(".hero-kicker");
+    const heroTitle = heroCopy.querySelector(".hero-title");
+    let heroCaption = heroCopy.querySelector(".hero-caption");
+    let heroLead = heroCopy.querySelector(".hero-lead");
+    let heroPillRow = heroCopy.querySelector(".hero-pill-row");
+    const buttonRow = heroCopy.querySelector(".button-row");
+
+    if (heroKicker) {
+      heroKicker.textContent =
+        "Hanyang University ERICA · AI Construction Technology Research Center";
+    }
+
+    if (heroTitle) {
+      heroTitle.textContent = "Construction AI & Data Intelligence";
+    }
+
+    if (!heroCaption && heroTitle) {
+      heroCaption = document.createElement("p");
+      heroCaption.className = "hero-caption";
+      heroTitle.insertAdjacentElement("afterend", heroCaption);
+    }
+
+    if (heroCaption) {
+      heroCaption.textContent = "with Codex and Vibe Coding";
+    }
+
+    if (!heroLead && heroCaption) {
+      heroLead = document.createElement("p");
+      heroLead.className = "hero-lead";
+      heroCaption.insertAdjacentElement("afterend", heroLead);
+    }
+
     if (heroLead) {
-      heroLead.remove();
+      heroLead.textContent =
+        lang === "ko"
+          ? "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구를 수행합니다."
+          : "Data-driven research connecting maintenance, performance assessment, predictive modeling, and decision support across the built environment.";
+    }
+
+    if (!heroPillRow && heroLead) {
+      heroPillRow = document.createElement("div");
+      heroPillRow.className = "hero-pill-row";
+      heroLead.insertAdjacentElement("afterend", heroPillRow);
+    }
+
+    if (heroPillRow) {
+      heroPillRow.setAttribute("aria-label", lang === "ko" ? "연구 키워드" : "Research keywords");
+      heroPillRow.innerHTML = [
+        lang === "ko" ? "유지관리" : "Maintenance",
+        lang === "ko" ? "성능평가" : "Performance",
+        lang === "ko" ? "예측모형" : "Prediction",
+        lang === "ko" ? "의사결정" : "Decision Support"
+      ]
+        .map((label) => `<span class="hero-pill">${label}</span>`)
+        .join("");
+    }
+
+    if (buttonRow) {
+      const buttonLabels = buttonRow.querySelectorAll("span");
+      if (buttonLabels[0]) {
+        buttonLabels[0].textContent = lang === "ko" ? "전체 논문 보기" : "View publications";
+      }
+
+      if (heroPillRow) {
+        heroPillRow.insertAdjacentElement("afterend", buttonRow);
+      }
     }
   }
 
