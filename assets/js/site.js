@@ -12,6 +12,23 @@
       ? "citations"
       : "year";
   let currentPublicationSort = publicationSort;
+  const AI_CHAT_IDLE_MS = 90000;
+  const AI_CHAT_STARTERS = [
+    {
+      label: { ko: "연구 주제", en: "Research topics" },
+      prompt: { ko: "연구 주제가 궁금해요", en: "What are the main research topics?" }
+    },
+    {
+      label: { ko: "논문 실적", en: "Publications" },
+      prompt: { ko: "논문 실적을 알려주세요", en: "Show me the publication summary" }
+    },
+    {
+      label: { ko: "연락 방법", en: "Contact" },
+      prompt: { ko: "연락은 어떻게 하나요?", en: "How can I get in touch?" }
+    }
+  ];
+  let aiChatOpen = false;
+  let aiChatIdleTimer = null;
 
   const ROUTES = {
     home: { ko: "ko.html", en: "en.html" },
@@ -476,8 +493,15 @@
         ${renderPage()}
       </main>
     </div>
+    ${renderAiChat()}
   `;
   app.addEventListener("click", handleAppClick);
+  app.addEventListener("submit", handleAppSubmit);
+  app.addEventListener("input", handleAppInput);
+  app.addEventListener("focusin", handleAppFocusIn);
+  document.addEventListener("pointerdown", handleDocumentPointerDown);
+  document.addEventListener("keydown", handleDocumentKeydown);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
   function text(value) {
     if (value === null || value === undefined) return "";
@@ -669,6 +693,65 @@
           <a class="lang-pill ${lang === "en" ? "is-active" : ""}" href="${route(page, "en")}">EN</a>
         </div>
       </aside>
+    `;
+  }
+
+  function renderAiChat() {
+    return `
+      <div class="ai-chat-widget" data-ai-chat-widget>
+        <section class="ai-chat-panel" id="ai-chat-panel" data-ai-chat-panel aria-hidden="true">
+          <div class="ai-chat-panel-header">
+            <div class="ai-chat-panel-copy">
+              <p class="ai-chat-kicker">AI Assistant</p>
+              <h2 class="ai-chat-title">${text({ ko: "연구 안내 채팅", en: "Research guide chat" })}</h2>
+            </div>
+            <button class="ai-chat-close" type="button" data-ai-chat-close>${text({ ko: "닫기", en: "Close" })}</button>
+          </div>
+          <div class="ai-chat-messages" data-ai-chat-messages>
+            <article class="ai-chat-message is-assistant">
+              <p class="ai-chat-message-label">AI Assistant</p>
+              <p class="ai-chat-message-body">${text({
+                ko: "연구 주제, 논문 실적, 최근 활동, 연락 방법을 빠르게 안내해드릴게요. 아래 버튼을 누르거나 직접 질문해 주세요.",
+                en: "Ask about research topics, publications, recent activities, or contact details. You can use the shortcuts below or type your own question."
+              })}</p>
+            </article>
+          </div>
+          <div class="ai-chat-starters">
+            ${AI_CHAT_STARTERS.map(
+              (item) => `
+                <button class="ai-chat-starter" type="button" data-ai-chat-starter="${text(item.prompt)}">${text(item.label)}</button>
+              `
+            ).join("")}
+          </div>
+          <form class="ai-chat-form" data-ai-chat-form>
+            <label class="sr-only" for="ai-chat-input">${text({ ko: "질문 입력", en: "Ask a question" })}</label>
+            <input
+              class="ai-chat-input"
+              id="ai-chat-input"
+              data-ai-chat-input
+              type="text"
+              maxlength="200"
+              placeholder="${text({ ko: "질문을 입력하세요", en: "Type your question" })}"
+            >
+            <button class="ai-chat-submit" type="submit">${text({ ko: "보내기", en: "Send" })}</button>
+          </form>
+          <p class="ai-chat-hint">${text({
+            ko: "사용하지 않으면 자동으로 다시 축소됩니다.",
+            en: "The panel automatically minimizes when it is idle."
+          })}</p>
+        </section>
+        <button
+          class="ai-chat-launcher"
+          type="button"
+          data-ai-chat-toggle
+          aria-controls="ai-chat-panel"
+          aria-expanded="false"
+          aria-label="${text({ ko: "AI 채팅 열기", en: "Open AI chat" })}"
+        >
+          <span class="ai-chat-launcher-icon">${icon("spark")}</span>
+          <span class="ai-chat-launcher-text">AI Chat</span>
+        </button>
+      </div>
     `;
   }
 
@@ -1330,6 +1413,28 @@
   }
 
   function handleAppClick(event) {
+    const chatToggle = event.target.closest("[data-ai-chat-toggle]");
+    if (chatToggle) {
+      event.preventDefault();
+      setAiChatOpen(!aiChatOpen, { focusInput: !aiChatOpen, focusLauncher: aiChatOpen });
+      return;
+    }
+
+    const chatClose = event.target.closest("[data-ai-chat-close]");
+    if (chatClose) {
+      event.preventDefault();
+      setAiChatOpen(false, { focusLauncher: true });
+      return;
+    }
+
+    const starterButton = event.target.closest("[data-ai-chat-starter]");
+    if (starterButton) {
+      event.preventDefault();
+      setAiChatOpen(true);
+      handleAiChatPrompt(starterButton.dataset.aiChatStarter || "");
+      return;
+    }
+
     const sortChip = event.target.closest("[data-publication-sort]");
 
     if (!sortChip || page !== "publications") {
@@ -1349,6 +1454,258 @@
     const siteMain = app.querySelector(".site-main");
     if (siteMain) {
       siteMain.innerHTML = renderPage();
+    }
+  }
+
+  function handleAppSubmit(event) {
+    const chatForm = event.target.closest("[data-ai-chat-form]");
+    if (!chatForm) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const input = chatForm.querySelector("[data-ai-chat-input]");
+    if (!input) {
+      return;
+    }
+
+    const prompt = String(input.value || "").trim();
+    if (!prompt) {
+      input.focus();
+      return;
+    }
+
+    handleAiChatPrompt(prompt);
+    input.value = "";
+  }
+
+  function handleAppInput(event) {
+    if (event.target.closest("[data-ai-chat-widget]")) {
+      noteAiChatInteraction();
+    }
+  }
+
+  function handleAppFocusIn(event) {
+    if (event.target.closest("[data-ai-chat-widget]")) {
+      noteAiChatInteraction();
+    }
+  }
+
+  function handleDocumentPointerDown(event) {
+    if (!aiChatOpen || event.target.closest("[data-ai-chat-widget]")) {
+      return;
+    }
+
+    setAiChatOpen(false);
+  }
+
+  function handleDocumentKeydown(event) {
+    if (event.key === "Escape" && aiChatOpen) {
+      setAiChatOpen(false, { focusLauncher: true });
+    }
+  }
+
+  function handleVisibilityChange() {
+    if (document.hidden && aiChatOpen) {
+      setAiChatOpen(false);
+    }
+  }
+
+  function handleAiChatPrompt(prompt) {
+    const normalizedPrompt = String(prompt || "").trim();
+    if (!normalizedPrompt) {
+      return;
+    }
+
+    if (!aiChatOpen) {
+      setAiChatOpen(true);
+    }
+
+    appendAiChatMessage("user", normalizedPrompt);
+
+    const reply = getAiChatReply(normalizedPrompt);
+    appendAiChatMessage("assistant", text(reply.body), reply.actions || []);
+    noteAiChatInteraction();
+  }
+
+  function appendAiChatMessage(role, message, actions) {
+    const container = app.querySelector("[data-ai-chat-messages]");
+    if (!container) {
+      return;
+    }
+
+    const article = document.createElement("article");
+    article.className = `ai-chat-message ${role === "user" ? "is-user" : "is-assistant"}`;
+
+    const label = document.createElement("p");
+    label.className = "ai-chat-message-label";
+    label.textContent = role === "user" ? text({ ko: "사용자", en: "You" }) : "AI Assistant";
+
+    const body = document.createElement("p");
+    body.className = "ai-chat-message-body";
+    body.textContent = message;
+
+    article.append(label, body);
+
+    if (Array.isArray(actions) && actions.length) {
+      const actionRow = document.createElement("div");
+      actionRow.className = "ai-chat-actions";
+
+      actions.forEach((action) => {
+        const link = document.createElement("a");
+        link.className = "ai-chat-action";
+        link.href = action.href;
+        link.textContent = text(action.label);
+        if (action.external) {
+          link.target = "_blank";
+          link.rel = "noreferrer";
+        }
+        actionRow.appendChild(link);
+      });
+
+      article.appendChild(actionRow);
+    }
+
+    container.appendChild(article);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function getAiChatReply(prompt) {
+    const query = String(prompt || "").toLowerCase();
+    const primaryActivity = ACTIVITIES[0];
+    const researchTitles = CONTENT.research.slice(0, 3).map((item) => text(item.title)).join(", ");
+    const emailHref = getProfileHref("email") || "mailto:envy978@hanmail.net";
+    const scholarHref =
+      getProfileHref("google scholar") ||
+      "https://scholar.google.com/citations?hl=en&view_op=search_authors&mauthors=Nahyun+Kwon+Hanyang+University+ERICA";
+
+    if (matchesAiPrompt(query, ["연락", "문의", "이메일", "메일", "contact", "email", "collaboration"])) {
+      return {
+        body: {
+          ko: "가장 빠른 연락 방법은 이메일입니다. 공동연구나 논문 문의라면 관심 주제와 현재 단계, 기대 산출물을 함께 보내주시면 더 빠르게 안내할 수 있습니다.",
+          en: "Email is the best contact channel. For collaboration or publication inquiries, include your topic, current stage, and expected outcome for a faster reply."
+        },
+        actions: [
+          { label: { ko: "메일 보내기", en: "Send email" }, href: emailHref, external: false },
+          { label: { ko: "연락처 페이지", en: "Open contact page" }, href: route("contact"), external: false }
+        ]
+      };
+    }
+
+    if (matchesAiPrompt(query, ["논문", "publication", "paper", "scholar", "citation", "인용"])) {
+      return {
+        body: {
+          ko: `현재 사이트에는 국제 저널 ${publicationSummary.international}편, KCI ${publicationSummary.KCI}편, 총 저널 ${publicationSummary.total}편이 정리되어 있습니다. 인용 정보와 전체 목록은 논문 페이지나 Google Scholar에서 빠르게 확인할 수 있습니다.`,
+          en: `The site currently summarizes ${publicationSummary.international} international journals, ${publicationSummary.KCI} KCI papers, and ${publicationSummary.total} journal papers in total. You can inspect the full list and citations from the publications page or Google Scholar.`
+        },
+        actions: [
+          { label: { ko: "논문 페이지", en: "Open publications" }, href: route("publications"), external: false },
+          { label: { ko: "Scholar 열기", en: "Open Scholar" }, href: scholarHref, external: true }
+        ]
+      };
+    }
+
+    if (matchesAiPrompt(query, ["연구", "주제", "키워드", "research", "topic", "keyword", "project"])) {
+      return {
+        body: {
+          ko: `주요 연구 축은 ${researchTitles}입니다. 유지관리, 건설관리, 에너지, 도시 데이터 분석을 연결하는 방향으로 정리되어 있고, 연구 프로젝트 페이지에서 세부 설명을 확인할 수 있습니다.`,
+          en: `The main research themes include ${researchTitles}. The site organizes them around maintenance, construction management, energy, and urban-data applications, with more detail on the research page.`
+        },
+        actions: [{ label: { ko: "연구 페이지", en: "Open research page" }, href: route("teaching"), external: false }]
+      };
+    }
+
+    if (matchesAiPrompt(query, ["학력", "경력", "소개", "bio", "career", "education", "profile"])) {
+      return {
+        body: {
+          ko: `${text(PROFILE.affiliation)} 소속으로 활동하고 있으며, 학위는 ${text(PROFILE.educationSummary)}입니다. 학력과 경력 흐름은 소개 페이지에서 한 번에 볼 수 있습니다.`,
+          en: `${text(PROFILE.affiliation)} is the current affiliation, and the degree summary is ${text(PROFILE.educationSummary)}. The biography page shows the education and career timeline in one place.`
+        },
+        actions: [{ label: { ko: "소개 페이지", en: "Open biography" }, href: route("bio"), external: false }]
+      };
+    }
+
+    if (primaryActivity && matchesAiPrompt(query, ["최근", "활동", "news", "recent", "activity", "update"])) {
+      return {
+        body: {
+          ko: `최근 활동으로는 ${text(primaryActivity.title)}가 정리되어 있습니다. 최신 항목과 사이트 업데이트는 활동 페이지에서 이어서 확인할 수 있습니다.`,
+          en: `One of the recent activities highlighted on the site is ${text(primaryActivity.title)}. You can continue from the activities page for the latest updates.`
+        },
+        actions: [{ label: { ko: "활동 페이지", en: "Open activities" }, href: route("news"), external: false }]
+      };
+    }
+
+    return {
+      body: {
+        ko: "연구 주제, 논문 실적, 최근 활동, 연락 방법 중 하나를 물어보시면 바로 연결해드릴게요.",
+        en: "Ask about research topics, publications, recent activities, or contact details and I will point you to the right section."
+      },
+      actions: [
+        { label: { ko: "연구 보기", en: "Open research" }, href: route("teaching"), external: false },
+        { label: { ko: "논문 보기", en: "Open publications" }, href: route("publications"), external: false }
+      ]
+    };
+  }
+
+  function matchesAiPrompt(query, keywords) {
+    return keywords.some((keyword) => query.includes(keyword));
+  }
+
+  function setAiChatOpen(nextState, options = {}) {
+    aiChatOpen = Boolean(nextState);
+    syncAiChatUi();
+
+    if (aiChatOpen) {
+      noteAiChatInteraction();
+      if (options.focusInput) {
+        const input = app.querySelector("[data-ai-chat-input]");
+        if (input) {
+          input.focus();
+        }
+      }
+      return;
+    }
+
+    clearAiChatIdleTimer();
+    if (options.focusLauncher) {
+      const launcher = app.querySelector("[data-ai-chat-toggle]");
+      if (launcher) {
+        launcher.focus();
+      }
+    }
+  }
+
+  function syncAiChatUi() {
+    const widget = app.querySelector("[data-ai-chat-widget]");
+    const panel = app.querySelector("[data-ai-chat-panel]");
+    const launcher = app.querySelector("[data-ai-chat-toggle]");
+
+    if (!widget || !panel || !launcher) {
+      return;
+    }
+
+    widget.classList.toggle("is-open", aiChatOpen);
+    panel.setAttribute("aria-hidden", String(!aiChatOpen));
+    launcher.setAttribute("aria-expanded", String(aiChatOpen));
+    launcher.setAttribute("aria-label", text(aiChatOpen ? { ko: "AI 채팅 닫기", en: "Close AI chat" } : { ko: "AI 채팅 열기", en: "Open AI chat" }));
+  }
+
+  function noteAiChatInteraction() {
+    if (!aiChatOpen) {
+      return;
+    }
+
+    clearAiChatIdleTimer();
+    aiChatIdleTimer = window.setTimeout(() => {
+      setAiChatOpen(false);
+    }, AI_CHAT_IDLE_MS);
+  }
+
+  function clearAiChatIdleTimer() {
+    if (aiChatIdleTimer) {
+      window.clearTimeout(aiChatIdleTimer);
+      aiChatIdleTimer = null;
     }
   }
 
