@@ -569,8 +569,8 @@
     const heroKicker = heroCopy.querySelector(".hero-kicker");
     const heroTitle = heroCopy.querySelector(".hero-title");
     let heroCaption = heroCopy.querySelector(".hero-caption");
-    let heroLead = heroCopy.querySelector(".hero-lead");
-    let heroPillRow = heroCopy.querySelector(".hero-pill-row");
+    const heroLead = heroCopy.querySelector(".hero-lead");
+    const heroPillRow = heroCopy.querySelector(".hero-pill-row");
     const buttonRow = heroCopy.querySelector(".button-row");
 
     if (heroKicker) {
@@ -592,35 +592,12 @@
       heroCaption.textContent = "with Codex and Vibe Coding";
     }
 
-    if (!heroLead && heroCaption) {
-      heroLead = document.createElement("p");
-      heroLead.className = "hero-lead";
-      heroCaption.insertAdjacentElement("afterend", heroLead);
-    }
-
     if (heroLead) {
-      heroLead.textContent =
-        lang === "ko"
-          ? "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구를 수행합니다."
-          : "Data-driven research connecting maintenance, performance assessment, predictive modeling, and decision support across the built environment.";
-    }
-
-    if (!heroPillRow && heroLead) {
-      heroPillRow = document.createElement("div");
-      heroPillRow.className = "hero-pill-row";
-      heroLead.insertAdjacentElement("afterend", heroPillRow);
+      heroLead.remove();
     }
 
     if (heroPillRow) {
-      heroPillRow.setAttribute("aria-label", lang === "ko" ? "연구 키워드" : "Research keywords");
-      heroPillRow.innerHTML = [
-        lang === "ko" ? "유지관리" : "Maintenance",
-        lang === "ko" ? "성능평가" : "Performance",
-        lang === "ko" ? "예측모형" : "Prediction",
-        lang === "ko" ? "의사결정" : "Decision Support"
-      ]
-        .map((label) => `<span class="hero-pill">${label}</span>`)
-        .join("");
+      heroPillRow.remove();
     }
 
     if (buttonRow) {
@@ -629,8 +606,8 @@
         buttonLabels[0].textContent = lang === "ko" ? "전체 논문 보기" : "View publications";
       }
 
-      if (heroPillRow) {
-        heroPillRow.insertAdjacentElement("afterend", buttonRow);
+      if (heroCaption) {
+        heroCaption.insertAdjacentElement("afterend", buttonRow);
       }
     }
   }
@@ -2676,16 +2653,6 @@
             })}</p>
             <h1 class="hero-title">Construction AI & Data Intelligence</h1>
             <p class="hero-caption">${text({ ko: "with Codex and Vibe Coding", en: "with Codex and Vibe Coding" })}</p>
-            <p class="hero-lead">${text({
-              ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구를 수행합니다.",
-              en: "Data-driven research connecting maintenance, performance assessment, predictive modeling, and decision support across the built environment."
-            })}</p>
-            <div class="hero-pill-row" aria-label="Research keywords">
-              <span class="hero-pill">${text({ ko: "유지관리", en: "Maintenance" })}</span>
-              <span class="hero-pill">${text({ ko: "성능평가", en: "Performance" })}</span>
-              <span class="hero-pill">${text({ ko: "예측모형", en: "Prediction" })}</span>
-              <span class="hero-pill">${text({ ko: "의사결정", en: "Decision Support" })}</span>
-            </div>
             <div class="button-row">
               <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "?꾩껜 ?쇰Ц 蹂닿린", en: "View publications" })}</span></a>
               <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
