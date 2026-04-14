@@ -539,6 +539,11 @@
     if (firstSection) {
       firstSection.classList.add("home-primary-section");
     }
+
+    const heroCaption = siteMain.querySelector(".hero-panel .hero-caption");
+    if (heroCaption) {
+      heroCaption.textContent = "with Codex and Vibe Coding";
+    }
   }
 
   function route(name, locale) {
@@ -2387,7 +2392,7 @@
           <div class="hero-copy">
             <p class="hero-kicker">${text({ ko: "Research Profile", en: "Research Profile" })}</p>
             <h1 class="hero-title">Construction AI & Data Intelligence</h1>
-            <p class="hero-caption">with Codex and 바이브코딩</p>
+            <p class="hero-caption">with Codex and Vibe Coding</p>
             <p class="hero-lead">${text({
               ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
               en: "Data-driven research connecting maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
