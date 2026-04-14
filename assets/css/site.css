@@ -1,4 +1,5 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.css");
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap");
 
@@ -3470,4 +3471,80 @@ body {
   .ai-chat-form-footer {
     align-items: center;
   }
+}
+
+:root {
+  --font-clean: "SUIT Variable", "SUIT", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-clean);
+}
+
+.sidebar-name,
+.hero-title,
+.page-title,
+.section-title,
+.card-title,
+.publication-title,
+.year-title,
+.sidebar-signature-title,
+.summary-value {
+  font-family: var(--font-clean);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+.hero-title,
+.sidebar-signature-title {
+  line-height: 0.98;
+}
+
+.hero-kicker,
+.page-kicker,
+.section-subtitle,
+.summary-label,
+.timeline-period,
+.sidebar-label,
+.sidebar-signature-kicker,
+.mark-subtitle,
+.hero-caption,
+.sidebar-contact-label,
+.ai-chat-kicker {
+  font-family: var(--font-clean);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.sidebar-affiliation,
+.sidebar-contact-value,
+.sidebar-signature-note,
+.hero-description,
+.page-description,
+.card-body,
+.timeline-body,
+.publication-authors,
+.publication-venue,
+.summary-detail,
+.nav-item,
+.lang-pill,
+.button,
+.section-action,
+.ai-chat-bubble-text,
+.ai-chat-input,
+.ai-chat-suggestion {
+  font-family: var(--font-clean);
+}
+
+.mark-title,
+.nav-item span,
+.lang-pill,
+.button,
+.section-action {
+  font-family: var(--font-clean);
+  font-weight: 700;
 }
