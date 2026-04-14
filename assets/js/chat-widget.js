@@ -16,7 +16,7 @@
   };
 
   if (!state.messages.length) {
-    state.messages = [createMessage("assistant", localize(config.welcomeMessage))];
+    state.messages = [createMessage("assistant", buildWelcomeMessage())];
     saveMessages();
   }
 
@@ -51,6 +51,8 @@
   elements.suggestions.addEventListener("click", handleSuggestionClick);
   document.addEventListener("click", handleDocumentClick);
   document.addEventListener("keydown", handleDocumentKeydown);
+  window.addEventListener("resize", applyFloatingPosition);
+  window.addEventListener("scroll", applyFloatingPosition, { passive: true });
 
   render();
 
@@ -62,20 +64,20 @@
       assistantName: { ko: "Research AI", en: "Research AI" },
       title: { ko: "AI Chat", en: "AI Chat" },
       subtitle: {
-        ko: "연구 분야, 논문, 협업 문의를 빠르게 안내합니다.",
-        en: "Ask about research topics, publications, and collaboration."
+        ko: "연구 분야와 대표 논문을 빠르게 살펴볼 수 있습니다.",
+        en: "Explore research themes and representative papers."
       },
       launcherLabel: { ko: "AI Chat", en: "AI Chat" },
-      launcherHint: { ko: "클릭해서 열기", en: "Click to open" },
+      launcherHint: { ko: "대표논문 보기", en: "Open paper guide" },
       placeholder: {
-        ko: "연구 분야나 논문에 대해 물어보세요.",
-        en: "Ask about research topics or publications."
+        ko: "연구 분야나 대표 논문에 대해 물어보세요.",
+        en: "Ask about research topics or representative papers."
       },
       sendLabel: { ko: "보내기", en: "Send" },
       closeLabel: { ko: "닫기", en: "Close" },
       welcomeMessage: {
-        ko: "안녕하세요. 이 사이트의 연구 분야, 대표 논문, 협업 문의 방법을 안내해드릴게요.",
-        en: "Hi. I can help you explore the site's research themes, selected publications, and collaboration info."
+        ko: "안녕하세요. 이 사이트의 핵심 연구 분야와 대표 논문을 빠르게 안내해드릴게요.",
+        en: "Hi. I can quickly guide you through the site's research themes and representative papers."
       },
       missingEndpointMessage: {
         ko: "아직 Gemini API 엔드포인트가 연결되지 않았습니다. assets/js/site-config.js 의 endpoint 값을 서버 주소로 바꿔주세요.",
@@ -98,13 +100,11 @@
       suggestedPrompts: {
         ko: [
           "핵심 연구 분야를 3줄로 요약해줘",
-          "대표 논문 몇 편을 추천해줘",
-          "공동연구 문의는 어떻게 하면 돼?"
+          "대표 논문 3편 추천해줘"
         ],
         en: [
           "Summarize the main research themes in three lines",
-          "Recommend a few representative papers",
-          "How should I ask about collaboration?"
+          "Recommend three representative papers"
         ]
       }
     };
@@ -143,8 +143,10 @@
           aria-label="${escapeHtml(localize(config.launcherLabel))}"
         >
           <span class="ai-chat-launcher-mark">AI</span>
-          <span class="sr-only">${escapeHtml(localize(config.launcherLabel))}</span>
-          <span class="ai-chat-launcher-tooltip">${escapeHtml(localize(config.launcherHint))}</span>
+          <span class="ai-chat-launcher-copy">
+            <strong>${escapeHtml(localize(config.launcherLabel))}</strong>
+            <span>${escapeHtml(localize(config.launcherHint))}</span>
+          </span>
         </button>
 
         <section
@@ -170,9 +172,6 @@
 
           <div class="ai-chat-toolbar">
             <span class="ai-chat-status" data-ai-chat-status></span>
-            <a class="ai-chat-contact" href="${lang === "en" ? "contact-en.html" : "contact.html"}">
-              ${escapeHtml(lang === "en" ? "Contact page" : "문의 페이지")}
-            </a>
           </div>
 
           <div class="ai-chat-messages" data-ai-chat-messages aria-live="polite"></div>
@@ -185,7 +184,7 @@
               class="ai-chat-input"
               id="site-ai-chat-input"
               data-ai-chat-input
-              rows="3"
+              rows="2"
               maxlength="1200"
               placeholder="${escapeHtml(localize(config.placeholder))}"
             ></textarea>
@@ -215,15 +214,17 @@
     elements.send.disabled = state.isSending;
     elements.input.disabled = state.isSending;
 
-    if (state.isOpen) {
-      requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      applyFloatingPosition();
+
+      if (state.isOpen) {
         elements.messages.scrollTop = elements.messages.scrollHeight;
 
         if (!state.isSending) {
           elements.input.focus();
         }
-      });
-    }
+      }
+    });
   }
 
   function renderMessages() {
@@ -253,21 +254,90 @@
   }
 
   function renderSuggestions() {
-    const prompts = Array.isArray(config.suggestedPrompts?.[lang])
-      ? config.suggestedPrompts[lang]
-      : Array.isArray(config.suggestedPrompts?.ko)
-        ? config.suggestedPrompts.ko
-        : [];
-
-    return prompts
-      .map((prompt) => {
+    return getSuggestionPrompts()
+      .map((item) => {
         return `
-          <button class="ai-chat-suggestion" type="button" data-ai-chat-prompt="${escapeAttribute(prompt)}">
-            ${escapeHtml(prompt)}
+          <button class="ai-chat-suggestion" type="button" data-ai-chat-prompt="${escapeAttribute(item.prompt)}">
+            ${escapeHtml(item.label)}
           </button>
         `;
       })
       .join("");
+  }
+
+  function getSuggestionPrompts() {
+    const basePrompts = (Array.isArray(config.suggestedPrompts?.[lang]) ? config.suggestedPrompts[lang] : [])
+      .slice(0, 2)
+      .map((prompt) => ({ label: prompt, prompt }));
+    const paperPrompts = getRepresentativePapers()
+      .slice(0, 2)
+      .map((paper) => {
+        return {
+          label: shortenText(paper.title, 54),
+          prompt: lang === "en"
+            ? `Explain the main contribution of "${paper.title}".`
+            : `"${paper.title}" 논문의 핵심 기여를 설명해줘.`
+        };
+      });
+
+    return [...basePrompts, ...paperPrompts];
+  }
+
+  function getRepresentativePapers() {
+    const featured = Array.isArray(window.SITE_DATA?.outputs?.featured)
+      ? window.SITE_DATA.outputs.featured
+      : [];
+    const publications = Array.isArray(window.SITE_DATA?.outputs?.publications)
+      ? window.SITE_DATA.outputs.publications
+      : [];
+
+    const fromFeatured = featured
+      .map((item) => ({
+        title: item.title,
+        year: item.date || "",
+        venue: item.meta || ""
+      }))
+      .filter((item) => typeof item.title === "string" && item.title.trim());
+
+    if (fromFeatured.length) {
+      return fromFeatured;
+    }
+
+    return publications
+      .slice()
+      .sort((a, b) => {
+        const aCitations = typeof a.citations === "number" ? a.citations : -1;
+        const bCitations = typeof b.citations === "number" ? b.citations : -1;
+
+        if (bCitations !== aCitations) {
+          return bCitations - aCitations;
+        }
+
+        return (b.year || 0) - (a.year || 0);
+      })
+      .slice(0, 3)
+      .map((item) => ({
+        title: item.title,
+        year: item.year || "",
+        venue: item.venue || ""
+      }));
+  }
+
+  function buildWelcomeMessage() {
+    const papers = getRepresentativePapers()
+      .slice(0, 2)
+      .map((paper) => `- ${paper.year} ${paper.title}`)
+      .join("\n");
+
+    const intro = localize(config.welcomeMessage);
+
+    if (!papers) {
+      return intro;
+    }
+
+    return lang === "en"
+      ? `${intro}\n\nRepresentative papers:\n${papers}`
+      : `${intro}\n\n대표 논문 예시:\n${papers}`;
   }
 
   function handleSuggestionClick(event) {
@@ -385,12 +455,9 @@
 
   function buildSiteContext() {
     const profile = window.SITE_DATA?.profile || {};
-    const publications = Array.isArray(window.SITE_DATA?.outputs?.publications)
-      ? window.SITE_DATA.outputs.publications
-          .slice(0, 6)
-          .map((item) => `${item.year || ""} | ${item.title || ""} | ${item.venue || ""}`)
-          .join("\n")
-      : "";
+    const publications = getRepresentativePapers()
+      .map((item) => `${item.year} | ${item.title} | ${item.venue}`)
+      .join("\n");
     const pageText = clipText(
       (document.querySelector(".site-main")?.innerText || "")
         .replace(/\s+\n/g, "\n")
@@ -406,7 +473,7 @@
       `Title: ${localize(profile.title)}`,
       `Affiliation: ${localize(profile.affiliation)}`,
       `Summary: ${localize(profile.status)}`,
-      publications ? `Selected publications:\n${publications}` : "",
+      publications ? `Representative papers:\n${publications}` : "",
       pageText ? `Visible page content:\n${pageText}` : ""
     ]
       .filter(Boolean)
@@ -419,6 +486,39 @@
     }
 
     return localize(config.errorMessage);
+  }
+
+  function applyFloatingPosition() {
+    const margin = window.innerWidth <= 820 ? 16 : 24;
+
+    elements.root.style.right = `${margin}px`;
+
+    if (!state.isOpen) {
+      elements.root.style.top = "auto";
+      elements.root.style.bottom = `${margin}px`;
+      return;
+    }
+
+    const panelHeight = elements.panel.offsetHeight || 0;
+    const schematic = document.querySelector(".hero-schematic");
+
+    if (page === "home" && schematic && panelHeight) {
+      const rect = schematic.getBoundingClientRect();
+      const visible = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (visible) {
+        const desiredTop = rect.bottom + 18;
+        const maxTop = Math.max(margin, window.innerHeight - panelHeight - margin);
+        const finalTop = Math.min(Math.max(desiredTop, margin), maxTop);
+
+        elements.root.style.top = `${Math.round(finalTop)}px`;
+        elements.root.style.bottom = "auto";
+        return;
+      }
+    }
+
+    elements.root.style.top = "auto";
+    elements.root.style.bottom = `${margin}px`;
   }
 
   function setOpen(nextOpen) {
@@ -465,6 +565,11 @@
     } catch (_error) {
       // Ignore storage failures.
     }
+  }
+
+  function shortenText(value, limit) {
+    const text = String(value || "");
+    return text.length > limit ? `${text.slice(0, limit - 1)}…` : text;
   }
 
   function formatText(value) {

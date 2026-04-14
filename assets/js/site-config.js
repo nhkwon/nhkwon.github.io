@@ -13,20 +13,20 @@ window.SITE_CHAT_CONFIG = {
     en: "AI Chat"
   },
   subtitle: {
-    ko: "연구 분야, 논문, 협업 문의를 빠르게 안내합니다.",
-    en: "Ask about research topics, publications, and collaboration."
+    ko: "연구 분야와 대표 논문을 빠르게 살펴볼 수 있습니다.",
+    en: "Explore research themes and representative papers."
   },
   launcherLabel: {
     ko: "AI Chat",
     en: "AI Chat"
   },
   launcherHint: {
-    ko: "연구 안내",
-    en: "Research guide"
+    ko: "대표논문 보기",
+    en: "Open paper guide"
   },
   placeholder: {
-    ko: "연구 분야나 논문에 대해 물어보세요",
-    en: "Ask about research topics or publications"
+    ko: "연구 분야나 대표 논문에 대해 물어보세요.",
+    en: "Ask about research topics or representative papers."
   },
   sendLabel: {
     ko: "보내기",
@@ -37,28 +37,24 @@ window.SITE_CHAT_CONFIG = {
     en: "Close"
   },
   welcomeMessage: {
-    ko: "안녕하세요. 이 사이트의 연구 분야, 대표 논문, 협업 문의 방법을 안내해드릴게요.",
-    en: "Hi. I can help you explore the site's research themes, selected publications, and collaboration info."
+    ko: "안녕하세요. 이 사이트의 핵심 연구 분야와 대표 논문을 빠르게 안내해드릴게요.",
+    en: "Hi. I can quickly guide you through the site's research themes and representative papers."
   },
   missingEndpointMessage: {
-    ko: "GitHub Pages에는 서버 API가 없어서 브라우저만으로는 Gemini를 안전하게 호출할 수 없습니다. `api/chat.js`를 Vercel 같은 서버리스에 배포한 뒤, 이 파일의 `endpoint`를 그 주소로 바꿔주세요.",
-    en: "GitHub Pages cannot safely call Gemini directly from the browser. Deploy `api/chat.js` to a serverless host such as Vercel, then point `endpoint` in this file to that URL."
+    ko: "아직 Gemini API 엔드포인트가 연결되지 않았습니다. `assets/js/site-config.js`의 `endpoint` 값을 서버 주소로 바꿔주세요.",
+    en: "The Gemini endpoint is not configured yet. Update `endpoint` in `assets/js/site-config.js`."
   },
   githubPagesHint: {
-    ko: "현재 GitHub Pages에 `/api/chat`가 없을 가능성이 큽니다. 별도 서버리스 URL을 `endpoint`에 넣어주세요.",
-    en: "You're likely on GitHub Pages, where `/api/chat` does not exist. Update `endpoint` to your deployed serverless URL."
+    ko: "GitHub Pages에서는 `/api/chat`가 직접 동작하지 않습니다. 별도 서버리스 URL을 `endpoint`에 넣어주세요.",
+    en: "On GitHub Pages, `/api/chat` will not exist. Point `endpoint` to a separate serverless URL."
   },
   errorMessage: {
     ko: "응답을 가져오지 못했습니다. 잠시 후 다시 시도해 주세요.",
-    en: "I couldn't get a response. Please try again in a moment."
+    en: "I could not get a response. Please try again in a moment."
   },
   typingLabel: {
     ko: "답변 생성 중...",
     en: "Generating response..."
-  },
-  readyLabel: {
-    ko: "연결됨",
-    en: "Connected"
   },
   setupLabel: {
     ko: "설정 필요",
@@ -71,13 +67,11 @@ window.SITE_CHAT_CONFIG = {
   suggestedPrompts: {
     ko: [
       "핵심 연구 분야를 3줄로 요약해줘",
-      "대표 논문 몇 편을 추천해줘",
-      "공동연구 문의는 어떻게 하면 돼?"
+      "대표 논문 3편 추천해줘"
     ],
     en: [
       "Summarize the main research themes in three lines",
-      "Recommend a few representative papers",
-      "How should I ask about collaboration?"
+      "Recommend three representative papers"
     ]
   }
 };
