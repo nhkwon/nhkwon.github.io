@@ -12,7 +12,7 @@
       ? "citations"
       : "year";
   let currentPublicationSort = publicationSort;
-  const AI_CHAT_IDLE_MS = 90000;
+  const AI_CHAT_IDLE_MS = 20000;
   const AI_CHAT_STARTERS = [
     {
       label: { ko: "연구 주제", en: "Research topics" },
@@ -499,9 +499,12 @@
   app.addEventListener("submit", handleAppSubmit);
   app.addEventListener("input", handleAppInput);
   app.addEventListener("focusin", handleAppFocusIn);
+  app.addEventListener("pointermove", handleAppPointerMove);
+  app.addEventListener("keydown", handleAppKeydown);
   document.addEventListener("pointerdown", handleDocumentPointerDown);
   document.addEventListener("keydown", handleDocumentKeydown);
   document.addEventListener("visibilitychange", handleVisibilityChange);
+  syncAiChatUi();
 
   function text(value) {
     if (value === null || value === undefined) return "";
@@ -675,11 +678,6 @@
               <span class="sidebar-contact-label">Tel.</span>
               <p class="sidebar-contact-value">01073929933</p>
             </div>
-          </section>
-          <section class="sidebar-signature">
-            <p class="sidebar-signature-kicker">Toward</p>
-            <h2 class="sidebar-signature-title">Construction AI & Data Intelligence</h2>
-            <p class="sidebar-signature-note">with Codex and vibe coding</p>
           </section>
         </div>
         <div class="sidebar-social">
@@ -1504,6 +1502,18 @@
     }
   }
 
+  function handleAppPointerMove(event) {
+    if (event.target.closest("[data-ai-chat-widget]")) {
+      noteAiChatInteraction();
+    }
+  }
+
+  function handleAppKeydown(event) {
+    if (event.target.closest("[data-ai-chat-widget]")) {
+      noteAiChatInteraction();
+    }
+  }
+
   function handleDocumentPointerDown(event) {
     if (!aiChatOpen || event.target.closest("[data-ai-chat-widget]")) {
       return;
@@ -1876,25 +1886,16 @@
       <section class="panel hero-panel">
         <div class="hero-layout">
           <div class="hero-copy">
-            <div class="hero-mark">
-              <div class="mark-badge hero-badge">NK</div>
-              <div class="mark-copy">
-                <p class="mark-title">${text(PROFILE.name)}</p>
-                <p class="mark-subtitle">with Codex and vibe coding</p>
-              </div>
-            </div>
-            <p class="hero-kicker">${text({ ko: "Toward", en: "Toward" })}</p>
+            <p class="hero-kicker">${text({ ko: "Research Profile", en: "Research Profile" })}</p>
             <h1 class="hero-title">Construction AI & Data Intelligence</h1>
-            <p class="hero-caption">with Codex and vibe coding</p>
-            <p class="hero-description">${text({
-              ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
-              en: "Data-driven research linking maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
+            <p class="hero-caption">${text({
+              ko: "한양대학교 AI Construction Technology Research Center",
+              en: "AI Construction Technology Research Center, Hanyang University"
             })}</p>
-            <div class="meta-row">
-              <span class="meta-pill">${icon("building")} Hanyang University</span>
-              <span class="meta-pill">${icon("research")} AI Construction Technology Research Center</span>
-              <span class="meta-pill">${icon("spark")} ${text({ ko: "Construction AI·Data Intelligence를 향한 연구", en: "Toward Construction AI & Data Intelligence" })}</span>
-            </div>
+            <p class="hero-lead">${text({
+              ko: "유지관리, 성능평가, 예측모형, 의사결정을 잇는 데이터 기반 건축·건설 연구",
+              en: "Data-driven research connecting maintenance, performance assessment, predictive modeling, and decision-making in the built environment."
+            })}</p>
             <div class="button-row">
               <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "전체 논문 보기", en: "View publications" })}</span></a>
               <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
