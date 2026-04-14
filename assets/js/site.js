@@ -638,6 +638,20 @@
         <div class="sidebar-identity">
           <p class="sidebar-name">${text(PROFILE.name)}</p>
           <p class="sidebar-affiliation">${text(PROFILE.affiliation)}</p>
+          <section class="sidebar-contact-card" aria-label="Contact details">
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Address</span>
+              <p class="sidebar-contact-value">15588 경기도 안산시 상록구 한양대학로 55</p>
+            </div>
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Email</span>
+              <p class="sidebar-contact-value"><a class="sidebar-contact-link" href="mailto:nhkwon@hanyang.ac.kr">nhkwon@hanyang.ac.kr</a></p>
+            </div>
+            <div class="sidebar-contact-row">
+              <span class="sidebar-contact-label">Tel.</span>
+              <p class="sidebar-contact-value">01073929933</p>
+            </div>
+          </section>
           <section class="sidebar-signature">
             <p class="sidebar-signature-kicker">Toward</p>
             <h2 class="sidebar-signature-title">Construction AI & Data Intelligence</h2>
