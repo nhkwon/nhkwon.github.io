@@ -110,13 +110,11 @@
       return null;
     }
 
-    const lang = document.body.dataset.lang === "en" ? "en" : "ko";
     const kicker = cleanText(heroPanel.querySelector(".hero-kicker")?.textContent);
     const title = cleanText(heroPanel.querySelector(".hero-title")?.textContent) || "Construction AI & Data Intelligence";
     const caption = cleanText(heroPanel.querySelector(".hero-caption")?.textContent);
-    const codingNote = lang === "en" ? "with Codex and Vibe Coding" : "with Codex and Vibe Coding";
+    const codingNote = "with Codex and Vibe Coding";
     const buttons = heroPanel.querySelector(".button-row")?.innerHTML || "";
-    const visual = heroPanel.querySelector(".hero-visual")?.outerHTML || "";
     const stats = heroPanel.querySelector(".hero-summary")?.innerHTML || "";
 
     const overview = document.createElement("section");
@@ -130,7 +128,12 @@
           <p class="gh-home-overview-caption">${caption}</p>
           <div class="button-row gh-home-overview-actions">${buttons}</div>
         </div>
-        <div class="gh-home-overview-visual">${visual}</div>
+        <div class="gh-home-overview-visual">
+          <div class="gh-home-overview-update" aria-label="Latest update">
+            <span class="gh-home-overview-update-label">Update</span>
+            <strong class="gh-home-overview-update-value">2026.04</strong>
+          </div>
+        </div>
       </div>
       <div class="summary-grid hero-summary gh-home-overview-stats">${stats}</div>
     `;
