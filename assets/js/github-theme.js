@@ -97,7 +97,13 @@
         </div>
       </div>
       <nav class="gh-repo-tabs" aria-label="Page navigation">
-        ${tabs}
+        <div class="gh-repo-tab-list">
+          ${tabs}
+        </div>
+        <div class="gh-repo-tabs-update" aria-label="Latest update">
+          <span class="gh-repo-tabs-update-label">Update</span>
+          <strong class="gh-repo-tabs-update-value">2026.04</strong>
+        </div>
       </nav>
     `;
 
@@ -127,12 +133,6 @@
           <p class="gh-home-overview-note">${codingNote}</p>
           <p class="gh-home-overview-caption">${caption}</p>
           <div class="button-row gh-home-overview-actions">${buttons}</div>
-        </div>
-        <div class="gh-home-overview-visual">
-          <div class="gh-home-overview-update" aria-label="Latest update">
-            <span class="gh-home-overview-update-label">Update</span>
-            <strong class="gh-home-overview-update-value">2026.04</strong>
-          </div>
         </div>
       </div>
       <div class="summary-grid hero-summary gh-home-overview-stats">${stats}</div>

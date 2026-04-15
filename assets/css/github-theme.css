@@ -1,7 +1,7 @@
 body.theme-github-mode {
   background: #f6f8fa !important;
   color: #1f2328 !important;
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
 }
 
 body.theme-github-mode .gh-theme-shell {
@@ -159,7 +159,7 @@ body.theme-github-mode .gh-repo-copy {
 
 body.theme-github-mode .gh-repo-page-title {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif;
   font-size: clamp(1.8rem, 3vw, 2.35rem);
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -175,13 +175,21 @@ body.theme-github-mode .gh-repo-page-description {
 }
 
 body.theme-github-mode .gh-repo-tabs {
-  gap: 24px !important;
-  flex-wrap: wrap;
-  padding: 14px 24px !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  flex-wrap: nowrap;
+  padding: 6px 16px !important;
   border: 1px solid #414956 !important;
   border-radius: 0 !important;
   background: linear-gradient(180deg, #4d5562 0%, #3f4753 100%) !important;
   box-shadow: 0 12px 24px rgba(31, 35, 40, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+body.theme-github-mode .gh-repo-tab-list {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-width: 0;
 }
 
 body.theme-github-mode .gh-repo-tab {
@@ -190,15 +198,15 @@ body.theme-github-mode .gh-repo-tab {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 0 4px 6px !important;
+  min-height: 24px;
+  padding: 0 2px 4px !important;
   margin-bottom: 0;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
   color: rgba(255, 255, 255, 0.86) !important;
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   font-weight: 600;
   line-height: 1;
   text-align: center;
@@ -244,6 +252,31 @@ body.theme-github-mode .gh-repo-tab.is-active::after {
 body.theme-github-mode .gh-repo-tab.is-active .icon,
 body.theme-github-mode .gh-repo-tab:hover .icon {
   color: currentColor;
+}
+
+body.theme-github-mode .gh-repo-tabs-update {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-left: auto;
+  padding: 3px 0 4px;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+
+body.theme-github-mode .gh-repo-tabs-update-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+}
+
+body.theme-github-mode .gh-repo-tabs-update-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
 body.theme-github-mode .gh-content-layout {
@@ -304,7 +337,7 @@ body.theme-github-mode .sidebar-identity {
 }
 
 body.theme-github-mode .sidebar-name {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
   font-size: 1.5rem !important;
   font-weight: 700 !important;
   color: #1f2328 !important;
@@ -444,7 +477,7 @@ body.theme-github-mode .card-title,
 body.theme-github-mode .publication-title,
 body.theme-github-mode .year-title,
 body.theme-github-mode .project-focus {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
   color: #1f2328 !important;
   letter-spacing: -0.02em !important;
 }
@@ -470,7 +503,7 @@ body.theme-github-mode .gh-home-overview {
 
 body.theme-github-mode .gh-home-overview-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.24fr) minmax(260px, 0.76fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   padding: 24px;
   align-items: stretch;
@@ -501,7 +534,7 @@ body.theme-github-mode .gh-home-overview-note {
 
 body.theme-github-mode .gh-home-overview-title {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif;
   font-size: clamp(2.4rem, 4.6vw, 4rem);
   font-weight: 700;
   line-height: 0.96;
@@ -627,7 +660,7 @@ body.theme-github-mode .summary-card {
 }
 
 body.theme-github-mode .summary-value {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
   font-size: clamp(2.2rem, 3vw, 3rem) !important;
   font-weight: 700 !important;
   line-height: 0.95 !important;
@@ -863,9 +896,17 @@ body.theme-github-mode .ai-chat-launcher {
 
   body.theme-github-mode .gh-repo-tabs {
     overflow-x: auto;
-    flex-wrap: nowrap;
-    gap: 18px !important;
-    padding-bottom: 10px !important;
+    gap: 14px !important;
+    padding-bottom: 6px !important;
+  }
+
+  body.theme-github-mode .gh-repo-tab-list {
+    gap: 18px;
+    min-width: max-content;
+  }
+
+  body.theme-github-mode .gh-repo-tabs-update {
+    min-width: max-content;
   }
 
   body.theme-github-mode .ai-chat-launcher {

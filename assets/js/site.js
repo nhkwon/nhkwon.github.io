@@ -3018,7 +3018,7 @@
       .sidebar-profile-kicker {
         margin: 0 !important;
         color: #7f6544 !important;
-        font-family: "Sora", "SUIT Variable", "SUIT", sans-serif !important;
+        font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
         font-size: 0.8rem !important;
         font-weight: 700 !important;
         letter-spacing: 0.08em !important;
@@ -3099,7 +3099,7 @@
       .hero-panel .hero-kicker {
         max-width: 48rem !important;
         margin: 0 0 0.25rem !important;
-        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
         font-size: clamp(0.86rem, 1vw, 0.96rem) !important;
         font-weight: 600 !important;
         line-height: 1.42 !important;
@@ -3124,7 +3124,7 @@
         padding: 0.76rem 1.18rem !important;
         border-radius: 999px !important;
         background: linear-gradient(180deg, rgba(224, 232, 241, 0.96), rgba(214, 223, 235, 0.88)) !important;
-        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
         font-size: 0.94rem !important;
         font-weight: 600 !important;
         line-height: 1.2 !important;
@@ -3162,7 +3162,7 @@
         display: block !important;
         min-height: 3.55rem !important;
         margin: 0 !important;
-        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
         font-size: 0.94rem !important;
         font-weight: 600 !important;
         line-height: 1.32 !important;
@@ -3174,7 +3174,7 @@
       .summary-value {
         margin: 0 !important;
         align-self: start !important;
-        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
         font-size: clamp(2.78rem, 3.05vw, 3.58rem) !important;
         font-weight: 700 !important;
         line-height: 0.94 !important;
@@ -3185,7 +3185,7 @@
       .summary-detail {
         margin: 0 !important;
         align-self: end !important;
-        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
         font-size: 0.94rem !important;
         line-height: 1.48 !important;
         letter-spacing: -0.008em !important;
