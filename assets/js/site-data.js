@@ -1400,7 +1400,7 @@ SITE_DATA.profile.status = {
 SITE_DATA.profile.links = [
   {
     label: "Google Scholar",
-    url: "https://scholar.google.com/citations?hl=en&view_op=search_authors&mauthors=Nahyun+Kwon+Hanyang+University+ERICA"
+    url: "https://scholar.google.com/citations?user=IplmvucAAAAJ&hl=en"
   },
   {
     label: "Center Profile",
@@ -1636,7 +1636,7 @@ SITE_DATA.contact.cards = [
         ko: "Scholar 열기",
         en: "Open Scholar"
       },
-      href: "https://scholar.google.com/citations?hl=en&view_op=search_authors&mauthors=Nahyun+Kwon+Hanyang+University+ERICA"
+      href: "https://scholar.google.com/citations?user=IplmvucAAAAJ&hl=en"
     }
   },
   {

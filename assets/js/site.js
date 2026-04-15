@@ -351,7 +351,7 @@
         },
         action: {
           label: { ko: "Scholar 열기", en: "Open Scholar" },
-          href: getProfileHref("google scholar") || "https://scholar.google.com/citations?hl=en&view_op=search_authors&mauthors=Nahyun+Kwon+Hanyang+University+ERICA"
+          href: getProfileHref("google scholar") || "https://scholar.google.com/citations?user=IplmvucAAAAJ&hl=en"
         }
       },
       {
@@ -1901,7 +1901,7 @@
     const emailHref = getProfileHref("email") || "mailto:envy978@hanmail.net";
     const scholarHref =
       getProfileHref("google scholar") ||
-      "https://scholar.google.com/citations?hl=en&view_op=search_authors&mauthors=Nahyun+Kwon+Hanyang+University+ERICA";
+      "https://scholar.google.com/citations?user=IplmvucAAAAJ&hl=en";
 
     if (matchesAiPrompt(query, ["연락", "문의", "이메일", "메일", "contact", "email", "collaboration"])) {
       return {
