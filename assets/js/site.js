@@ -2986,6 +2986,20 @@
     }
 
     styleEl.textContent = `
+      body,
+      .site-frame,
+      .site-sidebar,
+      .hero-panel,
+      .summary-card,
+      .nav-item,
+      .button,
+      .sidebar-contact-value,
+      .sidebar-affiliation {
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale !important;
+        text-rendering: optimizeLegibility !important;
+      }
+
       .site-sidebar {
         gap: 18px !important;
       }
@@ -3041,16 +3055,20 @@
 
       .sidebar-name {
         margin: 0 !important;
-        font-size: clamp(1.8rem, 2vw, 2.2rem) !important;
-        line-height: 1.02 !important;
+        font-size: clamp(1.68rem, 1.85vw, 2rem) !important;
+        font-weight: 760 !important;
+        line-height: 1.04 !important;
+        letter-spacing: -0.032em !important;
       }
 
       .sidebar-affiliation {
         max-width: none !important;
         margin: 0 !important;
         color: #62778c !important;
-        font-size: 0.98rem !important;
-        line-height: 1.62 !important;
+        font-size: 0.93rem !important;
+        font-weight: 500 !important;
+        line-height: 1.56 !important;
+        letter-spacing: -0.012em !important;
       }
 
       .sidebar-contact-card {
@@ -3076,20 +3094,20 @@
         max-width: 48rem !important;
         margin: 0 0 0.25rem !important;
         font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
-        font-size: clamp(0.9rem, 1.05vw, 1rem) !important;
+        font-size: clamp(0.86rem, 1vw, 0.96rem) !important;
         font-weight: 600 !important;
         line-height: 1.42 !important;
-        letter-spacing: 0.01em !important;
+        letter-spacing: 0.002em !important;
         text-transform: none !important;
         color: #8f6d4c !important;
       }
 
       .hero-panel .hero-title {
         max-width: 10.2ch !important;
-        font-size: clamp(3.18rem, 6vw, 5.15rem) !important;
-        font-weight: 780 !important;
-        line-height: 0.94 !important;
-        letter-spacing: -0.06em !important;
+        font-size: clamp(2.98rem, 5.65vw, 4.78rem) !important;
+        font-weight: 760 !important;
+        line-height: 0.96 !important;
+        letter-spacing: -0.046em !important;
         color: #132741 !important;
       }
 
@@ -3101,10 +3119,10 @@
         border-radius: 999px !important;
         background: linear-gradient(180deg, rgba(224, 232, 241, 0.96), rgba(214, 223, 235, 0.88)) !important;
         font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
-        font-size: 1rem !important;
+        font-size: 0.94rem !important;
         font-weight: 600 !important;
         line-height: 1.2 !important;
-        letter-spacing: -0.015em !important;
+        letter-spacing: -0.006em !important;
         text-transform: none !important;
         color: #26486e !important;
       }
@@ -3113,8 +3131,9 @@
         display: block !important;
         margin-top: 1.05rem !important;
         max-width: 44rem !important;
-        font-size: 1.04rem !important;
-        line-height: 1.82 !important;
+        font-size: 1rem !important;
+        line-height: 1.76 !important;
+        letter-spacing: -0.006em !important;
         color: #60768b !important;
       }
 
@@ -3138,10 +3157,10 @@
         min-height: 3.55rem !important;
         margin: 0 !important;
         font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
-        font-size: 0.98rem !important;
+        font-size: 0.94rem !important;
         font-weight: 600 !important;
         line-height: 1.32 !important;
-        letter-spacing: -0.01em !important;
+        letter-spacing: -0.004em !important;
         text-transform: none !important;
         color: #8f6d4c !important;
       }
@@ -3150,10 +3169,10 @@
         margin: 0 !important;
         align-self: start !important;
         font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
-        font-size: clamp(3rem, 3.3vw, 3.95rem) !important;
-        font-weight: 730 !important;
-        line-height: 0.9 !important;
-        letter-spacing: -0.055em !important;
+        font-size: clamp(2.78rem, 3.05vw, 3.58rem) !important;
+        font-weight: 700 !important;
+        line-height: 0.94 !important;
+        letter-spacing: -0.038em !important;
         color: #132741 !important;
       }
 
@@ -3161,9 +3180,23 @@
         margin: 0 !important;
         align-self: end !important;
         font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
-        font-size: 0.98rem !important;
-        line-height: 1.5 !important;
+        font-size: 0.94rem !important;
+        line-height: 1.48 !important;
+        letter-spacing: -0.008em !important;
         color: #667d93 !important;
+      }
+
+      .sidebar-contact-value,
+      .nav-item,
+      .button,
+      .lang-pill {
+        letter-spacing: -0.008em !important;
+      }
+
+      .nav-item,
+      .button,
+      .lang-pill {
+        font-size: 0.94rem !important;
       }
 
       .hero-panel .hero-schematic,
@@ -3328,6 +3361,120 @@
 
     if (buttonLabels[0]) {
       buttonLabels[0].textContent = lang === "ko" ? "전체 논문 보기" : "View publications";
+    }
+
+    if (heroLead && buttonRow && heroLead.nextElementSibling !== buttonRow) {
+      heroLead.insertAdjacentElement("afterend", buttonRow);
+    }
+  }
+
+  function finalizeRenderedPage() {
+    const koreanAddress = "15588 \uacbd\uae30\ub3c4 \uc548\uc0b0\uc2dc \uc0c1\ub85d\uad6c \ud55c\uc591\ub300\ud559\ub85c 55, \uc81c2\uacf5\ud559\uad00 507\ud638";
+    const koreanAffiliation = "\ud55c\uc591\ub300\ud559\uad50 ERICA \uc778\uacf5\uc9c0\ub2a5 \uac74\uc124\uae30\uc220 \uc5f0\uad6c\uc13c\ud130";
+    const applySidebarText = () => {
+      const sidebarRows = Array.from(app.querySelectorAll(".sidebar-contact-row"));
+
+      if (sidebarRows[0]?.querySelector(".sidebar-contact-value")) {
+        sidebarRows[0].querySelector(".sidebar-contact-value").textContent =
+          lang === "ko"
+            ? koreanAddress
+            : "Room 507, Engineering Building II, 55 Hanyangdaehak-ro, Sangnok-gu, Ansan-si, Gyeonggi-do 15588";
+      }
+
+      if (sidebarRows[2]?.querySelector(".sidebar-contact-value")) {
+        sidebarRows[2].querySelector(".sidebar-contact-value").textContent = "+82 10-7392-9933";
+      }
+
+      const sidebarAffiliation = app.querySelector(".sidebar-affiliation");
+      if (sidebarAffiliation) {
+        sidebarAffiliation.textContent =
+          lang === "ko"
+            ? koreanAffiliation
+            : "AI Construction Technology Research Center, Hanyang University ERICA";
+      }
+    };
+
+    applySidebarText();
+    requestAnimationFrame(applySidebarText);
+    setTimeout(applySidebarText, 80);
+
+    if (page !== "home") {
+      return;
+    }
+
+    const siteMain = app.querySelector(".site-main");
+    if (!siteMain) {
+      return;
+    }
+
+    const sections = Array.from(siteMain.querySelectorAll(".content-section"));
+    sections.forEach((section) => {
+      const titleText = String(section.querySelector(".section-title")?.textContent || "").trim().toLowerCase();
+      const bioAction = section.querySelector('.section-action[href*="bio"]');
+      const isIntroSection = Boolean(bioAction) || titleText === "biography" || titleText === "소개";
+
+      if (isIntroSection) {
+        section.remove();
+      }
+    });
+
+    const firstSection = siteMain.querySelector(".content-section");
+    if (firstSection) {
+      firstSection.classList.add("home-primary-section");
+    }
+
+    const heroCopy = siteMain.querySelector(".hero-panel .hero-copy");
+    if (!heroCopy) {
+      return;
+    }
+
+    const heroKicker = heroCopy.querySelector(".hero-kicker");
+    const heroTitle = heroCopy.querySelector(".hero-title");
+    let heroCaption = heroCopy.querySelector(".hero-caption");
+    let heroLead = heroCopy.querySelector(".hero-lead");
+    const buttonRow = heroCopy.querySelector(".button-row");
+    const buttonLabels = buttonRow ? buttonRow.querySelectorAll("span") : [];
+
+    const heroText = {
+      kicker: "Hanyang University ERICA · AI Construction Technology Research Center",
+      title: "Construction AI & Data Intelligence",
+      caption: "Building Maintenance · Safety · Prediction · Decision Support",
+      lead:
+        lang === "ko"
+          ? "\uac74\ucd95\u00b7\ub3c4\uc2dc\u00b7\uc2dc\uacf5 \ub370\uc774\ud130\ub97c \ubc14\ud0d5\uc73c\ub85c \ub178\ud6c4 \uac74\ucd95\ubb3c \uc720\uc9c0\uad00\ub9ac, \uc548\uc804, \uc131\ub2a5 \uc608\uce21, \uc758\uc0ac\uacb0\uc815 \uc9c0\uc6d0\uc744 \uc5f0\uacb0\ud558\ub294 \uc5f0\uad6c\ub97c \uc218\ud589\ud569\ub2c8\ub2e4."
+          : "Research focused on data-driven maintenance, safety, performance prediction, and decision support for the built environment."
+    };
+
+    if (heroKicker) {
+      heroKicker.textContent = heroText.kicker;
+    }
+
+    if (heroTitle) {
+      heroTitle.textContent = heroText.title;
+    }
+
+    if (!heroCaption && heroTitle) {
+      heroCaption = document.createElement("p");
+      heroCaption.className = "hero-caption";
+      heroTitle.insertAdjacentElement("afterend", heroCaption);
+    }
+
+    if (heroCaption) {
+      heroCaption.textContent = heroText.caption;
+    }
+
+    if (!heroLead) {
+      heroLead = document.createElement("p");
+      heroLead.className = "hero-lead";
+      (heroCaption || heroTitle)?.insertAdjacentElement("afterend", heroLead);
+    }
+
+    if (heroLead) {
+      heroLead.textContent = heroText.lead;
+    }
+
+    if (buttonLabels[0]) {
+      buttonLabels[0].textContent = lang === "ko" ? "\uc804\uccb4 \ub17c\ubb38 \ubcf4\uae30" : "View publications";
     }
 
     if (heroLead && buttonRow && heroLead.nextElementSibling !== buttonRow) {
