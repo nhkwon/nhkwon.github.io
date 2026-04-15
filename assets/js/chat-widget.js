@@ -5,6 +5,10 @@
     return;
   }
 
+  if (document.querySelector("[data-ai-chat-widget]")) {
+    return;
+  }
+
   const lang = document.body.dataset.lang === "en" ? "en" : "ko";
   const page = document.body.dataset.page || "home";
   const config = normalizeConfig(window.SITE_CHAT_CONFIG || {});

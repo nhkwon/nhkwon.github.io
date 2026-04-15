@@ -386,7 +386,7 @@ body.theme-github-mode .content-section > :not(.section-heading) {
 
 body.theme-github-mode .section-heading {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
@@ -542,6 +542,9 @@ body.theme-github-mode .summary-value {
 body.theme-github-mode .button,
 body.theme-github-mode .section-action,
 body.theme-github-mode .sort-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   min-height: 32px !important;
   padding: 0 12px !important;
   border-radius: 6px !important;
@@ -551,6 +554,9 @@ body.theme-github-mode .sort-chip {
   box-shadow: none !important;
   font-size: 0.9rem !important;
   font-weight: 600 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
 }
 
 body.theme-github-mode .button-primary,
@@ -564,6 +570,21 @@ body.theme-github-mode .button-secondary,
 body.theme-github-mode .section-action {
   background: #f6f8fa !important;
   color: #24292f !important;
+}
+
+body.theme-github-mode .section-action {
+  min-height: 36px !important;
+  padding: 0 14px !important;
+  border-color: #1d4ed8 !important;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18) !important;
+}
+
+body.theme-github-mode .section-action:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
+  border-color: #1e40af !important;
+  color: #ffffff !important;
 }
 
 body.theme-github-mode .card-grid,
@@ -597,14 +618,33 @@ body.theme-github-mode .topic-card {
   padding: 18px !important;
 }
 
+body.theme-github-mode .publication-title,
+body.theme-github-mode .publication-card-title {
+  font-size: clamp(1.38rem, 1.62vw, 1.6rem) !important;
+  font-weight: 650 !important;
+  line-height: 1.42 !important;
+  letter-spacing: -0.014em !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+}
+
 body.theme-github-mode .publication-title a,
+body.theme-github-mode .publication-card-title a,
 body.theme-github-mode .publication-detail-link,
 body.theme-github-mode .publication-secondary-links a,
 body.theme-github-mode .link-row a {
-  color: #0969da !important;
+  color: #1f67d6 !important;
+}
+
+body.theme-github-mode .publication-title a,
+body.theme-github-mode .publication-card-title a {
+  font-weight: 650 !important;
+  letter-spacing: inherit !important;
 }
 
 body.theme-github-mode .publication-title a:hover,
+body.theme-github-mode .publication-card-title a:hover,
 body.theme-github-mode .publication-secondary-links a:hover,
 body.theme-github-mode .link-row a:hover {
   text-decoration: underline;
