@@ -2967,6 +2967,12 @@
               <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
             </div>
           </div>
+          <div class="hero-visual hero-update-visual">
+            <div class="gh-home-overview-update" aria-label="Latest update">
+              <span class="gh-home-overview-update-label">Update</span>
+              <strong class="gh-home-overview-update-value">2026.04</strong>
+            </div>
+          </div>
         </div>
         <div class="summary-grid hero-summary">
           ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}

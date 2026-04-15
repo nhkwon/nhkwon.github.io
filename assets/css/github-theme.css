@@ -175,13 +175,13 @@ body.theme-github-mode .gh-repo-page-description {
 }
 
 body.theme-github-mode .gh-repo-tabs {
-  gap: 22px;
+  gap: 24px !important;
   flex-wrap: wrap;
-  padding: 12px 18px;
-  border: 1px solid #bfd0ee;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #dbe9ff 0%, #cfe2ff 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72), 0 10px 24px rgba(37, 99, 235, 0.08);
+  padding: 14px 24px !important;
+  border: 1px solid #1e3a8a !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 48%, #1e40af 100%) !important;
+  box-shadow: 0 16px 32px rgba(29, 78, 216, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
 }
 
 body.theme-github-mode .gh-repo-tab {
@@ -190,19 +190,19 @@ body.theme-github-mode .gh-repo-tab {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 42px;
-  padding: 0 2px 4px;
+  min-height: 44px;
+  padding: 0 4px 6px !important;
   margin-bottom: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  color: #42526b;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgba(255, 255, 255, 0.86) !important;
   font-size: 0.92rem;
   font-weight: 600;
   line-height: 1;
   text-align: center;
-  transition: color 0.18s ease;
+  transition: color 0.18s ease, opacity 0.18s ease;
 }
 
 body.theme-github-mode .gh-repo-tab::after {
@@ -210,18 +210,18 @@ body.theme-github-mode .gh-repo-tab::after {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -2px;
-  height: 3px;
+  bottom: 0;
+  height: 4px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%);
-  transform: scaleX(0.18);
+  background: #ffffff;
+  transform: scaleX(0.16);
   transform-origin: center;
   opacity: 0;
   transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
 body.theme-github-mode .gh-repo-tab:hover {
-  color: #1f4f98;
+  color: #ffffff !important;
 }
 
 body.theme-github-mode .gh-repo-tab .icon {
@@ -231,7 +231,7 @@ body.theme-github-mode .gh-repo-tab .icon {
 }
 
 body.theme-github-mode .gh-repo-tab.is-active {
-  color: #174ea6;
+  color: #ffffff !important;
   font-weight: 700;
 }
 
@@ -473,6 +473,7 @@ body.theme-github-mode .gh-home-overview-layout {
   grid-template-columns: minmax(0, 1.24fr) minmax(260px, 0.76fr);
   gap: 24px;
   padding: 24px;
+  align-items: stretch;
 }
 
 body.theme-github-mode .gh-home-overview-copy {
@@ -513,37 +514,47 @@ body.theme-github-mode .gh-home-overview-actions {
 }
 
 body.theme-github-mode .gh-home-overview-visual .hero-visual {
-  justify-content: stretch !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: flex-end !important;
+  width: 100% !important;
+  min-height: 100% !important;
 }
 
 body.theme-github-mode .gh-home-overview-visual {
-  display: grid;
-  align-items: center;
-  justify-items: end;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: flex-end !important;
+  min-height: 100% !important;
+  padding: 8px 0 12px !important;
 }
 
-body.theme-github-mode .gh-home-overview-update {
-  display: grid;
+body.theme-github-mode .gh-home-overview-update,
+body.theme-github-mode .hero-panel .gh-home-overview-update {
+  display: inline-flex;
+  flex-direction: column;
   gap: 6px;
   min-width: min(100%, 220px);
-  padding: 16px 20px;
-  border: 1px solid #c9d7f1;
+  padding: 15px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 16px;
-  background: linear-gradient(180deg, #f7fbff 0%, #edf4ff 100%);
-  box-shadow: 0 18px 34px rgba(37, 99, 235, 0.08);
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 18px 34px rgba(29, 78, 216, 0.22);
   text-align: left;
 }
 
-body.theme-github-mode .gh-home-overview-update-label {
-  color: #5b6e8b;
+body.theme-github-mode .gh-home-overview-update-label,
+body.theme-github-mode .hero-panel .gh-home-overview-update-label {
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-body.theme-github-mode .gh-home-overview-update-value {
-  color: #174ea6;
+body.theme-github-mode .gh-home-overview-update-value,
+body.theme-github-mode .hero-panel .gh-home-overview-update-value {
+  color: #ffffff;
   font-size: clamp(1.2rem, 1.9vw, 1.55rem);
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -853,8 +864,8 @@ body.theme-github-mode .ai-chat-launcher {
   body.theme-github-mode .gh-repo-tabs {
     overflow-x: auto;
     flex-wrap: nowrap;
-    gap: 18px;
-    padding-bottom: 8px;
+    gap: 18px !important;
+    padding-bottom: 10px !important;
   }
 
   body.theme-github-mode .ai-chat-launcher {
