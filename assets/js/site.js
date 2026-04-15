@@ -2885,4 +2885,453 @@
       </section>
     `;
   }
+  function renderSidebar() {
+    const navOrder = ["home", "bio", "teaching", "publications", "news", "contact"];
+
+    return `
+      <aside class="site-sidebar">
+        <section class="sidebar-profile-block" aria-label="About">
+          <div class="sidebar-profile-head">
+            <div class="sidebar-photo-frame">
+              <img class="profile-portrait" src="${SITE_DATA.profile?.photo || "assets/images/profile-portrait.svg"}" alt="${text(PROFILE.name)}">
+            </div>
+            <div class="sidebar-identity">
+              <p class="sidebar-name">${text(PROFILE.name)}</p>
+              <p class="sidebar-affiliation">${text(PROFILE.affiliation)}</p>
+            </div>
+          </div>
+        </section>
+        <section class="sidebar-contact-card" aria-label="Contact details">
+          <div class="sidebar-contact-row">
+            <span class="sidebar-contact-label">Address</span>
+            <p class="sidebar-contact-value">${text({
+              ko: "15588 경기도 안산시 상록구 한양대학로 55",
+              en: "55 Hanyangdaehak-ro, Sangnok-gu, Ansan-si, Gyeonggi-do 15588"
+            })}</p>
+          </div>
+          <div class="sidebar-contact-row">
+            <span class="sidebar-contact-label">Email</span>
+            <p class="sidebar-contact-value"><a class="sidebar-contact-link" href="mailto:nhkwon@hanyang.ac.kr">nhkwon@hanyang.ac.kr</a></p>
+          </div>
+          <div class="sidebar-contact-row">
+            <span class="sidebar-contact-label">Tel.</span>
+            <p class="sidebar-contact-value">+82 10-7392-9933</p>
+          </div>
+        </section>
+        <div class="sidebar-label">${text({ ko: "Links", en: "Links" })}</div>
+        <div class="sidebar-social">
+          ${getProfileLinks().map((item) => renderSocialLink(item)).join("")}
+        </div>
+        <div class="sidebar-label">${text({ ko: "Navigation", en: "Navigation" })}</div>
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          ${navOrder
+            .map(
+              (item) => `
+                <a class="nav-item ${page === item ? "is-active" : ""}" href="${route(item)}" ${page === item ? 'aria-current="page"' : ""}>
+                  ${icon(PAGE_META[item].icon)}
+                  <span>${PAGE_META[item].label?.en || text(PAGE_META[item].label)}</span>
+                </a>
+              `
+            )
+            .join("")}
+        </nav>
+        <div class="sidebar-label">${text({ ko: "Language", en: "Language" })}</div>
+        <div class="language-switch">
+          <a class="lang-pill ${lang === "ko" ? "is-active" : ""}" href="${route(page, "ko")}">KO</a>
+          <a class="lang-pill ${lang === "en" ? "is-active" : ""}" href="${route(page, "en")}">EN</a>
+        </div>
+      </aside>
+    `;
+  }
+
+  function renderHeroPanel() {
+    return `
+      <section class="panel hero-panel hero-panel-premium">
+        <div class="hero-layout hero-layout-simple">
+          <div class="hero-copy">
+            <p class="hero-kicker">${text({
+              ko: "Hanyang University ERICA · AI Construction Technology Research Center",
+              en: "Hanyang University ERICA · AI Construction Technology Research Center"
+            })}</p>
+            <h1 class="hero-title">Construction AI & Data Intelligence</h1>
+            <p class="hero-caption">${text({
+              ko: "Building Maintenance · Safety · Prediction · Decision Support",
+              en: "Building Maintenance · Safety · Prediction · Decision Support"
+            })}</p>
+            <p class="hero-lead">${text({
+              ko: "건축·도시·시공 데이터를 바탕으로 노후 건축물 유지관리, 안전, 성능 예측, 의사결정 지원을 연결하는 연구를 수행합니다.",
+              en: "Research focused on data-driven maintenance, safety, performance prediction, and decision support for the built environment."
+            })}</p>
+            <div class="button-row">
+              <a class="button button-primary" href="${route("publications")}">${icon("papers")}<span>${text({ ko: "전체 논문 보기", en: "View publications" })}</span></a>
+              <a class="button button-secondary" href="${getProfileHref("google scholar") || scholarSearchUrl(text(PROFILE.name))}" target="_blank" rel="noreferrer">${icon("scholar")}<span>Google Scholar</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="summary-grid hero-summary">
+          ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function ensureRuntimeStyleOverrides() {
+    const styleId = "site-runtime-overrides";
+    let styleEl = document.getElementById(styleId);
+
+    if (!styleEl) {
+      styleEl = document.createElement("style");
+      styleEl.id = styleId;
+      document.head.appendChild(styleEl);
+    }
+
+    styleEl.textContent = `
+      .site-sidebar {
+        gap: 18px !important;
+      }
+
+      .sidebar-profile-block {
+        display: grid !important;
+        gap: 14px !important;
+      }
+
+      .sidebar-profile-kicker {
+        margin: 0 !important;
+        color: #7f6544 !important;
+        font-family: "Sora", "SUIT Variable", "SUIT", sans-serif !important;
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+      }
+
+      .sidebar-profile-head {
+        display: grid !important;
+        grid-template-columns: auto minmax(0, 1fr) !important;
+        gap: 16px !important;
+        align-items: center !important;
+      }
+
+      .sidebar-photo-frame {
+        width: 104px !important;
+        height: 104px !important;
+        margin: 0 !important;
+        padding: 6px !important;
+        border-radius: 999px !important;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 253, 0.98)),
+          radial-gradient(circle at 30% 20%, rgba(121, 175, 232, 0.2), rgba(121, 175, 232, 0)) !important;
+        box-shadow:
+          0 16px 32px rgba(16, 39, 66, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.86) !important;
+      }
+
+      .profile-portrait {
+        border-radius: 999px !important;
+        object-position: center top !important;
+      }
+
+      .sidebar-identity {
+        min-width: 0 !important;
+        display: grid !important;
+        gap: 6px !important;
+        text-align: left !important;
+        align-content: center !important;
+      }
+
+      .sidebar-name {
+        margin: 0 !important;
+        font-size: clamp(1.8rem, 2vw, 2.2rem) !important;
+        line-height: 1.02 !important;
+      }
+
+      .sidebar-affiliation {
+        max-width: none !important;
+        margin: 0 !important;
+        color: #62778c !important;
+        font-size: 0.98rem !important;
+        line-height: 1.62 !important;
+      }
+
+      .sidebar-contact-card {
+        margin-top: 2px !important;
+      }
+
+      .sidebar-social {
+        justify-content: flex-start !important;
+      }
+
+      .hero-panel .hero-layout,
+      .hero-panel .hero-layout-simple {
+        grid-template-columns: minmax(0, 1fr) !important;
+        align-items: start !important;
+        gap: 20px !important;
+      }
+
+      .hero-panel .hero-copy {
+        max-width: min(100%, 820px) !important;
+      }
+
+      .hero-panel .hero-kicker {
+        max-width: 48rem !important;
+        margin: 0 0 0.25rem !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: clamp(0.9rem, 1.05vw, 1rem) !important;
+        font-weight: 600 !important;
+        line-height: 1.42 !important;
+        letter-spacing: 0.01em !important;
+        text-transform: none !important;
+        color: #8f6d4c !important;
+      }
+
+      .hero-panel .hero-title {
+        max-width: 10.2ch !important;
+        font-size: clamp(3.18rem, 6vw, 5.15rem) !important;
+        font-weight: 780 !important;
+        line-height: 0.94 !important;
+        letter-spacing: -0.06em !important;
+        color: #132741 !important;
+      }
+
+      .hero-panel .hero-caption {
+        display: inline-flex !important;
+        width: fit-content !important;
+        margin-top: 0.35rem !important;
+        padding: 0.76rem 1.18rem !important;
+        border-radius: 999px !important;
+        background: linear-gradient(180deg, rgba(224, 232, 241, 0.96), rgba(214, 223, 235, 0.88)) !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        letter-spacing: -0.015em !important;
+        text-transform: none !important;
+        color: #26486e !important;
+      }
+
+      .hero-panel .hero-lead {
+        display: block !important;
+        margin-top: 1.05rem !important;
+        max-width: 44rem !important;
+        font-size: 1.04rem !important;
+        line-height: 1.82 !important;
+        color: #60768b !important;
+      }
+
+      .hero-summary {
+        margin-top: 1.5rem !important;
+        gap: 18px !important;
+        align-items: stretch !important;
+      }
+
+      .summary-card {
+        display: grid !important;
+        grid-template-rows: minmax(3.55rem, auto) auto 1fr !important;
+        align-content: start !important;
+        gap: 0.82rem !important;
+        min-height: 214px !important;
+        padding: 26px 26px 24px !important;
+      }
+
+      .summary-label {
+        display: block !important;
+        min-height: 3.55rem !important;
+        margin: 0 !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: 0.98rem !important;
+        font-weight: 600 !important;
+        line-height: 1.32 !important;
+        letter-spacing: -0.01em !important;
+        text-transform: none !important;
+        color: #8f6d4c !important;
+      }
+
+      .summary-value {
+        margin: 0 !important;
+        align-self: start !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: clamp(3rem, 3.3vw, 3.95rem) !important;
+        font-weight: 730 !important;
+        line-height: 0.9 !important;
+        letter-spacing: -0.055em !important;
+        color: #132741 !important;
+      }
+
+      .summary-detail {
+        margin: 0 !important;
+        align-self: end !important;
+        font-family: "Inter", "Pretendard", "Pretendard Variable", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+        font-size: 0.98rem !important;
+        line-height: 1.5 !important;
+        color: #667d93 !important;
+      }
+
+      .hero-panel .hero-schematic,
+      .hero-panel .hero-visual,
+      .hero-panel .hero-diagram-shell {
+        display: none !important;
+      }
+
+      @media (max-width: 1120px) {
+        .summary-card {
+          min-height: 198px !important;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .sidebar-profile-head {
+          gap: 14px !important;
+        }
+
+        .sidebar-photo-frame {
+          width: 92px !important;
+          height: 92px !important;
+        }
+
+        .hero-panel .hero-kicker {
+          max-width: none !important;
+          font-size: 0.84rem !important;
+        }
+
+        .hero-panel .hero-title {
+          max-width: none !important;
+          font-size: clamp(2.5rem, 10vw, 3.75rem) !important;
+        }
+
+        .hero-panel .hero-caption {
+          font-size: 0.95rem !important;
+        }
+
+        .summary-card {
+          grid-template-rows: minmax(2.9rem, auto) auto 1fr !important;
+          min-height: 172px !important;
+          padding: 22px 20px 20px !important;
+        }
+
+        .summary-label {
+          min-height: 2.9rem !important;
+          font-size: 0.92rem !important;
+        }
+
+        .summary-value {
+          font-size: clamp(2.6rem, 11vw, 3.25rem) !important;
+        }
+
+        .summary-detail {
+          font-size: 0.92rem !important;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .sidebar-profile-head {
+          grid-template-columns: 1fr !important;
+          justify-items: start !important;
+        }
+
+        .sidebar-photo-frame {
+          width: 96px !important;
+          height: 96px !important;
+        }
+      }
+    `;
+  }
+
+  function finalizeRenderedPage() {
+    const sidebarRows = Array.from(app.querySelectorAll(".sidebar-contact-row"));
+
+    if (sidebarRows[0]?.querySelector(".sidebar-contact-value")) {
+      sidebarRows[0].querySelector(".sidebar-contact-value").textContent =
+        lang === "ko"
+          ? "15588 경기도 안산시 상록구 한양대학로 55"
+          : "55 Hanyangdaehak-ro, Sangnok-gu, Ansan-si, Gyeonggi-do 15588";
+    }
+
+    if (sidebarRows[2]?.querySelector(".sidebar-contact-value")) {
+      sidebarRows[2].querySelector(".sidebar-contact-value").textContent = "+82 10-7392-9933";
+    }
+
+    if (page !== "home") {
+      return;
+    }
+
+    const siteMain = app.querySelector(".site-main");
+    if (!siteMain) {
+      return;
+    }
+
+    const sections = Array.from(siteMain.querySelectorAll(".content-section"));
+    sections.forEach((section) => {
+      const titleText = String(section.querySelector(".section-title")?.textContent || "").trim().toLowerCase();
+      const bioAction = section.querySelector('.section-action[href*="bio"]');
+      const isIntroSection = Boolean(bioAction) || titleText === "biography" || titleText === "소개";
+
+      if (isIntroSection) {
+        section.remove();
+      }
+    });
+
+    const firstSection = siteMain.querySelector(".content-section");
+    if (firstSection) {
+      firstSection.classList.add("home-primary-section");
+    }
+
+    const heroCopy = siteMain.querySelector(".hero-panel .hero-copy");
+    if (!heroCopy) {
+      return;
+    }
+
+    const heroKicker = heroCopy.querySelector(".hero-kicker");
+    const heroTitle = heroCopy.querySelector(".hero-title");
+    let heroCaption = heroCopy.querySelector(".hero-caption");
+    let heroLead = heroCopy.querySelector(".hero-lead");
+    const buttonRow = heroCopy.querySelector(".button-row");
+    const buttonLabels = buttonRow ? buttonRow.querySelectorAll("span") : [];
+
+    const heroText = {
+      kicker: "Hanyang University ERICA · AI Construction Technology Research Center",
+      title: "Construction AI & Data Intelligence",
+      caption:
+        "Building Maintenance · Safety · Prediction · Decision Support",
+      lead:
+        lang === "ko"
+          ? "건축·도시·시공 데이터를 바탕으로 노후 건축물 유지관리, 안전, 성능 예측, 의사결정 지원을 연결하는 연구를 수행합니다."
+          : "Research focused on data-driven maintenance, safety, performance prediction, and decision support for the built environment."
+    };
+
+    if (heroKicker) {
+      heroKicker.textContent = heroText.kicker;
+    }
+
+    if (heroTitle) {
+      heroTitle.textContent = heroText.title;
+    }
+
+    if (!heroCaption && heroTitle) {
+      heroCaption = document.createElement("p");
+      heroCaption.className = "hero-caption";
+      heroTitle.insertAdjacentElement("afterend", heroCaption);
+    }
+
+    if (heroCaption) {
+      heroCaption.textContent = heroText.caption;
+    }
+
+    if (!heroLead) {
+      heroLead = document.createElement("p");
+      heroLead.className = "hero-lead";
+      (heroCaption || heroTitle)?.insertAdjacentElement("afterend", heroLead);
+    }
+
+    if (heroLead) {
+      heroLead.textContent = heroText.lead;
+    }
+
+    if (buttonLabels[0]) {
+      buttonLabels[0].textContent = lang === "ko" ? "전체 논문 보기" : "View publications";
+    }
+
+    if (heroLead && buttonRow && heroLead.nextElementSibling !== buttonRow) {
+      heroLead.insertAdjacentElement("afterend", buttonRow);
+    }
+  }
 })();
