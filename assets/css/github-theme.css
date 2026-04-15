@@ -177,8 +177,11 @@ body.theme-github-mode .gh-repo-page-description {
 body.theme-github-mode .gh-repo-tabs {
   gap: 8px;
   flex-wrap: wrap;
-  padding: 4px 0 2px;
-  border-bottom: 1px solid #d8dee4;
+  padding: 10px 12px;
+  border: 1px solid #d7e3f3;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f3f8ff 0%, #eaf2ff 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
 }
 
 body.theme-github-mode .gh-repo-tab {
@@ -462,12 +465,20 @@ body.theme-github-mode .gh-home-overview-copy {
 }
 
 body.theme-github-mode .gh-home-overview-kicker,
-body.theme-github-mode .gh-home-overview-caption {
+body.theme-github-mode .gh-home-overview-caption,
+body.theme-github-mode .gh-home-overview-note {
   margin: 0;
   color: #57606a;
   font-size: 0.82rem;
   font-weight: 600;
   line-height: 1.5;
+}
+
+body.theme-github-mode .gh-home-overview-note {
+  color: #1f67d6;
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 body.theme-github-mode .gh-home-overview-title {

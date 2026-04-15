@@ -110,9 +110,11 @@
       return null;
     }
 
+    const lang = document.body.dataset.lang === "en" ? "en" : "ko";
     const kicker = cleanText(heroPanel.querySelector(".hero-kicker")?.textContent);
     const title = cleanText(heroPanel.querySelector(".hero-title")?.textContent) || "Construction AI & Data Intelligence";
     const caption = cleanText(heroPanel.querySelector(".hero-caption")?.textContent);
+    const codingNote = lang === "en" ? "with Codex and Vibe Coding" : "with Codex and Vibe Coding";
     const buttons = heroPanel.querySelector(".button-row")?.innerHTML || "";
     const visual = heroPanel.querySelector(".hero-visual")?.outerHTML || "";
     const stats = heroPanel.querySelector(".hero-summary")?.innerHTML || "";
@@ -124,6 +126,7 @@
         <div class="gh-home-overview-copy">
           <p class="gh-home-overview-kicker">${kicker}</p>
           <h2 class="gh-home-overview-title">${title}</h2>
+          <p class="gh-home-overview-note">${codingNote}</p>
           <p class="gh-home-overview-caption">${caption}</p>
           <div class="button-row gh-home-overview-actions">${buttons}</div>
         </div>
