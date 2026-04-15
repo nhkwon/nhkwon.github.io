@@ -67,6 +67,10 @@
   function buildRepoHeader(copy, navItems, pageTitle, pageDescription) {
     const header = document.createElement("section");
     header.className = "gh-repo-header";
+    const descriptionText = cleanText(pageDescription);
+    const descriptionMarkup = descriptionText
+      ? `<p class="gh-repo-page-description">${descriptionText}</p>`
+      : "";
 
     const tabs = navItems
       .map((item) => {
@@ -93,7 +97,7 @@
         </div>
         <div class="gh-repo-copy">
           <h1 class="gh-repo-page-title">${cleanText(pageTitle)}</h1>
-          <p class="gh-repo-page-description">${cleanText(pageDescription) || copy.repoSummary}</p>
+          ${descriptionMarkup}
         </div>
       </div>
       <nav class="gh-repo-tabs" aria-label="Page navigation">
@@ -198,9 +202,11 @@
       cleanText(activeNav?.querySelector("span")?.textContent) ||
       "Construction AI & Data Intelligence";
     const pageDescription =
-      cleanText(siteMain?.querySelector(".page-description")?.textContent) ||
-      cleanText(siteMain?.querySelector(".hero-kicker")?.textContent) ||
-      copy.repoSummary;
+      document.body.dataset.page === "home"
+        ? ""
+        : cleanText(siteMain?.querySelector(".page-description")?.textContent) ||
+          cleanText(siteMain?.querySelector(".hero-kicker")?.textContent) ||
+          copy.repoSummary;
 
     document.body.classList.add("theme-github-mode");
 

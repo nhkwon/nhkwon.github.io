@@ -159,10 +159,10 @@ body.theme-github-mode .gh-repo-copy {
 
 body.theme-github-mode .gh-repo-page-title {
   margin: 0;
-  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif;
+  font-family: "Noto Serif KR", "Nanum Myeongjo", "Batang", Georgia, "Times New Roman", serif;
   font-size: clamp(1.8rem, 3vw, 2.35rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: #1f2328;
 }
 
@@ -534,11 +534,11 @@ body.theme-github-mode .gh-home-overview-note {
 
 body.theme-github-mode .gh-home-overview-title {
   margin: 0;
-  font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif;
+  font-family: "Noto Serif KR", "Nanum Myeongjo", "Batang", Georgia, "Times New Roman", serif;
   font-size: clamp(2.4rem, 4.6vw, 4rem);
   font-weight: 700;
-  line-height: 0.96;
-  letter-spacing: -0.04em;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
   color: #1f2328;
 }
 

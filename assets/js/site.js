@@ -3110,10 +3110,11 @@
 
       .hero-panel .hero-title {
         max-width: 10.2ch !important;
+        font-family: "Noto Serif KR", "Nanum Myeongjo", "Batang", Georgia, "Times New Roman", serif !important;
         font-size: clamp(2.98rem, 5.65vw, 4.78rem) !important;
         font-weight: 760 !important;
-        line-height: 0.96 !important;
-        letter-spacing: -0.046em !important;
+        line-height: 1.02 !important;
+        letter-spacing: -0.026em !important;
         color: #132741 !important;
       }
 
