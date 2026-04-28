@@ -6,8 +6,7 @@
       links: "Links",
       language: "Language",
       contact: "Contact",
-      overview: "Overview",
-      search: "검색"
+      overview: "Overview"
     },
     en: {
       publicLabel: "Public",
@@ -15,8 +14,7 @@
       links: "Links",
       language: "Language",
       contact: "Contact",
-      overview: "Overview",
-      search: "Search"
+      overview: "Overview"
     }
   };
 
@@ -29,7 +27,7 @@
   }
 
   function buildTopbar(copy, homeHref, scholarHref, contactHref, pageTitle) {
-    const searchButtonLabel = copy.search || "Search";
+    const searchButtonLabel = "Research Search";
     const utilityCopy = "Hanyang University ERICA · AI Construction Technology Research Center";
     const searchSummary = cleanText(pageTitle) || "Construction AI & Data Intelligence";
     const topbar = document.createElement("header");
@@ -51,8 +49,8 @@
       </div>
       <div class="gh-topbar-inner">
         <a class="gh-topbar-brand" href="${homeHref}" aria-label="Open home">
-          <span class="gh-topbar-mark">N</span>
-          <span class="gh-topbar-wordmark">NH Research</span>
+          <span class="gh-topbar-mark">NH</span>
+          <span class="gh-topbar-wordmark">NHKWON AI</span>
         </a>
         <button class="gh-search-stub" type="button" aria-label="${searchButtonLabel}">
           <span class="gh-search-stub-text">${searchSummary}</span>
@@ -131,7 +129,7 @@
     const kicker = cleanText(heroPanel.querySelector(".hero-kicker")?.textContent);
     const title = cleanText(heroPanel.querySelector(".hero-title")?.textContent) || "Construction AI & Data Intelligence";
     const caption = cleanText(heroPanel.querySelector(".hero-caption")?.textContent);
-    const codingNote = document.body.dataset.lang === "en" ? "Data-driven research metrics" : "데이터 기반 연구 지표";
+    const codingNote = "with Codex and Vibe Coding";
     const buttons = heroPanel.querySelector(".button-row")?.innerHTML || "";
     const stats = heroPanel.querySelector(".hero-summary")?.innerHTML || "";
 
