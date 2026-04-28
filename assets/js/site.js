@@ -1,4 +1,5 @@
 (function () {
+  function bootSite() {
   const app = document.getElementById("app");
 
   if (!app || typeof SITE_DATA === "undefined") {
@@ -3487,5 +3488,12 @@
     if (heroLead && buttonRow && heroLead.nextElementSibling !== buttonRow) {
       heroLead.insertAdjacentElement("afterend", buttonRow);
     }
+  }
+  }
+
+  if (window.SITE_DATA_READY && typeof window.SITE_DATA_READY.finally === "function") {
+    window.SITE_DATA_READY.finally(bootSite);
+  } else {
+    bootSite();
   }
 })();
