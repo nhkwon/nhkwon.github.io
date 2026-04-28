@@ -1433,19 +1433,6 @@
   function renderContactPage() {
     return `
       <section class="content-section">
-        ${renderSectionHeading({ ko: "연락 채널", en: "Contact Channels" }, { ko: "Channels", en: "Channels" })}
-        <div class="card-grid three-column">${CONTACT.cards.map((item) => renderContactCard(item)).join("")}</div>
-      </section>
-      <section class="content-section">
-        ${renderSectionHeading({ ko: "문의 전 참고", en: "Before Reaching Out" }, { ko: "Guidance", en: "Guidance" })}
-        <div class="timeline-stack">${CONTACT.checklist.map((item) => `<article class="timeline-item"><p class="timeline-body">${text(item)}</p></article>`).join("")}</div>
-      </section>
-    `;
-  }
-
-  function renderContactPage() {
-    return `
-      <section class="content-section">
         ${renderSectionHeading({ ko: "\uc5f0\ub77d \ucc44\ub110", en: "Contact Channels" }, { ko: "Channels", en: "Channels" })}
         <div class="card-grid three-column">${CONTACT.cards.map((item) => renderContactCard(item)).join("")}</div>
       </section>
