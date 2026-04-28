@@ -2066,11 +2066,53 @@
           ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
         </div>
       </section>
+      ${renderScholarMetricsPanel()}
       <section class="content-section">
         ${renderPublicationSortControls()}
       </section>
       ${renderPublicationSection({ ko: "SCI(E) 논문실적", en: "SCI(E) Publications" }, { ko: `${sciPublications.length}편`, en: `${sciPublications.length} papers` }, sciPublications, "SCI")}
       ${renderPublicationSection({ ko: "KCI 논문실적", en: "KCI Publications" }, { ko: `${kciPublications.length}편`, en: `${kciPublications.length} papers` }, kciPublications, "KCI")}
+    `;
+  }
+
+  function scholarMetricDetail(sinceValue) {
+    return sinceValue ? `Since 2021: ${sinceValue}` : "Google Scholar";
+  }
+
+  function renderScholarMetricsPanel() {
+    const scholarHref = getProfileHref("google scholar") || "https://scholar.google.com/citations?user=IplmvucAAAAJ&hl=en";
+    const updated = scholarMetrics.updated || "";
+
+    return `
+      <section class="content-section scholar-metrics-section">
+        ${renderSectionHeading("Google Scholar metrics", updated ? `Updated ${updated}` : "Citation profile")}
+        <div class="scholar-metrics-grid">
+          <article class="info-card scholar-metric-card">
+            <h3 class="card-title">Citations</h3>
+            <div class="publication-metrics">
+              <span class="metric-chip">All ${scholarMetrics.citationsAll || publicationSummary.totalCitations}</span>
+              ${scholarMetrics.citationsSince2021 ? `<span class="metric-chip">Since 2021 ${scholarMetrics.citationsSince2021}</span>` : ""}
+            </div>
+          </article>
+          <article class="info-card scholar-metric-card">
+            <h3 class="card-title">h-index</h3>
+            <div class="publication-metrics">
+              <span class="metric-chip">All ${scholarMetrics.hIndexAll || "-"}</span>
+              ${scholarMetrics.hIndexSince2021 ? `<span class="metric-chip">Since 2021 ${scholarMetrics.hIndexSince2021}</span>` : ""}
+            </div>
+          </article>
+          <article class="info-card scholar-metric-card">
+            <h3 class="card-title">i10-index</h3>
+            <div class="publication-metrics">
+              <span class="metric-chip">All ${scholarMetrics.i10IndexAll || "-"}</span>
+              ${scholarMetrics.i10IndexSince2021 ? `<span class="metric-chip">Since 2021 ${scholarMetrics.i10IndexSince2021}</span>` : ""}
+            </div>
+          </article>
+        </div>
+        <div class="link-row scholar-metrics-link">
+          <a href="${scholarHref}" target="_blank" rel="noreferrer">Open Google Scholar profile</a>
+        </div>
+      </section>
     `;
   }
 
@@ -2280,12 +2322,17 @@
       {
         label: "Total citations",
         value: String(scholarMetrics.citationsAll || publicationSummary.totalCitations),
-        detail: scholarMetrics.citationsSince2021 ? `Since 2021: ${scholarMetrics.citationsSince2021}` : "Google Scholar"
+        detail: scholarMetricDetail(scholarMetrics.citationsSince2021)
       },
       {
         label: "h-index",
         value: String(scholarMetrics.hIndexAll || ""),
-        detail: scholarMetrics.hIndexSince2021 ? `Since 2021: ${scholarMetrics.hIndexSince2021}` : "Google Scholar"
+        detail: scholarMetricDetail(scholarMetrics.hIndexSince2021)
+      },
+      {
+        label: "i10-index",
+        value: String(scholarMetrics.i10IndexAll || ""),
+        detail: scholarMetricDetail(scholarMetrics.i10IndexSince2021)
       }
     ];
   }
@@ -2888,6 +2935,61 @@
       </section>
     `;
   }
+  function renderSidebarCredentials() {
+    const educationItems =
+      lang === "ko"
+        ? [
+            { degree: "학사", school: "한양대학교 건축학부", field: "건축설계", period: "2007.02.27 - 2011.02.18" },
+            { degree: "석사", school: "서울대학교 건축학과", field: "건설관리 및 시공", period: "2012.03.01 - 2014.02.26" },
+            { degree: "박사", school: "서울대학교 건축학과", field: "건설관리 및 시공", period: "2014.03.01 - 2018.08.29" }
+          ]
+        : [
+            { degree: "B.Arch.", school: "Hanyang University", field: "Architectural Design", period: "2007.02.27 - 2011.02.18" },
+            { degree: "M.Eng.", school: "Seoul National University", field: "Construction Management", period: "2012.03.01 - 2014.02.26" },
+            { degree: "Ph.D.", school: "Seoul National University", field: "Construction Management", period: "2014.03.01 - 2018.08.29" }
+          ];
+
+    const careerItems =
+      lang === "ko"
+        ? [
+            {
+              role: "책임연구원",
+              place: "현대건설 기술연구원 스마트건설센터 구성",
+              period: "2022.11.21 - 2023.11.20"
+            }
+          ]
+        : [
+            {
+              role: "Senior Researcher",
+              place: "Smart Construction Center, Hyundai E&C R&D Institute",
+              period: "2022.11.21 - 2023.11.20"
+            }
+          ];
+
+    const renderItem = (item) => `
+      <li class="sidebar-credential-item">
+        <span class="sidebar-credential-period">${item.period}</span>
+        <strong>${item.degree || item.role}</strong>
+        <span>${item.school || item.place}</span>
+        ${item.field ? `<span>${item.field}</span>` : ""}
+      </li>
+    `;
+
+    return `
+      <section class="sidebar-credentials-card" aria-label="${text({ ko: "학력 및 경력", en: "Education and Career" })}">
+        <p class="sidebar-card-title">${text({ ko: "학력 및 경력", en: "Education & Career" })}</p>
+        <div class="sidebar-credential-group">
+          <span class="sidebar-credential-heading">${text({ ko: "학력", en: "Education" })}</span>
+          <ul class="sidebar-credential-list">${educationItems.map(renderItem).join("")}</ul>
+        </div>
+        <div class="sidebar-credential-group">
+          <span class="sidebar-credential-heading">${text({ ko: "경력", en: "Career" })}</span>
+          <ul class="sidebar-credential-list">${careerItems.map(renderItem).join("")}</ul>
+        </div>
+      </section>
+    `;
+  }
+
   function renderSidebar() {
     const navOrder = ["home", "bio", "teaching", "publications", "news", "contact"];
 
@@ -2914,13 +3016,17 @@
           </div>
           <div class="sidebar-contact-row">
             <span class="sidebar-contact-label">Email</span>
-            <p class="sidebar-contact-value"><a class="sidebar-contact-link" href="mailto:nhkwon@hanyang.ac.kr">nhkwon@hanyang.ac.kr</a></p>
+            <p class="sidebar-contact-value sidebar-email-list">
+              <a class="sidebar-contact-link" href="mailto:nhkwon@hanyang.ac.kr">nhkwon@hanyang.ac.kr</a>
+              <a class="sidebar-contact-link" href="mailto:nhkwon78@naver.com">nhkwon78@naver.com</a>
+            </p>
           </div>
           <div class="sidebar-contact-row">
             <span class="sidebar-contact-label">Tel.</span>
             <p class="sidebar-contact-value">+82 10-7392-9933</p>
           </div>
         </section>
+        ${renderSidebarCredentials()}
         <div class="sidebar-label">${text({ ko: "Links", en: "Links" })}</div>
         <div class="sidebar-social">
           ${getProfileLinks().map((item) => renderSocialLink(item)).join("")}
@@ -3389,6 +3495,14 @@
           lang === "ko"
             ? koreanAddress
             : "Room 507, Engineering Building II, 55 Hanyangdaehak-ro, Sangnok-gu, Ansan-si, Gyeonggi-do 15588";
+      }
+
+      if (sidebarRows[1]?.querySelector(".sidebar-contact-value")) {
+        sidebarRows[1].querySelector(".sidebar-contact-value").innerHTML = `
+          <a class="sidebar-contact-link" href="mailto:nhkwon@hanyang.ac.kr">nhkwon@hanyang.ac.kr</a>
+          <a class="sidebar-contact-link" href="mailto:nhkwon78@naver.com">nhkwon78@naver.com</a>
+        `;
+        sidebarRows[1].querySelector(".sidebar-contact-value").classList.add("sidebar-email-list");
       }
 
       if (sidebarRows[2]?.querySelector(".sidebar-contact-value")) {

@@ -1243,6 +1243,98 @@ body.theme-github-mode .lang-pill.is-active {
   color: #ffffff !important;
 }
 
+body.theme-github-mode .hero-summary,
+body.theme-github-mode .page-summary {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+}
+
+body.theme-github-mode .scholar-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+}
+
+body.theme-github-mode .scholar-metric-card {
+  display: grid;
+  gap: 12px;
+}
+
+body.theme-github-mode .scholar-metrics-link {
+  padding: 0 20px 20px;
+}
+
+body.theme-github-mode .scholar-metrics-link a {
+  color: #0969da !important;
+}
+
+body.theme-github-mode .sidebar-email-list {
+  display: grid !important;
+  gap: 4px !important;
+}
+
+body.theme-github-mode .sidebar-contact-link {
+  overflow-wrap: anywhere;
+}
+
+body.theme-github-mode .sidebar-credentials-card {
+  display: grid !important;
+  gap: 14px !important;
+  padding: 14px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 8px !important;
+  background: #f6f8fa !important;
+}
+
+body.theme-github-mode .sidebar-card-title {
+  margin: 0 !important;
+  color: #1f2328 !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+}
+
+body.theme-github-mode .sidebar-credential-group {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+body.theme-github-mode .sidebar-credential-heading {
+  color: #57606a !important;
+  font-size: 0.78rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+}
+
+body.theme-github-mode .sidebar-credential-list {
+  display: grid !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+body.theme-github-mode .sidebar-credential-item {
+  display: grid !important;
+  gap: 3px !important;
+  padding-left: 10px !important;
+  border-left: 2px solid #d0d7de !important;
+  color: #3b4651 !important;
+  font-size: 0.82rem !important;
+  line-height: 1.45 !important;
+}
+
+body.theme-github-mode .sidebar-credential-item strong {
+  color: #1f2328 !important;
+  font-size: 0.88rem !important;
+}
+
+body.theme-github-mode .sidebar-credential-period {
+  color: #0969da !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+}
+
 @media (max-width: 780px) {
   body.theme-github-mode .gh-topbar-inner {
     min-height: auto !important;
@@ -1257,5 +1349,9 @@ body.theme-github-mode .lang-pill.is-active {
 
   body.theme-github-mode .gh-search-stub {
     min-width: 0 !important;
+  }
+
+  body.theme-github-mode .scholar-metrics-grid {
+    grid-template-columns: 1fr;
   }
 }
