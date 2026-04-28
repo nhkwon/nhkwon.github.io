@@ -24,6 +24,17 @@
     return String(value || "").replace(/\s+/g, " ").trim();
   }
 
+  function currentUpdateLabel() {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return `${values.year}.${values.month}.${values.day}`;
+  }
+
   function currentCopy() {
     return COPY[document.body.dataset.lang === "en" ? "en" : "ko"];
   }
@@ -95,7 +106,7 @@
         <div class="gh-repo-tab-list">${tabs}</div>
         <div class="gh-repo-tabs-update" aria-label="Latest update">
           <span class="gh-repo-tabs-update-label">Update</span>
-          <strong class="gh-repo-tabs-update-value">2026.04</strong>
+          <strong class="gh-repo-tabs-update-value">${currentUpdateLabel()}</strong>
         </div>
       </nav>
     `;
@@ -107,7 +118,7 @@
     if (!heroPanel) return null;
 
     const kicker = cleanText(heroPanel.querySelector(".hero-kicker")?.textContent);
-    const title = cleanText(heroPanel.querySelector(".hero-title")?.textContent) || "Construction AI & Data Intelligence";
+    const title = "Construction AI & Data Intelligence";
     const caption = cleanText(heroPanel.querySelector(".hero-caption")?.textContent);
     const buttons = heroPanel.querySelector(".button-row")?.innerHTML || "";
     const stats = heroPanel.querySelector(".hero-summary")?.innerHTML || "";
@@ -118,8 +129,7 @@
       <div class="gh-home-overview-layout">
         <div class="gh-home-overview-copy">
           <p class="gh-home-overview-kicker">${kicker}</p>
-          <h2 class="gh-home-overview-title">${title}</h2>
-          <p class="gh-home-overview-note">with Codex and Vibe Coding</p>
+          <h2 class="gh-home-overview-title">${title} <span class="gh-home-overview-title-tag">with Codex and Vibe Coding</span></h2>
           <p class="gh-home-overview-caption">${caption}</p>
           <div class="button-row gh-home-overview-actions">${buttons}</div>
         </div>
@@ -147,7 +157,7 @@
     const scholarHref = document.querySelector('a[href*="scholar.google"]')?.getAttribute("href") || "";
     const pageTitle =
       cleanText(siteMain?.querySelector(".page-title")?.textContent) ||
-      cleanText(siteMain?.querySelector(".hero-title")?.textContent) ||
+      (document.body.dataset.page === "home" ? "Construction AI & Data Intelligence" : cleanText(siteMain?.querySelector(".hero-title")?.textContent)) ||
       cleanText(activeNav?.querySelector("span")?.textContent) ||
       "Construction AI & Data Intelligence";
     const pageDescription =

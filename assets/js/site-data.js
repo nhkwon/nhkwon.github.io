@@ -1380,7 +1380,7 @@ SITE_DATA.profile.location = {
   en: "Ansan, Republic of Korea"
 };
 SITE_DATA.profile.email = "envy978@hanmail.net";
-SITE_DATA.profile.photo = "assets/images/profile-photo.png";
+SITE_DATA.profile.photo = "assets/images/profile-photo.png?v=20260428k";
 SITE_DATA.profile.photoAlt = {
   ko: "권나현 프로필 이미지",
   en: "Nahyun Kwon profile image"

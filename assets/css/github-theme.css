@@ -362,9 +362,9 @@ body.theme-github-mode .gh-sidebar-section-title {
 }
 
 body.theme-github-mode .sidebar-photo-frame {
-  width: 112px !important;
-  height: 112px !important;
-  padding: 4px !important;
+  width: 120px !important;
+  height: 120px !important;
+  padding: 3px !important;
   margin: 0 !important;
   border-radius: 999px !important;
   border: 1px solid #dce8e1 !important;
@@ -374,6 +374,12 @@ body.theme-github-mode .sidebar-photo-frame {
 
 body.theme-github-mode .profile-portrait {
   border-radius: 999px !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
+  filter: contrast(1.06) saturate(1.04) !important;
+  image-rendering: auto !important;
 }
 
 body.theme-github-mode .sidebar-identity {
@@ -1082,12 +1088,20 @@ body.theme-github-mode .gh-search-shortcut {
 
 body.theme-github-mode .gh-topbar-link {
   min-height: 40px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   padding: 0 14px !important;
-  border: 1px solid #57606a !important;
+  border: 2px solid #8b949e !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(240, 246, 252, 0.12),
+    0 0 0 1px rgba(139, 148, 158, 0.18) !important;
   border-radius: 6px !important;
   background: transparent !important;
   color: #f0f6fc !important;
   font-weight: 700 !important;
+  line-height: 1 !important;
+  text-align: center !important;
 }
 
 body.theme-github-mode .gh-repo-header {
@@ -1132,6 +1146,14 @@ body.theme-github-mode .gh-repo-page-title {
   color: #1f2328 !important;
 }
 
+body[data-page="home"].theme-github-mode .gh-repo-page-title {
+  display: none !important;
+}
+
+body[data-page="home"].theme-github-mode .gh-page-pill {
+  display: none !important;
+}
+
 body.theme-github-mode .gh-repo-tabs {
   min-height: 38px !important;
   padding: 0 16px !important;
@@ -1151,9 +1173,9 @@ body.theme-github-mode .gh-repo-tab {
 body.theme-github-mode .gh-repo-tab::after {
   left: 4px !important;
   right: 4px !important;
-  bottom: 6px !important;
-  height: 4px !important;
-  background: #ffffff !important;
+  bottom: 7px !important;
+  height: 2px !important;
+  background: #c9d1d9 !important;
 }
 
 body.theme-github-mode .gh-repo-tab.is-active,
@@ -1357,6 +1379,35 @@ body.theme-github-mode .summary-value {
   line-height: 1 !important;
 }
 
+body.theme-github-mode .hero-title-tag {
+  display: inline-block;
+  margin-left: 0.24em;
+  transform: translateY(-0.12em);
+  color: #6e7781;
+  font-family: "Noto Serif KR", "Nanum Myeongjo", Georgia, "Times New Roman", serif;
+  font-size: clamp(1.1rem, 1.62vw, 1.48rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+body.theme-github-mode .gh-home-overview-title-tag {
+  display: inline-block;
+  margin-left: 0.22em;
+  transform: translateY(-0.1em);
+  color: #6e7781;
+  font-family: "Noto Serif KR", "Nanum Myeongjo", Georgia, "Times New Roman", serif;
+  font-size: clamp(1.08rem, 1.58vw, 1.42rem);
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+body.theme-github-mode .hero-caption {
+  display: none !important;
+}
+
 @media (max-width: 780px) {
   body.theme-github-mode .gh-topbar-inner {
     min-height: auto !important;
@@ -1375,5 +1426,19 @@ body.theme-github-mode .summary-value {
 
   body.theme-github-mode .scholar-metrics-grid {
     grid-template-columns: 1fr;
+  }
+
+  body.theme-github-mode .hero-title-tag {
+    display: block;
+    margin: 0.42rem 0 0;
+    transform: none;
+    white-space: normal;
+  }
+
+  body.theme-github-mode .gh-home-overview-title-tag {
+    display: block;
+    margin: 0.42rem 0 0;
+    transform: none;
+    white-space: normal;
   }
 }

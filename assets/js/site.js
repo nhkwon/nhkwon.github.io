@@ -8,10 +8,9 @@
 
   const page = document.body.dataset.page || "home";
   const lang = document.body.dataset.lang === "en" ? "en" : "ko";
+  const sortParam = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("sort") : "";
   const publicationSort =
-    typeof window !== "undefined" && new URLSearchParams(window.location.search).get("sort") === "citations"
-      ? "citations"
-      : "year";
+    sortParam === "citations" || sortParam === "if" ? sortParam : "year";
   let currentPublicationSort = publicationSort;
   const AI_CHAT_IDLE_MS = 20000;
   const AI_CHAT_STARTERS = [
@@ -333,7 +332,21 @@
       }
     }
   ];
+
+  function currentUpdateLabel() {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Seoul",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).formatToParts(new Date());
+    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    return `${values.year}.${values.month}.${values.day}`;
+  }
   const ACTIVITIES = Array.isArray(SITE_DATA.activities) && SITE_DATA.activities.length ? SITE_DATA.activities : DEFAULT_ACTIVITIES;
+  function getActivities() {
+    return Array.isArray(SITE_DATA.activities) && SITE_DATA.activities.length ? SITE_DATA.activities : ACTIVITIES;
+  }
 
   const CONTACT = {
     cards: [
@@ -867,8 +880,31 @@
     return String(a.title).localeCompare(String(b.title));
   }
 
+  function impactFactorValue(item) {
+    const raw = item?.metrics?.impactFactor;
+    const value = Number(String(raw || "").replace(/[^0-9.]+/g, ""));
+    return Number.isFinite(value) ? value : -1;
+  }
+
+  function byImpactFactorThenYear(a, b) {
+    const aIf = impactFactorValue(a);
+    const bIf = impactFactorValue(b);
+    if (bIf !== aIf) return bIf - aIf;
+    if ((b.year || 0) !== (a.year || 0)) return (b.year || 0) - (a.year || 0);
+    const aCitations = typeof a.citations === "number" ? a.citations : -1;
+    const bCitations = typeof b.citations === "number" ? b.citations : -1;
+    if (bCitations !== aCitations) return bCitations - aCitations;
+    return String(a.title).localeCompare(String(b.title));
+  }
+
   function sortPublications(items) {
-    return items.slice().sort(currentPublicationSort === "citations" ? byCitationsThenYear : byYearThenCitations);
+    const sorter =
+      currentPublicationSort === "citations"
+        ? byCitationsThenYear
+        : currentPublicationSort === "if"
+          ? byImpactFactorThenYear
+          : byYearThenCitations;
+    return items.slice().sort(sorter);
   }
 
   function getJournalPublications() {
@@ -1155,7 +1191,7 @@
       </section>
       <section class="content-section">
         ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Activities", en: "Activities" }, route("news"), { ko: "활동 더 보기", en: "Open activities" })}
-        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+        <div class="timeline-stack">${getActivities().map((item) => renderActivityCard(item)).join("")}</div>
       </section>
       ${renderContactCta()}
     `;
@@ -1261,7 +1297,7 @@
     return `
       <section class="content-section">
         ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Recent", en: "Recent" })}
-        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+        <div class="timeline-stack">${getActivities().map((item) => renderActivityCard(item)).join("")}</div>
       </section>
       <section class="content-section">
         ${renderSectionHeading({ ko: "연구 확장 방향", en: "Research Expansion" }, { ko: "Ongoing", en: "Ongoing" })}
@@ -1756,7 +1792,9 @@
 
     event.preventDefault();
 
-    const nextSort = sortChip.dataset.publicationSort === "citations" ? "citations" : "year";
+    const nextSort = ["year", "citations", "if"].includes(sortChip.dataset.publicationSort)
+      ? sortChip.dataset.publicationSort
+      : "year";
 
     if (nextSort === currentPublicationSort) {
       return;
@@ -1899,7 +1937,7 @@
 
   function getAiChatReply(prompt) {
     const query = String(prompt || "").toLowerCase();
-    const primaryActivity = ACTIVITIES[0];
+    const primaryActivity = getActivities()[0];
     const researchTitles = CONTENT.research.slice(0, 3).map((item) => text(item.title)).join(", ");
     const emailHref = getProfileHref("email") || "mailto:envy978@hanmail.net";
     const scholarHref =
@@ -2046,6 +2084,10 @@
           <button class="sort-chip ${currentPublicationSort === "citations" ? "is-active" : ""}" type="button" data-publication-sort="citations" aria-pressed="${currentPublicationSort === "citations"}">
             ${icon("chart")}
             <span>${text({ ko: "인용순", en: "By citations" })}</span>
+          </button>
+          <button class="sort-chip ${currentPublicationSort === "if" ? "is-active" : ""}" type="button" data-publication-sort="if" aria-pressed="${currentPublicationSort === "if"}">
+            ${icon("star")}
+            <span>${text({ ko: "IF순", en: "By IF" })}</span>
           </button>
         </div>
       </div>
@@ -2296,7 +2338,7 @@
       </section>
       <section class="content-section">
         ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Activities", en: "Activities" }, route("news"), { ko: "활동 더 보기", en: "Open activities" })}
-        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+        <div class="timeline-stack">${getActivities().map((item) => renderActivityCard(item)).join("")}</div>
       </section>
       ${renderContactCta()}
     `;
@@ -2376,6 +2418,123 @@
       summary: {
         ko: "웨어러블 기반 생체·행동 데이터를 활용해 근로자의 피로도와 위험도를 통합 평가하고 사고 예방용 실시간 모니터링 체계를 구축함",
         en: "This project builds a real-time monitoring framework that integrates fatigue and risk assessment using wearable biometric and behavioral data."
+      }
+    },
+    {
+      period: "2024-2025",
+      role: { ko: "연구원", en: "Researcher" },
+      program: { ko: "한국에너지기술평가원 / 한양대학교 ERICA 산학협력단", en: "KETEP / Hanyang University ERICA" },
+      title: {
+        ko: "분산형 재생에너지 시스템 실증단지 필수 기반인프라 구축",
+        en: "Core infrastructure for a distributed renewable energy system demonstration complex"
+      },
+      summary: {
+        ko: "재생에너지 실증단지 운영에 필요한 전력·데이터·운영 기반 인프라를 구축하는 연구",
+        en: "Infrastructure research for power, data, and operation systems required by renewable-energy demonstration sites."
+      }
+    },
+    {
+      period: "2020-2025",
+      role: { ko: "연구원", en: "Researcher" },
+      program: { ko: "한국에너지기술평가원 / 한국건설기술연구원", en: "KETEP / KICT" },
+      title: {
+        ko: "제로에너지건축물 구현을 위한 스마트 외장재·설비 융복합 기술개발 및 성능평가 체계 구축, 실증",
+        en: "Smart envelope and equipment convergence technologies for zero-energy buildings"
+      },
+      summary: {
+        ko: "스마트 외장재와 설비 융복합 기술을 결합해 제로에너지건축물의 성능평가와 실증 체계를 구축하는 연구",
+        en: "Research on smart envelope and equipment convergence technologies with performance evaluation and demonstration for zero-energy buildings."
+      }
+    },
+    {
+      period: "2024",
+      role: { ko: "연구원", en: "Researcher" },
+      program: { ko: "한국에너지기술평가원", en: "KETEP" },
+      title: {
+        ko: "재생에너지 디지털트윈 및 친환경교통 실증연구 인프라 구축",
+        en: "Renewable energy digital twin and eco-friendly transportation demonstration infrastructure"
+      },
+      summary: {
+        ko: "재생에너지와 친환경교통 실증 데이터를 디지털트윈 기반 인프라로 연결하는 연구",
+        en: "Digital-twin infrastructure research connecting renewable-energy and eco-friendly transportation demonstration data."
+      }
+    },
+    {
+      period: "2022",
+      role: { ko: "연구원", en: "Researcher" },
+      program: { ko: "한국건설기술연구원", en: "KICT" },
+      title: {
+        ko: "그린리모델링 활성화를 위한 건축물 에너지 디지털 진단 및 설계 자동화 기술개발",
+        en: "Digital energy diagnosis and design automation for green remodeling"
+      },
+      summary: {
+        ko: "건축물 에너지 상태를 디지털로 진단하고 그린리모델링 설계 과정을 자동화하는 기술개발 연구",
+        en: "Technology research for digital building-energy diagnosis and automated green-remodeling design workflows."
+      }
+    },
+    {
+      period: "2018-2022",
+      role: { ko: "연구원", en: "Researcher" },
+      program: { ko: "한국연구재단 건설구조물 내구성 혁신 연구센터", en: "NRF Research Center for Durable Construction Structures" },
+      title: {
+        ko: "건설구조물 내구성 혁신 연구센터",
+        en: "Research Center for Durability Innovation in Construction Structures"
+      },
+      summary: {
+        ko: "건설구조물의 내구성 향상, 성능저하 진단, 유지관리 전략을 다루는 연구센터 과제",
+        en: "Research-center work on durability improvement, deterioration diagnosis, and maintenance strategies for construction structures."
+      }
+    },
+    {
+      period: "2018-2020",
+      role: { ko: "연구원", en: "Researcher" },
+      program: { ko: "(주)썬앤라이트", en: "Sun & Light" },
+      title: {
+        ko: "그린리모델링 및 실내환경 향상을 위한 IoT기반 스마트 모듈러 외피 패키지 개발",
+        en: "IoT-based smart modular envelope package for green remodeling and indoor environment improvement"
+      },
+      summary: {
+        ko: "IoT 센싱과 모듈러 외피 패키지를 활용해 그린리모델링과 실내환경 개선을 연결하는 연구",
+        en: "Research linking IoT sensing and modular envelope packages for green remodeling and indoor environmental improvement."
+      }
+    },
+    {
+      period: "2017-2018",
+      role: { ko: "참여연구원", en: "Research Participant" },
+      program: { ko: "산업통상자원부 산업핵심기술개발사업", en: "MOTIE Industrial Core Technology Program" },
+      title: {
+        ko: "엔지니어링 프로젝트의 지능형 통합관리 지원 시스템 개발",
+        en: "Intelligent integrated management support system for engineering projects"
+      },
+      summary: {
+        ko: "엔지니어링 프로젝트의 공정, 비용, 리스크 정보를 통합해 지능형 관리 의사결정을 지원하는 시스템 연구",
+        en: "System research for intelligent project-management decisions by integrating schedule, cost, and risk information."
+      }
+    },
+    {
+      period: "2018",
+      role: { ko: "참여연구원", en: "Research Participant" },
+      program: { ko: "국토교통부 국토교통기술촉진연구사업", en: "MOLIT Transportation and Construction Technology Promotion Program" },
+      title: {
+        ko: "네트워크 기반 라이프라인 지진 재해 기능저하 예측 모델",
+        en: "Network-based prediction model for lifeline degradation under earthquake disasters"
+      },
+      summary: {
+        ko: "네트워크 관점에서 라이프라인 시설의 지진 재해 취약성과 기능저하를 예측하는 모델 연구",
+        en: "Network-based modeling for predicting seismic vulnerability and functional degradation of lifeline facilities."
+      }
+    },
+    {
+      period: "2012-2013",
+      role: { ko: "참여연구원", en: "Research Participant" },
+      program: { ko: "국토해양부 건설교통기술연구개발사업 / 첨단도시개발사업", en: "MOLIT Construction and Transportation R&D / Advanced Urban Development" },
+      title: {
+        ko: "개방형 BIM 기반 설계환경 개발 기획 및 통합 공사관리 시스템 연구",
+        en: "Open BIM-based design environment planning and integrated construction management systems"
+      },
+      summary: {
+        ko: "개방형 BIM 설계환경과 공정·원가·노무·안전 데이터를 연결하는 통합 공사관리 시스템 연구",
+        en: "Integrated construction-management research connecting open BIM design environments with schedule, cost, labor, and safety data."
       }
     }
     ];
@@ -2615,7 +2774,7 @@
       </section>
       <section class="content-section">
         ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Activities", en: "Activities" }, route("news"), { ko: "활동 더 보기", en: "Open activities" })}
-        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+        <div class="timeline-stack">${getActivities().map((item) => renderActivityCard(item)).join("")}</div>
       </section>
       ${renderContactCta()}
     `;
@@ -2660,7 +2819,7 @@
       </section>
       <section class="content-section">
         ${renderSectionHeading({ ko: "최근 활동", en: "Recent Activities" }, { ko: "Activities", en: "Activities" }, route("news"), { ko: "활동 더 보기", en: "Open activities" })}
-        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+        <div class="timeline-stack">${getActivities().map((item) => renderActivityCard(item)).join("")}</div>
       </section>
       ${renderContactCta()}
     `;
@@ -2696,7 +2855,7 @@
           route("news"),
           { ko: "활동 더 보기", en: "Open activities" }
         )}
-        <div class="timeline-stack">${ACTIVITIES.map((item) => renderActivityCard(item)).join("")}</div>
+        <div class="timeline-stack">${getActivities().map((item) => renderActivityCard(item)).join("")}</div>
       </section>
       ${renderContactCta()}
     `;
@@ -3062,11 +3221,7 @@
               ko: "Hanyang University ERICA · AI Construction Technology Research Center",
               en: "Hanyang University ERICA · AI Construction Technology Research Center"
             })}</p>
-            <h1 class="hero-title">Construction AI & Data Intelligence</h1>
-            <p class="hero-caption">${text({
-              ko: "Building Maintenance · Safety · Prediction · Decision Support",
-              en: "Building Maintenance · Safety · Prediction · Decision Support"
-            })}</p>
+            <h1 class="hero-title">Construction AI & Data<br class="hero-title-break">Intelligence <span class="hero-title-tag">with Codex and Vibe Coding</span></h1>
             <p class="hero-lead">${text({
               ko: "건축·도시·시공 데이터를 바탕으로 노후 건축물 유지관리, 안전, 성능 예측, 의사결정 지원을 연결하는 연구를 수행합니다.",
               en: "Research focused on data-driven maintenance, safety, performance prediction, and decision support for the built environment."
@@ -3079,7 +3234,7 @@
           <div class="hero-visual hero-update-visual">
             <div class="gh-home-overview-update" aria-label="Latest update">
               <span class="gh-home-overview-update-label">Update</span>
-              <strong class="gh-home-overview-update-value">2026.04</strong>
+              <strong class="gh-home-overview-update-value">${currentUpdateLabel()}</strong>
             </div>
           </div>
         </div>
@@ -3142,10 +3297,10 @@
       }
 
       .sidebar-photo-frame {
-        width: 104px !important;
-        height: 104px !important;
+        width: 120px !important;
+        height: 120px !important;
         margin: 0 !important;
-        padding: 6px !important;
+        padding: 3px !important;
         border-radius: 999px !important;
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(244, 248, 253, 0.98)),
@@ -3158,6 +3313,10 @@
       .profile-portrait {
         border-radius: 999px !important;
         object-position: center top !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        filter: contrast(1.06) saturate(1.04) !important;
       }
 
       .sidebar-identity {
@@ -3225,6 +3384,19 @@
         line-height: 1.02 !important;
         letter-spacing: -0.026em !important;
         color: #132741 !important;
+      }
+
+      .hero-panel .hero-title .hero-title-tag {
+        display: inline-block !important;
+        margin-left: 0.24em !important;
+        transform: translateY(-0.12em) !important;
+        color: #6e7781 !important;
+        font-family: "Noto Serif KR", "Nanum Myeongjo", Georgia, "Times New Roman", serif !important;
+        font-size: clamp(1.1rem, 1.62vw, 1.48rem) !important;
+        font-weight: 700 !important;
+        line-height: 1.15 !important;
+        letter-spacing: 0 !important;
+        white-space: nowrap !important;
       }
 
       .hero-panel .hero-caption {
@@ -3345,6 +3517,13 @@
         .hero-panel .hero-title {
           max-width: none !important;
           font-size: clamp(2.5rem, 10vw, 3.75rem) !important;
+        }
+
+        .hero-panel .hero-title .hero-title-tag {
+          display: block !important;
+          margin: 0.42rem 0 0 !important;
+          transform: none !important;
+          white-space: normal !important;
         }
 
         .hero-panel .hero-caption {
@@ -3561,8 +3740,7 @@
 
     const heroText = {
       kicker: "Hanyang University ERICA · AI Construction Technology Research Center",
-      title: "Construction AI & Data Intelligence",
-      caption: "Building Maintenance · Safety · Prediction · Decision Support",
+      title: 'Construction AI & Data<br class="hero-title-break">Intelligence <span class="hero-title-tag">with Codex and Vibe Coding</span>',
       lead:
         lang === "ko"
           ? "\uac74\ucd95\u00b7\ub3c4\uc2dc\u00b7\uc2dc\uacf5 \ub370\uc774\ud130\ub97c \ubc14\ud0d5\uc73c\ub85c \ub178\ud6c4 \uac74\ucd95\ubb3c \uc720\uc9c0\uad00\ub9ac, \uc548\uc804, \uc131\ub2a5 \uc608\uce21, \uc758\uc0ac\uacb0\uc815 \uc9c0\uc6d0\uc744 \uc5f0\uacb0\ud558\ub294 \uc5f0\uad6c\ub97c \uc218\ud589\ud569\ub2c8\ub2e4."
@@ -3574,17 +3752,12 @@
     }
 
     if (heroTitle) {
-      heroTitle.textContent = heroText.title;
-    }
-
-    if (!heroCaption && heroTitle) {
-      heroCaption = document.createElement("p");
-      heroCaption.className = "hero-caption";
-      heroTitle.insertAdjacentElement("afterend", heroCaption);
+      heroTitle.innerHTML = heroText.title;
     }
 
     if (heroCaption) {
-      heroCaption.textContent = heroText.caption;
+      heroCaption.remove();
+      heroCaption = null;
     }
 
     if (!heroLead) {

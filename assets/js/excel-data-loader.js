@@ -60,6 +60,41 @@
     return raw;
   }
 
+  function normalizeTitle(value) {
+    return compact(value)
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, " ")
+      .trim();
+  }
+
+  function citationValue(value) {
+    if (value === null || value === undefined || value === "") return undefined;
+    const numberValue = Number(String(value).replace(/,/g, "").trim());
+    return Number.isFinite(numberValue) ? numberValue : undefined;
+  }
+
+  function formatMetric(value, digits = 2) {
+    if (value === null || value === undefined || value === "") return "";
+    const numberValue = Number(String(value).replace(/,/g, "").trim());
+    if (!Number.isFinite(numberValue)) return String(value).trim();
+    return Number.isInteger(numberValue)
+      ? String(numberValue)
+      : numberValue.toFixed(digits).replace(/\.?0+$/, "");
+  }
+
+  function existingCitationMap() {
+    const map = new Map();
+    const publications = SITE_DATA?.outputs?.publications || [];
+
+    publications.forEach((item) => {
+      const key = normalizeTitle(item.title);
+      if (!key || typeof item.citations !== "number") return;
+      map.set(key, item.citations);
+    });
+
+    return map;
+  }
+
   function findSheetName(workbook, candidates) {
     const wanted = candidates.map(normalizeKey);
     return workbook.SheetNames.find((name) => {
@@ -122,7 +157,7 @@
     SITE_DATA.scholarMetrics = metrics;
   }
 
-  function publicationFromExcelRecord(record, source) {
+  function publicationFromExcelRecord(record, source, citationMap = new Map()) {
     const title = compact(valueByHeader(record, ["title", "논문명", "제목"]));
     if (!title) return null;
     if (/^https?:\/\//i.test(title)) return null;
@@ -138,12 +173,14 @@
     const authors = compact(valueByHeader(record, ["저자"], { last: true })) || role;
     const authorCount = valueByHeader(record, ["인원수", "발표자수"]);
     const paperUrl = compact(valueByHeader(record, ["인터넷주소", "paperUrl", "url", "link", "링크"]));
+    const excelCitations = citationValue(valueByHeader(record, ["citations", "인용"]));
+    const fallbackCitations = citationMap.get(normalizeTitle(title));
 
     return {
       type: "journal",
       journalClass: source === "domestic" ? "KCI" : "SCI",
       year: parseYear(publicationDate),
-      citations: Number(valueByHeader(record, ["citations", "인용"])) || 0,
+      citations: excelCitations ?? fallbackCitations,
       title,
       authors,
       venue,
@@ -156,10 +193,10 @@
       issn: compact(valueByHeader(record, ["ISSN"])),
       metrics: {
         indexType: indexType || (source === "domestic" ? "KCI" : ""),
-        impactFactor: impactFactor ? String(impactFactor) : "",
-        impactFactorAtPublication: impactFactorAtPublication ? String(impactFactorAtPublication) : "",
-        percentile: percentile ? String(percentile) : "",
-        topPercent: topPercent ? String(topPercent) : ""
+        impactFactor: formatMetric(impactFactor, 2),
+        impactFactorAtPublication: formatMetric(impactFactorAtPublication, 2),
+        percentile: formatMetric(percentile, 2),
+        topPercent: formatMetric(topPercent, 2)
       }
     };
   }
@@ -179,14 +216,14 @@
         const topPercent = readCell(row, ["topPercent", "top percent", "상위"]);
 
         if (indexType) metrics.indexType = indexType;
-        if (impactFactor) metrics.impactFactor = String(impactFactor);
-        if (percentile) metrics.percentile = String(percentile);
-        if (topPercent) metrics.topPercent = String(topPercent);
+        if (impactFactor) metrics.impactFactor = formatMetric(impactFactor, 2);
+        if (percentile) metrics.percentile = formatMetric(percentile, 2);
+        if (topPercent) metrics.topPercent = formatMetric(topPercent, 2);
 
         return {
           type: readCell(row, ["type", "유형"]) || "journal",
           year: Number(readCell(row, ["year", "연도"])) || "",
-          citations: Number(readCell(row, ["citations", "인용"])) || 0,
+          citations: citationValue(readCell(row, ["citations", "인용"])),
           title,
           authors: readCell(row, ["authors", "저자"]),
           venue: readCell(row, ["venue", "journal", "학술지", "게재지"]),
@@ -218,6 +255,39 @@
         linkLabel: { ko: "전체 목록에서 보기", en: "View in full list" },
         tags: [String(item.year || ""), item.journalClass === "KCI" ? "KCI" : "SCI(E)"].filter(Boolean)
       }));
+  }
+
+  function dedupeActivities(items) {
+    const seen = new Set();
+
+    return items.filter((item) => {
+      const title = typeof item.title === "object" ? item.title.ko || item.title.en : item.title;
+      const body = typeof item.body === "object" ? item.body.ko || item.body.en : item.body;
+      const key = [item.date, title, body]
+        .map((part) => compact(part).toLowerCase())
+        .join("|");
+
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function removeAwardedPresentations(awards, presentations) {
+    const awardedPaperTitles = new Set(
+      awards
+        .map((item) => {
+          const body = typeof item.body === "object" ? item.body.ko || item.body.en : item.body;
+          return normalizeTitle(String(body || "").split(" · ")[0]);
+        })
+        .filter(Boolean)
+    );
+
+    return presentations.filter((item) => {
+      const body = typeof item.body === "object" ? item.body.ko || item.body.en : item.body;
+      const paperTitle = normalizeTitle(String(body || "").split(" · ")[0]);
+      return !paperTitle || !awardedPaperTitles.has(paperTitle);
+    });
   }
 
   function buildAwardActivities(records) {
@@ -268,11 +338,12 @@
   }
 
   function applyWorkbookSpecificSheets(workbook) {
+    const citationMap = existingCitationMap();
     const sci = rowsFromMatrix(getMatrix(workbook, ["전체-ver1-IF_SCI", "SCI"])).map((record) =>
-      publicationFromExcelRecord(record, "international")
+      publicationFromExcelRecord(record, "international", citationMap)
     );
     const domestic = rowsFromMatrix(getMatrix(workbook, ["전체-ver1-IF_국내", "국내"])).map((record) =>
-      publicationFromExcelRecord(record, "domestic")
+      publicationFromExcelRecord(record, "domestic", citationMap)
     );
     const publications = [...sci, ...domestic].filter(Boolean);
 
@@ -280,11 +351,14 @@
       applyPublications(publications);
     }
 
-    const awards = buildAwardActivities(rowsFromMatrix(getMatrix(workbook, ["수상실적", "수상"])));
-    const presentations = buildPresentationActivities(rowsFromMatrix(getMatrix(workbook, ["학술발표", "발표"])));
+    const awards = dedupeActivities(buildAwardActivities(rowsFromMatrix(getMatrix(workbook, ["수상실적", "수상"]))));
+    const presentations = removeAwardedPresentations(
+      awards,
+      dedupeActivities(buildPresentationActivities(rowsFromMatrix(getMatrix(workbook, ["학술발표", "발표"]))))
+    );
 
     if (awards.length || presentations.length) {
-      SITE_DATA.activities = [...awards, ...presentations].sort((a, b) => activitySortValue(b) - activitySortValue(a));
+      SITE_DATA.activities = (awards.length ? awards : presentations).sort((a, b) => activitySortValue(b) - activitySortValue(a));
       SITE_DATA.awards = awards;
       SITE_DATA.presentations = presentations;
     }
