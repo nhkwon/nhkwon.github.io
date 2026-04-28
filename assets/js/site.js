@@ -347,6 +347,130 @@
   function getActivities() {
     return Array.isArray(SITE_DATA.activities) && SITE_DATA.activities.length ? SITE_DATA.activities : ACTIVITIES;
   }
+  const CONTACT_BOARD_STORAGE_KEY = "nhkwon-contact-board-v1";
+  const CONTACT_BOARD_MAX_FILE_SIZE = 2 * 1024 * 1024;
+  const CONTACT_BOARD_API = "/api/contact-board";
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+  }
+
+  function readContactBoardPosts() {
+    try {
+      const raw = window.localStorage.getItem(CONTACT_BOARD_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function writeContactBoardPosts(posts) {
+    window.localStorage.setItem(CONTACT_BOARD_STORAGE_KEY, JSON.stringify(posts));
+  }
+
+  function formatContactBoardDate(value) {
+    try {
+      return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(value));
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => resolve(String(reader.result || "")));
+      reader.addEventListener("error", reject);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderContactBoardEmpty() {
+    return `<p class="empty-state">${text({ ko: "\ub4f1\ub85d\ub41c \ubb38\uc758\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.", en: "No messages yet." })}</p>`;
+  }
+
+  function renderContactBoardLoading() {
+    return `<p class="empty-state">${text({ ko: "\uac8c\uc2dc\uae00\uc744 \ubd88\ub7ec\uc624\ub294 \uc911\uc785\ub2c8\ub2e4.", en: "Loading messages." })}</p>`;
+  }
+
+  async function requestContactBoard(path = "", options = {}) {
+    const response = await fetch(`${CONTACT_BOARD_API}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {})
+      }
+    });
+
+    if (response.status === 204) {
+      return null;
+    }
+
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(payload?.error || "Contact board request failed.");
+    }
+
+    return payload;
+  }
+
+  async function loadContactBoardPosts() {
+    const payload = await requestContactBoard();
+    return Array.isArray(payload?.posts) ? payload.posts : [];
+  }
+
+  async function createContactBoardPost(post) {
+    const payload = await requestContactBoard("", {
+      method: "POST",
+      body: JSON.stringify(post)
+    });
+    return payload?.post || post;
+  }
+
+  async function deleteContactBoardPost(id) {
+    await requestContactBoard("", {
+      method: "DELETE",
+      body: JSON.stringify({ id })
+    });
+  }
+
+  async function refreshContactBoardList() {
+    const list = app.querySelector("[data-contact-board-list]");
+    if (!list) {
+      return;
+    }
+
+    list.innerHTML = renderContactBoardLoading();
+
+    try {
+      const posts = await loadContactBoardPosts();
+      list.innerHTML = posts.length ? posts.map((post) => renderContactBoardPost(post)).join("") : renderContactBoardEmpty();
+    } catch (error) {
+      const localPosts = readContactBoardPosts();
+      list.innerHTML = localPosts.length ? localPosts.map((post) => renderContactBoardPost(post)).join("") : renderContactBoardEmpty();
+      const status = app.querySelector("[data-contact-board-status]");
+      if (status) {
+        status.textContent = text({
+          ko: "Supabase \uc5f0\uacb0 \uc124\uc815\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.",
+          en: "Check the Supabase connection settings."
+        });
+      }
+    }
+  }
 
   const CONTACT = {
     cards: [
@@ -1319,6 +1443,83 @@
     `;
   }
 
+  function renderContactPage() {
+    return `
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "\uc5f0\ub77d \ucc44\ub110", en: "Contact Channels" }, { ko: "Channels", en: "Channels" })}
+        <div class="card-grid three-column">${CONTACT.cards.map((item) => renderContactCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading({ ko: "\uac8c\uc2dc\ud310", en: "Message Board" }, { ko: "Board", en: "Board" })}
+        ${renderContactBoard()}
+      </section>
+    `;
+  }
+
+  function renderContactBoard() {
+    const posts = readContactBoardPosts();
+
+    return `
+      <div class="contact-board">
+        <form class="contact-board-form" data-contact-board-form>
+          <div class="contact-board-grid">
+            <label class="form-field">
+              <span>${text({ ko: "\uc774\ub984", en: "Name" })}</span>
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label class="form-field">
+              <span>${text({ ko: "\uc774\uba54\uc77c", en: "Email" })}</span>
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+          </div>
+          <label class="form-field">
+            <span>${text({ ko: "\uc81c\ubaa9", en: "Subject" })}</span>
+            <input type="text" name="subject" required>
+          </label>
+          <label class="form-field">
+            <span>${text({ ko: "\ub0b4\uc6a9", en: "Message" })}</span>
+            <textarea name="message" rows="7" required></textarea>
+          </label>
+          <label class="form-field">
+            <span>${text({ ko: "\ucca8\ubd80\ud30c\uc77c", en: "Attachment" })}</span>
+            <input type="file" name="attachments" multiple>
+          </label>
+          <div class="contact-board-actions">
+            <button class="button button-primary" type="submit">${icon("mail")}<span>${text({ ko: "\ub4f1\ub85d", en: "Post" })}</span></button>
+            <p class="contact-board-status" data-contact-board-status aria-live="polite"></p>
+          </div>
+        </form>
+        <div class="contact-board-list" data-contact-board-list>
+          ${posts.length ? posts.map((post) => renderContactBoardPost(post)).join("") : renderContactBoardLoading()}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderContactBoardPost(post) {
+    const attachments = Array.isArray(post.attachments) ? post.attachments : [];
+
+    return `
+      <article class="contact-board-post">
+        <div class="contact-board-post-head">
+          <div>
+            <h3 class="contact-board-title">${escapeHtml(post.subject)}</h3>
+            <p class="contact-board-meta">${escapeHtml(post.name)} &middot; ${escapeHtml(post.email)} &middot; ${escapeHtml(formatContactBoardDate(post.createdAt))}</p>
+          </div>
+          <button class="contact-board-delete" type="button" data-contact-post-delete="${escapeHtml(post.id)}" aria-label="${text({ ko: "\uac8c\uc2dc\uae00 \uc0ad\uc81c", en: "Delete post" })}">&times;</button>
+        </div>
+        <p class="contact-board-message">${escapeHtml(post.message)}</p>
+        ${
+          attachments.length
+            ? `<div class="contact-board-attachments">${attachments
+                .map((file) => `<a class="attachment-pill" href="${file.dataUrl}" download="${escapeHtml(file.name)}">${icon("link")}<span>${escapeHtml(file.name)}</span></a>`)
+                .join("")}</div>`
+            : ""
+        }
+      </article>
+    `;
+  }
+
   function renderSectionHeading(title, subtitle, href, actionLabel) {
     const subtitleText =
       page === "publications" &&
@@ -1761,7 +1962,7 @@
     return `<article class="summary-card"><p class="summary-label">${text(item.label)}</p><p class="summary-value">${item.value}</p><p class="summary-detail">${text(item.detail)}</p></article>`;
   }
 
-  function handleAppClick(event) {
+  async function handleAppClick(event) {
     const chatToggle = event.target.closest("[data-ai-chat-toggle]");
     if (chatToggle) {
       event.preventDefault();
@@ -1781,6 +1982,33 @@
       event.preventDefault();
       setAiChatOpen(true);
       handleAiChatPrompt(starterButton.dataset.aiChatStarter || "");
+      return;
+    }
+
+    const deleteContactPostButton = event.target.closest("[data-contact-post-delete]");
+    if (deleteContactPostButton) {
+      event.preventDefault();
+      const postId = deleteContactPostButton.dataset.contactPostDelete;
+      const status = app.querySelector("[data-contact-board-status]");
+      if (status) {
+        status.textContent = text({ ko: "\uc0ad\uc81c \uc911...", en: "Deleting..." });
+      }
+
+      try {
+        await deleteContactBoardPost(postId);
+      } catch (error) {
+        const nextPosts = readContactBoardPosts().filter((post) => post.id !== postId);
+        writeContactBoardPosts(nextPosts);
+      }
+
+      const list = app.querySelector("[data-contact-board-list]");
+      if (list) {
+        await refreshContactBoardList();
+      }
+
+      if (status) {
+        status.textContent = text({ ko: "\uc0ad\uc81c\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", en: "Deleted." });
+      }
       return;
     }
 
@@ -1809,7 +2037,81 @@
     }
   }
 
-  function handleAppSubmit(event) {
+  async function handleAppSubmit(event) {
+    const contactBoardForm = event.target.closest("[data-contact-board-form]");
+    if (contactBoardForm) {
+      event.preventDefault();
+
+      const status = contactBoardForm.querySelector("[data-contact-board-status]");
+      const formData = new FormData(contactBoardForm);
+      const files = Array.from(contactBoardForm.querySelector('input[name="attachments"]')?.files || []);
+      const oversizedFile = files.find((file) => file.size > CONTACT_BOARD_MAX_FILE_SIZE);
+
+      if (oversizedFile) {
+        if (status) {
+          status.textContent = text({ ko: "\ucca8\ubd80\ud30c\uc77c\uc740 \uac01 2MB \uc774\ud558\ub9cc \ub4f1\ub85d\ub429\ub2c8\ub2e4.", en: "Each attachment must be 2MB or smaller." });
+        }
+        return;
+      }
+
+      if (status) {
+        status.textContent = text({ ko: "\ub4f1\ub85d \uc911...", en: "Posting..." });
+      }
+
+      try {
+        const attachments = await Promise.all(
+          files.map(async (file) => ({
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            dataUrl: await readFileAsDataUrl(file)
+          }))
+        );
+        const post = {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          name: String(formData.get("name") || "").trim(),
+          email: String(formData.get("email") || "").trim(),
+          subject: String(formData.get("subject") || "").trim(),
+          message: String(formData.get("message") || "").trim(),
+          attachments,
+          createdAt: new Date().toISOString()
+        };
+
+        if (!post.name || !post.email || !post.subject || !post.message) {
+          if (status) {
+            status.textContent = text({ ko: "\ud544\uc218 \ud56d\ubaa9\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694.", en: "Please fill in every required field." });
+          }
+          return;
+        }
+
+        const savedPost = await createContactBoardPost(post);
+        const posts = [savedPost, ...readContactBoardPosts()].slice(0, 30);
+        writeContactBoardPosts(posts);
+        contactBoardForm.reset();
+
+        await refreshContactBoardList();
+
+        if (status) {
+          status.textContent = text({ ko: "\ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", en: "Posted." });
+        }
+      } catch (error) {
+        const posts = [post, ...readContactBoardPosts()].slice(0, 30);
+        writeContactBoardPosts(posts);
+        contactBoardForm.reset();
+        const list = app.querySelector("[data-contact-board-list]");
+        if (list) {
+          list.innerHTML = posts.map((item) => renderContactBoardPost(item)).join("");
+        }
+        if (status) {
+          status.textContent = text({
+            ko: "Supabase \uc5f0\uacb0 \uc124\uc815 \uc804\uc774\ub77c \ud604\uc7ac \ube0c\ub77c\uc6b0\uc800\uc5d0 \uc784\uc2dc \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
+            en: "Saved in this browser until Supabase is configured."
+          });
+        }
+      }
+      return;
+    }
+
     const chatForm = event.target.closest("[data-ai-chat-form]");
     if (!chatForm) {
       return;
@@ -3578,6 +3880,10 @@
       sidebarRows[2].querySelector(".sidebar-contact-value").textContent = "+82 10-7392-9933";
     }
 
+    if (page === "contact") {
+      refreshContactBoardList();
+    }
+
     if (page !== "home") {
       return;
     }
@@ -3700,6 +4006,10 @@
     applySidebarText();
     requestAnimationFrame(applySidebarText);
     setTimeout(applySidebarText, 80);
+
+    if (page === "contact") {
+      refreshContactBoardList();
+    }
 
     if (page !== "home") {
       return;

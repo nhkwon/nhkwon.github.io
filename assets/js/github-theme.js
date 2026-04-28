@@ -223,7 +223,24 @@
   function boot() {
     applyGithubTheme();
     window.setTimeout(applyGithubTheme, 60);
+    window.setTimeout(applyGithubTheme, 250);
+    window.setTimeout(applyGithubTheme, 1000);
     window.requestAnimationFrame(applyGithubTheme);
+
+    const app = document.getElementById("app");
+    if (!app || app.querySelector(".gh-theme-shell")) {
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+      applyGithubTheme();
+      if (app.querySelector(".gh-theme-shell")) {
+        observer.disconnect();
+      }
+    });
+
+    observer.observe(app, { childList: true, subtree: true });
+    window.setTimeout(() => observer.disconnect(), 5000);
   }
 
   if (document.readyState === "loading") {

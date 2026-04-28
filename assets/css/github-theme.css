@@ -1442,3 +1442,166 @@ body.theme-github-mode .hero-caption {
     white-space: normal;
   }
 }
+
+body.theme-github-mode .contact-board {
+  display: grid !important;
+  gap: 20px !important;
+}
+
+body.theme-github-mode .contact-board-form {
+  display: grid !important;
+  gap: 14px !important;
+  padding: 18px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 8px !important;
+  background: #f6f8fa !important;
+}
+
+body.theme-github-mode .contact-board-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+body.theme-github-mode .form-field {
+  display: grid !important;
+  gap: 7px !important;
+  color: #24292f !important;
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+}
+
+body.theme-github-mode .form-field input,
+body.theme-github-mode .form-field textarea {
+  width: 100% !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #24292f !important;
+  font: inherit !important;
+  font-weight: 500 !important;
+}
+
+body.theme-github-mode .form-field input {
+  min-height: 40px !important;
+  padding: 0 12px !important;
+}
+
+body.theme-github-mode .form-field textarea {
+  min-height: 150px !important;
+  padding: 12px !important;
+  resize: vertical !important;
+}
+
+body.theme-github-mode .form-field input:focus,
+body.theme-github-mode .form-field textarea:focus {
+  border-color: #0969da !important;
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.16) !important;
+  outline: none !important;
+}
+
+body.theme-github-mode .contact-board-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+
+body.theme-github-mode .contact-board-status {
+  min-height: 1.25rem !important;
+  margin: 0 !important;
+  color: #6e7781 !important;
+  font-size: 0.9rem !important;
+}
+
+body.theme-github-mode .contact-board-list {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+body.theme-github-mode .contact-board-post {
+  padding: 18px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+}
+
+body.theme-github-mode .contact-board-post-head {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+body.theme-github-mode .contact-board-title {
+  margin: 0 !important;
+  color: #24292f !important;
+  font-size: 1.05rem !important;
+  line-height: 1.45 !important;
+}
+
+body.theme-github-mode .contact-board-meta {
+  margin: 5px 0 0 !important;
+  color: #6e7781 !important;
+  font-size: 0.86rem !important;
+}
+
+body.theme-github-mode .contact-board-message {
+  margin: 14px 0 0 !important;
+  color: #3b434d !important;
+  line-height: 1.7 !important;
+  white-space: pre-wrap !important;
+}
+
+body.theme-github-mode .contact-board-delete {
+  width: 32px !important;
+  height: 32px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 6px !important;
+  background: #f6f8fa !important;
+  color: #57606a !important;
+  cursor: pointer !important;
+  font-size: 1.1rem !important;
+}
+
+body.theme-github-mode .contact-board-delete:hover {
+  border-color: #cf222e !important;
+  color: #cf222e !important;
+}
+
+body.theme-github-mode .contact-board-attachments {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  margin-top: 14px !important;
+}
+
+body.theme-github-mode .attachment-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-height: 32px !important;
+  padding: 0 10px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 999px !important;
+  background: #f6f8fa !important;
+  color: #0969da !important;
+  font-size: 0.86rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+body.theme-github-mode .empty-state {
+  margin: 0 !important;
+  padding: 18px !important;
+  border: 1px dashed #d0d7de !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: #6e7781 !important;
+}
+
+@media (max-width: 720px) {
+  body.theme-github-mode .contact-board-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
