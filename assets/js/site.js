@@ -299,7 +299,7 @@
     ]
   };
 
-  const ACTIVITIES = [
+  const DEFAULT_ACTIVITIES = [
     {
       date: "2026",
       title: { ko: "Sustainability 특집호 Guest Editor", en: "Guest Editor for Sustainability" },
@@ -333,6 +333,7 @@
       }
     }
   ];
+  const ACTIVITIES = Array.isArray(SITE_DATA.activities) && SITE_DATA.activities.length ? SITE_DATA.activities : DEFAULT_ACTIVITIES;
 
   const CONTACT = {
     cards: [
@@ -845,6 +846,7 @@
   function classifyPublication(item) {
     const venueKey = normalizeVenue(item.venue);
     if (item.type !== "journal") return "EXCLUDED";
+    if (item.journalClass === "KCI" || item.journalClass === "SCI" || item.journalClass === "OTHER") return item.journalClass;
     if (KCI_VENUES.has(venueKey)) return "KCI";
     return "SCI";
   }
