@@ -1,6 +1,7 @@
 (() => {
   const COPY = {
     ko: {
+      search: "페이지 탐색",
       publicLabel: "Public",
       about: "About",
       links: "Links",
@@ -9,6 +10,7 @@
       overview: "Overview"
     },
     en: {
+      search: "Search pages",
       publicLabel: "Public",
       about: "About",
       links: "Links",
@@ -26,57 +28,40 @@
     return COPY[document.body.dataset.lang === "en" ? "en" : "ko"];
   }
 
-  function buildTopbar(copy, homeHref, scholarHref, contactHref, pageTitle) {
-    const searchButtonLabel = "Research Search";
-    const utilityCopy = "Hanyang University ERICA · AI Construction Technology Research Center";
-    const searchSummary = cleanText(pageTitle) || "Construction AI & Data Intelligence";
+  function buildTopbar(copy, homeHref, scholarHref, contactHref) {
     const topbar = document.createElement("header");
-
     topbar.className = "gh-topbar";
     topbar.innerHTML = `
-      <div class="gh-topbar-utility">
-        <div class="gh-topbar-utility-inner">
-          <span class="gh-topbar-utility-copy">${utilityCopy}</span>
-          <div class="gh-topbar-utility-links">
-            ${
-              scholarHref
-                ? `<a class="gh-topbar-utility-link" href="${scholarHref}" target="_blank" rel="noreferrer">Google Scholar</a>`
-                : ""
-            }
-            <a class="gh-topbar-utility-link" href="${contactHref}">${copy.contact}</a>
+      <div class="gh-topbar-inner">
+        <div class="gh-topbar-brand">
+          <a class="gh-topbar-mark" href="${homeHref}" aria-label="Open home"><span>NH</span></a>
+          <div class="gh-topbar-path">
+            <span class="gh-topbar-owner">nhkwon</span>
+            <span class="gh-topbar-sep">/</span>
+            <strong class="gh-topbar-repo">nhkwon.github.io</strong>
           </div>
         </div>
-      </div>
-      <div class="gh-topbar-inner">
-        <a class="gh-topbar-brand" href="${homeHref}" aria-label="Open home">
-          <span class="gh-topbar-mark">NH</span>
-          <span class="gh-topbar-wordmark">NHKWON AI</span>
-        </a>
-        <button class="gh-search-stub" type="button" aria-label="${searchButtonLabel}">
-          <span class="gh-search-stub-text">${searchSummary}</span>
-          <span class="gh-search-stub-submit">${searchButtonLabel}</span>
+        <button class="gh-search-stub" type="button" aria-label="${copy.search}">
+          <span class="gh-search-stub-text">${copy.search}</span>
+          <span class="gh-search-shortcut">/</span>
         </button>
         <div class="gh-topbar-tools">
           ${
             scholarHref
-              ? `<a class="gh-topbar-link" href="${scholarHref}" target="_blank" rel="noreferrer">Scholar</a>`
+              ? `<a class="gh-topbar-link" href="${scholarHref}" target="_blank" rel="noreferrer">Google Scholar</a>`
               : ""
           }
           <a class="gh-topbar-link" href="${contactHref}">${copy.contact}</a>
         </div>
       </div>
     `;
-
     return topbar;
   }
 
   function buildRepoHeader(copy, navItems, pageTitle, pageDescription) {
     const header = document.createElement("section");
     const descriptionText = cleanText(pageDescription);
-    const descriptionMarkup = descriptionText
-      ? `<p class="gh-repo-page-description">${descriptionText}</p>`
-      : "";
-
+    const descriptionMarkup = descriptionText ? `<p class="gh-repo-page-description">${descriptionText}</p>` : "";
     const tabs = navItems
       .map((item) => {
         const href = item.getAttribute("href") || "#";
@@ -94,7 +79,7 @@
           <div class="gh-repo-pathline">
             <a href="${navItems[0]?.getAttribute("href") || "ko.html"}">nhkwon</a>
             <span>/</span>
-            <strong>research portal</strong>
+            <strong>nhkwon.github.io</strong>
             <span class="gh-visibility-badge">${copy.publicLabel}</span>
           </div>
           <div class="gh-repo-actions">
@@ -107,29 +92,23 @@
         </div>
       </div>
       <nav class="gh-repo-tabs" aria-label="Page navigation">
-        <div class="gh-repo-tab-list">
-          ${tabs}
-        </div>
+        <div class="gh-repo-tab-list">${tabs}</div>
         <div class="gh-repo-tabs-update" aria-label="Latest update">
           <span class="gh-repo-tabs-update-label">Update</span>
           <strong class="gh-repo-tabs-update-value">2026.04</strong>
         </div>
       </nav>
     `;
-
     return header;
   }
 
   function buildHomeOverview(siteMain) {
     const heroPanel = siteMain.querySelector(".hero-panel");
-    if (!heroPanel) {
-      return null;
-    }
+    if (!heroPanel) return null;
 
     const kicker = cleanText(heroPanel.querySelector(".hero-kicker")?.textContent);
     const title = cleanText(heroPanel.querySelector(".hero-title")?.textContent) || "Construction AI & Data Intelligence";
     const caption = cleanText(heroPanel.querySelector(".hero-caption")?.textContent);
-    const codingNote = "with Codex and Vibe Coding";
     const buttons = heroPanel.querySelector(".button-row")?.innerHTML || "";
     const stats = heroPanel.querySelector(".hero-summary")?.innerHTML || "";
 
@@ -140,24 +119,20 @@
         <div class="gh-home-overview-copy">
           <p class="gh-home-overview-kicker">${kicker}</p>
           <h2 class="gh-home-overview-title">${title}</h2>
-          <p class="gh-home-overview-note">${codingNote}</p>
+          <p class="gh-home-overview-note">with Codex and Vibe Coding</p>
           <p class="gh-home-overview-caption">${caption}</p>
           <div class="button-row gh-home-overview-actions">${buttons}</div>
         </div>
       </div>
       <div class="summary-grid hero-summary gh-home-overview-stats">${stats}</div>
     `;
-
     return overview;
   }
 
   function applyGithubTheme() {
     const app = document.getElementById("app");
     const frame = app?.querySelector(".site-frame");
-
-    if (!app || !frame || app.querySelector(".gh-theme-shell")) {
-      return;
-    }
+    if (!app || !frame || app.querySelector(".gh-theme-shell")) return;
 
     const copy = currentCopy();
     const lang = document.body.dataset.lang === "en" ? "en" : "ko";
@@ -170,7 +145,6 @@
       navItems.find((item) => /contact/i.test(item.getAttribute("href") || ""))?.getAttribute("href") ||
       (lang === "en" ? "contact-en.html" : "contact.html");
     const scholarHref = document.querySelector('a[href*="scholar.google"]')?.getAttribute("href") || "";
-
     const pageTitle =
       cleanText(siteMain?.querySelector(".page-title")?.textContent) ||
       cleanText(siteMain?.querySelector(".hero-title")?.textContent) ||
@@ -187,39 +161,26 @@
 
     const shell = document.createElement("div");
     shell.className = "gh-theme-shell";
-    shell.appendChild(buildTopbar(copy, homeHref, scholarHref, contactHref, pageTitle));
+    shell.appendChild(buildTopbar(copy, homeHref, scholarHref, contactHref));
     shell.appendChild(buildRepoHeader(copy, navItems, pageTitle, pageDescription));
-
     app.insertBefore(shell, frame);
 
     const contentLayout = document.createElement("div");
     contentLayout.className = "gh-content-layout";
-
     const aboutPanel = document.createElement("aside");
     aboutPanel.className = "gh-about-panel";
     aboutPanel.innerHTML = sidebar?.innerHTML || "";
-
     shell.appendChild(contentLayout);
     contentLayout.appendChild(siteMain);
     contentLayout.appendChild(aboutPanel);
     frame.remove();
 
-    const pageLead = siteMain?.querySelector(".page-lead");
-    if (pageLead) {
-      pageLead.remove();
-    }
-
+    siteMain?.querySelector(".page-lead")?.remove();
     if (document.body.dataset.page === "home") {
       const overview = buildHomeOverview(siteMain);
       const heroPanel = siteMain?.querySelector(".hero-panel");
-
-      if (overview) {
-        siteMain.insertBefore(overview, siteMain.firstChild);
-      }
-
-      if (heroPanel) {
-        heroPanel.remove();
-      }
+      if (overview) siteMain.insertBefore(overview, siteMain.firstChild);
+      heroPanel?.remove();
     }
 
     if (aboutPanel && !aboutPanel.querySelector(".gh-sidebar-heading")) {
@@ -230,11 +191,7 @@
     }
 
     Array.from(aboutPanel?.querySelectorAll(":scope > .sidebar-label") || []).forEach((label) => label.remove());
-
-    const nav = aboutPanel?.querySelector(".sidebar-nav");
-    if (nav) {
-      nav.setAttribute("hidden", "hidden");
-    }
+    aboutPanel?.querySelector(".sidebar-nav")?.setAttribute("hidden", "hidden");
 
     const social = aboutPanel?.querySelector(".sidebar-social");
     if (social && !social.previousElementSibling?.classList.contains("gh-sidebar-section-title")) {
