@@ -2954,14 +2954,14 @@
         ? [
             {
               role: "책임연구원",
-              place: "현대건설 기술연구원 스마트건설센터 구성",
+              place: "현대건설 기술연구원 스마트건설연구실",
               period: "2022.11.21 - 2023.11.20"
             }
           ]
         : [
             {
               role: "Senior Researcher",
-              place: "Smart Construction Center, Hyundai E&C R&D Institute",
+              place: "Smart Construction Research Lab, Hyundai E&C R&D Institute",
               period: "2022.11.21 - 2023.11.20"
             }
           ];
@@ -3285,7 +3285,7 @@
         margin: 0 !important;
         align-self: start !important;
         font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Arial, sans-serif !important;
-        font-size: clamp(2.78rem, 3.05vw, 3.58rem) !important;
+        font-size: clamp(2.05rem, 2.2vw, 2.65rem) !important;
         font-weight: 700 !important;
         line-height: 0.94 !important;
         letter-spacing: -0.038em !important;
@@ -3363,7 +3363,7 @@
         }
 
         .summary-value {
-          font-size: clamp(2.6rem, 11vw, 3.25rem) !important;
+          font-size: clamp(2.05rem, 8.5vw, 2.55rem) !important;
         }
 
         .summary-detail {

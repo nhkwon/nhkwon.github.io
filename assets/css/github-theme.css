@@ -1335,6 +1335,28 @@ body.theme-github-mode .sidebar-credential-period {
   font-weight: 700 !important;
 }
 
+body.theme-github-mode .publication-title,
+body.theme-github-mode .publication-title a,
+body.theme-github-mode .publication-card-title,
+body.theme-github-mode .publication-card-title a {
+  color: #3f4b57 !important;
+}
+
+body.theme-github-mode .publication-title {
+  font-size: clamp(1.05rem, 1.7vw, 1.42rem) !important;
+  line-height: 1.38 !important;
+}
+
+body.theme-github-mode .publication-title a:hover,
+body.theme-github-mode .publication-card-title a:hover {
+  color: #0969da !important;
+}
+
+body.theme-github-mode .summary-value {
+  font-size: clamp(2.05rem, 2.2vw, 2.65rem) !important;
+  line-height: 1 !important;
+}
+
 @media (max-width: 780px) {
   body.theme-github-mode .gh-topbar-inner {
     min-height: auto !important;
