@@ -458,10 +458,10 @@
 
     try {
       const posts = await loadContactBoardPosts();
-      list.innerHTML = posts.length ? posts.map((post) => renderContactBoardPost(post)).join("") : renderContactBoardEmpty();
+      list.innerHTML = posts.length ? posts.map((post, index) => renderContactBoardPost(post, index)).join("") : renderContactBoardEmpty();
     } catch (error) {
       const localPosts = readContactBoardPosts();
-      list.innerHTML = localPosts.length ? localPosts.map((post) => renderContactBoardPost(post)).join("") : renderContactBoardEmpty();
+      list.innerHTML = localPosts.length ? localPosts.map((post, index) => renderContactBoardPost(post, index)).join("") : renderContactBoardEmpty();
       const status = app.querySelector("[data-contact-board-status]");
       if (status) {
         status.textContent = text({
@@ -1448,6 +1448,9 @@
 
     return `
       <div class="contact-board">
+        <div class="contact-board-list" data-contact-board-list>
+          ${posts.length ? posts.map((post, index) => renderContactBoardPost(post, index)).join("") : renderContactBoardLoading()}
+        </div>
         <form class="contact-board-form" data-contact-board-form>
           <div class="contact-board-grid">
             <label class="form-field">
@@ -1480,21 +1483,19 @@
             <p class="contact-board-status" data-contact-board-status aria-live="polite"></p>
           </div>
         </form>
-        <div class="contact-board-list" data-contact-board-list>
-          ${posts.length ? posts.map((post) => renderContactBoardPost(post)).join("") : renderContactBoardLoading()}
-        </div>
       </div>
     `;
   }
 
-  function renderContactBoardPost(post) {
+  function renderContactBoardPost(post, index = 0) {
     const attachments = Array.isArray(post.attachments) ? post.attachments : [];
+    const postNumber = Number(index) + 1;
 
     return `
       <article class="contact-board-post">
         <div class="contact-board-post-head">
-          <div>
-            <h3 class="contact-board-title">${escapeHtml(post.subject)}</h3>
+          <div class="contact-board-post-main">
+            <h3 class="contact-board-title"><span class="contact-board-number">${postNumber}</span><span>${escapeHtml(post.subject)}</span></h3>
             <p class="contact-board-meta">${escapeHtml(post.name)} &middot; ${escapeHtml(post.email)} &middot; ${escapeHtml(formatContactBoardDate(post.createdAt))}</p>
           </div>
           <button class="contact-board-delete" type="button" data-contact-post-delete="${escapeHtml(post.id)}" aria-label="${text({ ko: "\uac8c\uc2dc\uae00 \uc0ad\uc81c", en: "Delete post" })}">&times;</button>

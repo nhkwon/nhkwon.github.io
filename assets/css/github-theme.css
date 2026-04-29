@@ -1533,15 +1533,38 @@ body.theme-github-mode .contact-board-post-head {
   gap: 12px !important;
 }
 
+body.theme-github-mode .contact-board-post-main {
+  min-width: 0 !important;
+}
+
 body.theme-github-mode .contact-board-title {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
   margin: 0 !important;
   color: #24292f !important;
   font-size: 1.05rem !important;
   line-height: 1.45 !important;
 }
 
+body.theme-github-mode .contact-board-number {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 999px !important;
+  background: #f6f8fa !important;
+  color: #57606a !important;
+  font-size: 0.86rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
 body.theme-github-mode .contact-board-meta {
-  margin: 5px 0 0 !important;
+  margin: 5px 0 0 38px !important;
   color: #6e7781 !important;
   font-size: 0.86rem !important;
 }
