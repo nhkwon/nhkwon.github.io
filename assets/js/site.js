@@ -3543,8 +3543,43 @@
         </div>
         <div class="summary-grid hero-summary">
           ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
+          ${renderResearchFocusCard()}
         </div>
       </section>
+    `;
+  }
+
+  function renderResearchFocusCard() {
+    const interests = [
+      "Construction Management",
+      "Building Maintenance",
+      "Smart Construction",
+      "Safety & Prediction",
+      "Decision Support"
+    ];
+    const methodologies = [
+      "Machine Learning",
+      "Deep Learning",
+      "Computer Vision",
+      "Digital Twin",
+      "Optimization",
+      "Generative AI",
+      "AI Agents",
+      "Physical AI"
+    ];
+    const renderTags = (items) => items.map((item) => `<span class="research-focus-tag">${item}</span>`).join("");
+
+    return `
+      <article class="research-focus-card">
+        <div class="research-focus-group">
+          <p class="research-focus-label">Research Interests</p>
+          <div class="research-focus-tags">${renderTags(interests)}</div>
+        </div>
+        <div class="research-focus-group">
+          <p class="research-focus-label">AI Methodologies</p>
+          <div class="research-focus-tags">${renderTags(methodologies)}</div>
+        </div>
+      </article>
     `;
   }
 

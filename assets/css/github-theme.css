@@ -1262,6 +1262,53 @@ body.theme-github-mode .summary-card {
   box-shadow: none !important;
 }
 
+body.theme-github-mode .research-focus-card {
+  grid-column: span 2 !important;
+  min-height: 178px !important;
+  display: grid !important;
+  align-content: center !important;
+  gap: 18px !important;
+  padding: 20px !important;
+  border: 1px solid #d0d7de !important;
+  border-top: 3px solid #6e7781 !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+}
+
+body.theme-github-mode .research-focus-group {
+  display: grid !important;
+  gap: 9px !important;
+}
+
+body.theme-github-mode .research-focus-label {
+  margin: 0 !important;
+  color: #57606a !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+}
+
+body.theme-github-mode .research-focus-tags {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 7px !important;
+}
+
+body.theme-github-mode .research-focus-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  min-height: 28px !important;
+  padding: 0 10px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 999px !important;
+  background: #f6f8fa !important;
+  color: #24292f !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
 body.theme-github-mode .button-primary,
 body.theme-github-mode .section-action,
 body.theme-github-mode .sort-chip.is-active {
@@ -1653,5 +1700,9 @@ body.theme-github-mode .empty-state {
 @media (max-width: 720px) {
   body.theme-github-mode .contact-board-grid {
     grid-template-columns: 1fr !important;
+  }
+
+  body.theme-github-mode .research-focus-card {
+    grid-column: span 1 !important;
   }
 }
