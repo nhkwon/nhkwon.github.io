@@ -3576,7 +3576,7 @@
           <div class="research-focus-tags">${renderTags(interests)}</div>
         </div>
         <div class="research-focus-group">
-          <p class="research-focus-label">AI Methodologies</p>
+          <p class="research-focus-label">AI Methodology</p>
           <div class="research-focus-tags">${renderTags(methodologies)}</div>
         </div>
       </article>
