@@ -14,3 +14,22 @@ alter table public.contact_posts enable row level security;
 
 create index if not exists contact_posts_created_at_idx
   on public.contact_posts (created_at desc);
+
+drop policy if exists "contact_posts_select_public" on public.contact_posts;
+drop policy if exists "contact_posts_insert_public" on public.contact_posts;
+drop policy if exists "contact_posts_delete_public" on public.contact_posts;
+
+create policy "contact_posts_select_public"
+  on public.contact_posts
+  for select
+  using (true);
+
+create policy "contact_posts_insert_public"
+  on public.contact_posts
+  for insert
+  with check (true);
+
+create policy "contact_posts_delete_public"
+  on public.contact_posts
+  for delete
+  using (true);
