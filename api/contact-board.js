@@ -55,6 +55,11 @@ async function listPosts(res) {
 
 async function createPost(req, res) {
   const body = normalizeBody(req.body);
+
+  if (!verifyWriteCode(req, body)) {
+    return res.status(401).json({ error: "A valid board authentication code is required." });
+  }
+
   const post = {
     name: clipText(body.name, 80),
     email: clipText(body.email, 160),
@@ -87,6 +92,10 @@ async function createPost(req, res) {
 async function deletePost(req, res) {
   const body = normalizeBody(req.body);
   const id = clipText(body.id || req.query?.id, 80);
+
+  if (!verifyWriteCode(req, body)) {
+    return res.status(401).json({ error: "A valid board authentication code is required." });
+  }
 
   if (!id) {
     return res.status(400).json({ error: "Post id is required." });
@@ -170,6 +179,13 @@ function normalizeRow(row) {
     attachments: Array.isArray(row?.attachments) ? row.attachments : [],
     createdAt: row?.created_at || row?.createdAt || ""
   };
+}
+
+function verifyWriteCode(req, body) {
+  const configuredCode = String(process.env.CONTACT_BOARD_WRITE_CODE || "").trim();
+  const suppliedCode = String(body?.authCode || req.headers["x-contact-board-code"] || "").trim();
+
+  return Boolean(configuredCode && suppliedCode && configuredCode === suppliedCode);
 }
 
 function clipText(value, limit) {

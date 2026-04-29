@@ -433,18 +433,18 @@
     return Array.isArray(payload?.posts) ? payload.posts : [];
   }
 
-  async function createContactBoardPost(post) {
+  async function createContactBoardPost(post, authCode) {
     const payload = await requestContactBoard("", {
       method: "POST",
-      body: JSON.stringify(post)
+      body: JSON.stringify({ ...post, authCode })
     });
     return payload?.post || post;
   }
 
-  async function deleteContactBoardPost(id) {
+  async function deleteContactBoardPost(id, authCode) {
     await requestContactBoard("", {
       method: "DELETE",
-      body: JSON.stringify({ id })
+      body: JSON.stringify({ id, authCode })
     });
   }
 
@@ -1471,6 +1471,10 @@
             <span>${text({ ko: "\ucca8\ubd80\ud30c\uc77c", en: "Attachment" })}</span>
             <input type="file" name="attachments" multiple>
           </label>
+          <label class="form-field">
+            <span>${text({ ko: "\uc778\uc99d\ucf54\ub4dc", en: "Authentication code" })}</span>
+            <input type="password" name="authCode" autocomplete="off" required>
+          </label>
           <div class="contact-board-actions">
             <button class="button button-primary" type="submit">${icon("mail")}<span>${text({ ko: "\ub4f1\ub85d", en: "Post" })}</span></button>
             <p class="contact-board-status" data-contact-board-status aria-live="polite"></p>
@@ -1976,16 +1980,22 @@
     if (deleteContactPostButton) {
       event.preventDefault();
       const postId = deleteContactPostButton.dataset.contactPostDelete;
+      const authCode = window.prompt(text({ ko: "\uc0ad\uc81c \uc778\uc99d\ucf54\ub4dc\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.", en: "Enter the delete authentication code." }));
+      if (!authCode) {
+        return;
+      }
       const status = app.querySelector("[data-contact-board-status]");
       if (status) {
         status.textContent = text({ ko: "\uc0ad\uc81c \uc911...", en: "Deleting..." });
       }
 
       try {
-        await deleteContactBoardPost(postId);
+        await deleteContactBoardPost(postId, authCode);
       } catch (error) {
-        const nextPosts = readContactBoardPosts().filter((post) => post.id !== postId);
-        writeContactBoardPosts(nextPosts);
+        if (status) {
+          status.textContent = text({ ko: "\uc778\uc99d\ucf54\ub4dc\uac00 \ub9de\uc9c0 \uc54a\uac70\ub098 \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.", en: "The authentication code is incorrect or the post could not be deleted." });
+        }
+        return;
       }
 
       const list = app.querySelector("[data-contact-board-list]");
@@ -2033,10 +2043,18 @@
       const formData = new FormData(contactBoardForm);
       const files = Array.from(contactBoardForm.querySelector('input[name="attachments"]')?.files || []);
       const oversizedFile = files.find((file) => file.size > CONTACT_BOARD_MAX_FILE_SIZE);
+      const authCode = String(formData.get("authCode") || "").trim();
 
       if (oversizedFile) {
         if (status) {
           status.textContent = text({ ko: "\ucca8\ubd80\ud30c\uc77c\uc740 \uac01 2MB \uc774\ud558\ub9cc \ub4f1\ub85d\ub429\ub2c8\ub2e4.", en: "Each attachment must be 2MB or smaller." });
+        }
+        return;
+      }
+
+      if (!authCode) {
+        if (status) {
+          status.textContent = text({ ko: "\uc778\uc99d\ucf54\ub4dc\ub97c \uc785\ub825\ud574\uc8fc\uc138\uc694.", en: "Enter the authentication code." });
         }
         return;
       }
@@ -2071,7 +2089,7 @@
           return;
         }
 
-        const savedPost = await createContactBoardPost(post);
+        const savedPost = await createContactBoardPost(post, authCode);
         const posts = [savedPost, ...readContactBoardPosts()].slice(0, 30);
         writeContactBoardPosts(posts);
         contactBoardForm.reset();
@@ -2082,17 +2100,10 @@
           status.textContent = text({ ko: "\ub4f1\ub85d\ub418\uc5c8\uc2b5\ub2c8\ub2e4.", en: "Posted." });
         }
       } catch (error) {
-        const posts = [post, ...readContactBoardPosts()].slice(0, 30);
-        writeContactBoardPosts(posts);
-        contactBoardForm.reset();
-        const list = app.querySelector("[data-contact-board-list]");
-        if (list) {
-          list.innerHTML = posts.map((item) => renderContactBoardPost(item)).join("");
-        }
         if (status) {
           status.textContent = text({
-            ko: "Supabase \uc5f0\uacb0 \uc124\uc815 \uc804\uc774\ub77c \ud604\uc7ac \ube0c\ub77c\uc6b0\uc800\uc5d0 \uc784\uc2dc \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4.",
-            en: "Saved in this browser until Supabase is configured."
+            ko: "\uc778\uc99d\ucf54\ub4dc\uac00 \ub9de\uc9c0 \uc54a\uac70\ub098 \uac8c\uc2dc\uae00\uc744 \ub4f1\ub85d\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
+            en: "The authentication code is incorrect or the post could not be saved."
           });
         }
       }
