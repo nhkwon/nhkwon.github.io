@@ -3415,20 +3415,22 @@
             {
               role: "책임연구원",
               place: "현대건설 기술연구원 스마트건설연구실",
-              period: "2022.11.21 - 2023.11.20"
+              period: "",
+              hidePeriod: true
             }
           ]
         : [
             {
               role: "Senior Researcher",
               place: "Smart Construction Research Lab, Hyundai E&C R&D Institute",
-              period: "2022.11.21 - 2023.11.20"
+              period: "",
+              hidePeriod: true
             }
           ];
 
     const renderItem = (item) => `
       <li class="sidebar-credential-item">
-        <span class="sidebar-credential-period">${item.period}</span>
+        ${item.hidePeriod ? "" : `<span class="sidebar-credential-period">${item.period}</span>`}
         <strong>${item.degree || item.role}</strong>
         <span>${item.school || item.place}</span>
         ${item.field ? `<span>${item.field}</span>` : ""}

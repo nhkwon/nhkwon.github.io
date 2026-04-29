@@ -39,8 +39,23 @@
     return COPY[document.body.dataset.lang === "en" ? "en" : "ko"];
   }
 
-  function buildTopbar(copy, homeHref, scholarHref, contactHref) {
+  function pageSearchItems(lang) {
+    return [
+      { keys: ["home", "홈"], label: "Home", href: lang === "en" ? "en.html" : "ko.html" },
+      { keys: ["biography", "bio", "소개", "학력", "경력"], label: "Biography", href: lang === "en" ? "bio-en.html" : "bio.html" },
+      { keys: ["research", "연구"], label: "Research", href: lang === "en" ? "teaching-en.html" : "teaching.html" },
+      { keys: ["publications", "publication", "papers", "논문"], label: "Publications", href: lang === "en" ? "publications-en.html" : "publications.html" },
+      { keys: ["activities", "activity", "news", "활동"], label: "Activities", href: lang === "en" ? "news-en.html" : "news.html" },
+      { keys: ["contact", "연락", "게시판"], label: "Contact", href: lang === "en" ? "contact-en.html" : "contact.html" }
+    ];
+  }
+
+  function buildTopbar(copy, homeHref, scholarHref, contactHref, lang) {
     const topbar = document.createElement("header");
+    const searchOptions = pageSearchItems(lang)
+      .map((item) => `<option value="${item.label}"></option>`)
+      .join("");
+
     topbar.className = "gh-topbar";
     topbar.innerHTML = `
       <div class="gh-topbar-inner">
@@ -52,10 +67,11 @@
             <strong class="gh-topbar-repo">nhkwon.github.io</strong>
           </div>
         </div>
-        <button class="gh-search-stub" type="button" aria-label="${copy.search}">
-          <span class="gh-search-stub-text">${copy.search}</span>
+        <form class="gh-search-stub" data-gh-page-search role="search" aria-label="${copy.search}">
+          <input class="gh-search-stub-text" type="search" name="pageSearch" list="gh-page-search-options" placeholder="${copy.search}" autocomplete="off">
+          <datalist id="gh-page-search-options">${searchOptions}</datalist>
           <span class="gh-search-shortcut">/</span>
-        </button>
+        </form>
         <div class="gh-topbar-tools">
           ${
             scholarHref
@@ -171,7 +187,7 @@
 
     const shell = document.createElement("div");
     shell.className = "gh-theme-shell";
-    shell.appendChild(buildTopbar(copy, homeHref, scholarHref, contactHref));
+    shell.appendChild(buildTopbar(copy, homeHref, scholarHref, contactHref, lang));
     shell.appendChild(buildRepoHeader(copy, navItems, pageTitle, pageDescription));
     app.insertBefore(shell, frame);
 
@@ -220,6 +236,51 @@
     }
   }
 
+  function findPageSearchTarget(value, lang) {
+    const query = cleanText(value).toLowerCase();
+    if (!query) return "";
+
+    const exactMatch = pageSearchItems(lang).find((item) => item.label.toLowerCase() === query);
+    if (exactMatch) return exactMatch.href;
+
+    const keyMatch = pageSearchItems(lang).find((item) =>
+      item.keys.some((key) => key.toLowerCase().includes(query) || query.includes(key.toLowerCase()))
+    );
+    return keyMatch?.href || "";
+  }
+
+  function handleSearchSubmit(event) {
+    const form = event.target.closest("[data-gh-page-search]");
+    if (!form) return;
+
+    event.preventDefault();
+    const lang = document.body.dataset.lang === "en" ? "en" : "ko";
+    const input = form.querySelector('input[name="pageSearch"]');
+    const href = findPageSearchTarget(input?.value, lang);
+
+    if (href) {
+      window.location.href = href;
+      return;
+    }
+
+    input?.focus();
+    form.classList.add("is-invalid");
+    window.setTimeout(() => form.classList.remove("is-invalid"), 900);
+  }
+
+  function handleSearchShortcut(event) {
+    if (event.key !== "/" || event.ctrlKey || event.metaKey || event.altKey) return;
+
+    const active = document.activeElement;
+    if (active && ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName)) return;
+
+    const input = document.querySelector('.gh-search-stub input[name="pageSearch"]');
+    if (!input) return;
+
+    event.preventDefault();
+    input.focus();
+  }
+
   function boot() {
     applyGithubTheme();
     window.setTimeout(applyGithubTheme, 60);
@@ -248,4 +309,7 @@
   } else {
     boot();
   }
+
+  document.addEventListener("submit", handleSearchSubmit);
+  document.addEventListener("keydown", handleSearchShortcut);
 })();

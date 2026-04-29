@@ -1065,9 +1065,28 @@ body.theme-github-mode .gh-search-stub {
 }
 
 body.theme-github-mode .gh-search-stub-text {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
   color: #8b949e !important;
   font-size: 0.92rem !important;
   font-weight: 500 !important;
+}
+
+body.theme-github-mode .gh-search-stub-text::placeholder {
+  color: #8b949e !important;
+  opacity: 1 !important;
+}
+
+body.theme-github-mode .gh-search-stub:focus-within {
+  border-color: #8b949e !important;
+  background: #22272e !important;
+}
+
+body.theme-github-mode .gh-search-stub.is-invalid {
+  border-color: #cf222e !important;
 }
 
 body.theme-github-mode .gh-search-stub-submit {
@@ -1102,6 +1121,14 @@ body.theme-github-mode .gh-topbar-link {
   font-weight: 700 !important;
   line-height: 1 !important;
   text-align: center !important;
+}
+
+body.theme-github-mode .gh-topbar-link:hover,
+body.theme-github-mode .gh-topbar-link:focus-visible {
+  border-color: #f0f6fc !important;
+  background: #f0f6fc !important;
+  color: #24292f !important;
+  outline: none !important;
 }
 
 body.theme-github-mode .gh-repo-header {
