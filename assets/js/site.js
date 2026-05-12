@@ -3680,7 +3680,7 @@
     const topics = researchTrendTopics();
 
     return `
-      <section class="content-section paper-trend-section" data-paper-trend-panel>
+      <section id="paper-trends" class="content-section paper-trend-section" data-paper-trend-panel>
         ${renderSectionHeading(
           { ko: "논문 동향 레이더", en: "Paper Trend Radar" },
           { ko: "Latest Literature Scan", en: "Latest Literature Scan" }

@@ -45,6 +45,7 @@
       { keys: ["biography", "bio", "소개", "학력", "경력"], label: "Biography", href: lang === "en" ? "bio-en.html" : "bio.html" },
       { keys: ["research", "연구"], label: "Research", href: lang === "en" ? "teaching-en.html" : "teaching.html" },
       { keys: ["publications", "publication", "papers", "논문"], label: "Publications", href: lang === "en" ? "publications-en.html" : "publications.html" },
+      { keys: ["research trends", "trend", "literature", "paper trend", "paper trends", "연구동향", "논문동향"], label: "Research Trends", href: paperTrendsHref(lang) },
       { keys: ["activities", "activity", "news", "활동"], label: "Activities", href: lang === "en" ? "news-en.html" : "news.html" },
       { keys: ["contact", "연락", "게시판"], label: "Contact", href: lang === "en" ? "contact-en.html" : "contact.html" }
     ];
@@ -85,16 +86,60 @@
     return topbar;
   }
 
-  function buildRepoHeader(copy, navItems, pageTitle, pageDescription) {
+  function paperTrendsHref(lang) {
+    return lang === "en" ? "en.html#paper-trends" : "ko.html#paper-trends";
+  }
+
+  function paperTrendsIcon() {
+    return `
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19V5"></path>
+        <path d="M4 19h16"></path>
+        <path d="m7 15 3.5-3.5 3 3L19 9"></path>
+      </svg>
+    `;
+  }
+
+  function buildRepoNavEntries(navItems, copy, lang) {
+    const entries = navItems.map((item) => ({
+      href: item.getAttribute("href") || "#",
+      active: item.classList.contains("is-active"),
+      iconMarkup: item.querySelector(".icon")?.outerHTML || "",
+      label: cleanText(item.querySelector("span")?.textContent || copy.overview)
+    }));
+    const trendsEntry = {
+      href: paperTrendsHref(lang),
+      active: window.location.hash === "#paper-trends",
+      iconMarkup: paperTrendsIcon(),
+      label: "Research Trends"
+    };
+
+    if (!entries.some((entry) => entry.href.includes("#paper-trends"))) {
+      const publicationsIndex = entries.findIndex((entry) => /publications/i.test(entry.href) || /publications/i.test(entry.label));
+      const activitiesIndex = entries.findIndex((entry) => /news/i.test(entry.href) || /activities/i.test(entry.label));
+      const insertIndex = publicationsIndex >= 0 ? publicationsIndex + 1 : activitiesIndex >= 0 ? activitiesIndex : entries.length;
+      entries.splice(insertIndex, 0, trendsEntry);
+    }
+
+    if (trendsEntry.active) {
+      entries.forEach((entry) => {
+        entry.active = entry.href.includes("#paper-trends");
+      });
+    }
+
+    return entries;
+  }
+
+  function buildRepoHeader(copy, navItems, pageTitle, pageDescription, lang) {
     const header = document.createElement("section");
     const descriptionText = cleanText(pageDescription);
     const descriptionMarkup = descriptionText ? `<p class="gh-repo-page-description">${descriptionText}</p>` : "";
-    const tabs = navItems
+    const tabs = buildRepoNavEntries(navItems, copy, lang)
       .map((item) => {
-        const href = item.getAttribute("href") || "#";
-        const active = item.classList.contains("is-active") ? " is-active" : "";
-        const iconMarkup = item.querySelector(".icon")?.outerHTML || "";
-        const label = cleanText(item.querySelector("span")?.textContent || copy.overview);
+        const active = item.active ? " is-active" : "";
+        const iconMarkup = item.iconMarkup || "";
+        const label = cleanText(item.label || copy.overview);
+        const href = item.href || "#";
         return `<a class="gh-repo-tab${active}" href="${href}">${iconMarkup}<span>${label}</span></a>`;
       })
       .join("");
@@ -188,7 +233,7 @@
     const shell = document.createElement("div");
     shell.className = "gh-theme-shell";
     shell.appendChild(buildTopbar(copy, homeHref, scholarHref, contactHref, lang));
-    shell.appendChild(buildRepoHeader(copy, navItems, pageTitle, pageDescription));
+    shell.appendChild(buildRepoHeader(copy, navItems, pageTitle, pageDescription, lang));
     app.insertBefore(shell, frame);
 
     const contentLayout = document.createElement("div");
