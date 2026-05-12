@@ -422,10 +422,49 @@
     const payload = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      throw new Error(payload?.error || "Contact board request failed.");
+      const error = new Error(payload?.error || "Contact board request failed.");
+      error.status = response.status;
+      throw error;
     }
 
     return payload;
+  }
+
+  function contactBoardErrorMessage(error, action) {
+    const status = Number(error?.status || 0);
+
+    if (status === 401) {
+      return text({
+        ko: "인증코드가 맞지 않습니다.",
+        en: "The authentication code is incorrect."
+      });
+    }
+
+    if (status === 403) {
+      return text({
+        ko: "현재 접속 주소가 게시판 API 허용 도메인에 포함되어 있지 않습니다.",
+        en: "The current origin is not allowed to use the board API."
+      });
+    }
+
+    if (status === 404) {
+      return text({
+        ko: "로컬 미리보기 서버에는 게시판 API가 없습니다. Vercel 배포 주소에서 확인해주세요.",
+        en: "The local preview server does not include the board API. Check the Vercel deployment URL."
+      });
+    }
+
+    if (status >= 500) {
+      return text({
+        ko: "게시판 서버 설정 또는 Supabase 연결에 문제가 있습니다. Vercel 환경변수와 재배포 상태를 확인해주세요.",
+        en: "The board server or Supabase connection is not configured correctly. Check Vercel environment variables and redeploy."
+      });
+    }
+
+    return text({
+      ko: action === "delete" ? "게시글을 삭제할 수 없습니다." : "게시글을 등록할 수 없습니다.",
+      en: action === "delete" ? "The post could not be deleted." : "The post could not be saved."
+    });
   }
 
   async function loadContactBoardPosts() {
@@ -2031,7 +2070,7 @@
         await deleteContactBoardPost(postId, authCode);
       } catch (error) {
         if (status) {
-          status.textContent = text({ ko: "\uc778\uc99d\ucf54\ub4dc\uac00 \ub9de\uc9c0 \uc54a\uac70\ub098 \uc0ad\uc81c\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.", en: "The authentication code is incorrect or the post could not be deleted." });
+          status.textContent = contactBoardErrorMessage(error, "delete");
         }
         return;
       }
@@ -2139,10 +2178,7 @@
         }
       } catch (error) {
         if (status) {
-          status.textContent = text({
-            ko: "\uc778\uc99d\ucf54\ub4dc\uac00 \ub9de\uc9c0 \uc54a\uac70\ub098 \uac8c\uc2dc\uae00\uc744 \ub4f1\ub85d\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.",
-            en: "The authentication code is incorrect or the post could not be saved."
-          });
+          status.textContent = contactBoardErrorMessage(error, "create");
         }
       }
       return;
