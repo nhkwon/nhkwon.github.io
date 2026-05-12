@@ -3845,6 +3845,12 @@
     return "";
   }
 
+  const PAPER_TREND_PREVIEW_LIMIT = 60;
+  const PAPER_TREND_ROWS_PER_JOURNAL = 30;
+  const PAPER_TREND_SELECTED_JOURNAL_ROWS = 75;
+  const PAPER_TREND_CONCURRENT_REQUESTS = 2;
+  const PAPER_TREND_FETCH_TIMEOUT_MS = 12000;
+
   function initializePaperTrendPanel() {
     const panel = app.querySelector("[data-paper-trend-panel]");
     const form = panel?.querySelector("[data-paper-trend-form]");
@@ -3885,7 +3891,7 @@
     const links = {
       scholar: buildScholarTrendUrl(data),
       semantic: buildSemanticScholarTrendUrl(data),
-      crossref: buildCrossrefTrendUrl(data, 10)
+      crossref: buildCrossrefTrendUrl(data, 100)
     };
 
     Object.keys(links).forEach((key) => {
@@ -3903,6 +3909,58 @@
     panel?.querySelectorAll("[data-paper-trend-journal]").forEach((button) => {
       button.classList.toggle("is-active", String(button.dataset.paperTrendJournal || "") === data.journal);
     });
+  }
+
+  function waitPaperTrend(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
+  async function fetchPaperTrendPayload(target, rows) {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const controller = typeof AbortController === "function" ? new AbortController() : null;
+      const timeoutId = controller
+        ? window.setTimeout(() => controller.abort(), PAPER_TREND_FETCH_TIMEOUT_MS)
+        : 0;
+
+      try {
+        const response = await fetch(buildCrossrefTrendUrl(target, rows), {
+          headers: { Accept: "application/json" },
+          signal: controller?.signal
+        });
+
+        if (response.ok) {
+          return response.json();
+        }
+      } catch (error) {
+        // Crossref can intermittently reject browser-side requests; retry once before skipping the journal.
+      } finally {
+        if (timeoutId) {
+          window.clearTimeout(timeoutId);
+        }
+      }
+
+      await waitPaperTrend(350 * (attempt + 1));
+    }
+
+    return null;
+  }
+
+  async function fetchPaperTrendPayloads(targets, rows) {
+    const payloads = new Array(targets.length).fill(null);
+    let nextIndex = 0;
+    const workerCount = Math.min(PAPER_TREND_CONCURRENT_REQUESTS, targets.length);
+
+    await Promise.all(
+      Array.from({ length: workerCount }, async () => {
+        while (nextIndex < targets.length) {
+          const currentIndex = nextIndex;
+          nextIndex += 1;
+          payloads[currentIndex] = await fetchPaperTrendPayload(targets[currentIndex], rows);
+        }
+      })
+    );
+
+    return payloads;
   }
 
   async function loadPaperTrendResults(form) {
@@ -3936,19 +3994,8 @@
       const targetQueries = data.journal
         ? [data]
         : researchTrendJournals().map((journal) => ({ ...data, journal: journal.title, issn: journal.issn }));
-      const rowsPerQuery = data.journal ? 10 : 3;
-      const payloads = await Promise.all(
-        targetQueries.map(async (target) => {
-          try {
-            const response = await fetch(buildCrossrefTrendUrl(target, rowsPerQuery), {
-              headers: { Accept: "application/json" }
-            });
-            return response.ok ? response.json() : null;
-          } catch (error) {
-            return null;
-          }
-        })
-      );
+      const rowsPerQuery = data.journal ? PAPER_TREND_SELECTED_JOURNAL_ROWS : PAPER_TREND_ROWS_PER_JOURNAL;
+      const payloads = await fetchPaperTrendPayloads(targetQueries, rowsPerQuery);
 
       if (!payloads.some(Boolean)) {
         throw new Error("Crossref unavailable");
@@ -3961,11 +4008,12 @@
       const items = dedupePaperTrendItems(
         payloads
           .flatMap((payload) => normalizeCrossrefTrendItems(payload?.message?.items || []))
+          .filter(isPaperTrendResearchRecord)
           .filter((item) => isPaperTrendVenueMatch(item.venue, data.journal))
           .filter((item) => isPaperTrendDatePlausible(item, data.months))
       )
         .sort(comparePaperTrendItems)
-        .slice(0, 10);
+        .slice(0, PAPER_TREND_PREVIEW_LIMIT);
 
       if (!items.length) {
         results.innerHTML = renderPaperTrendEmpty(data);
@@ -3986,9 +4034,10 @@
         clusters.innerHTML = renderPaperTrendClusterSummary(items);
       }
       if (status) {
+        const loadedTargets = payloads.filter(Boolean).length;
         status.textContent = text({
-          ko: `${data.months}개월 범위에서 ${items.length}편을 불러왔습니다.`,
-          en: `Loaded ${items.length} recent records from the last ${data.months} months.`
+          ko: `${data.months}개월 범위에서 ${items.length}편을 불러왔습니다.${loadedTargets < targetQueries.length ? ` (${loadedTargets}/${targetQueries.length}개 저널 응답)` : ""}`,
+          en: `Loaded ${items.length} recent records from the last ${data.months} months.${loadedTargets < targetQueries.length ? ` (${loadedTargets}/${targetQueries.length} journals responded)` : ""}`
         });
       }
     } catch (error) {
@@ -4019,7 +4068,7 @@
     return `https://www.semanticscholar.org/search?q=${encodeURIComponent(buildPaperTrendPhrase(data))}&sort=pub-date`;
   }
 
-  function buildCrossrefTrendUrl(data, rows = 10) {
+  function buildCrossrefTrendUrl(data, rows = PAPER_TREND_PREVIEW_LIMIT) {
     const endpoint = "https://api.crossref.org/works";
     const filters = [
       "type:journal-article",
@@ -4090,6 +4139,27 @@
       seen.add(key);
       return true;
     });
+  }
+
+  function isPaperTrendResearchRecord(item) {
+    const title = normalizePaperTrendText(item.title);
+    const excludedTitles = [
+      "editorial board",
+      "editorial",
+      "corrigendum",
+      "erratum",
+      "correction",
+      "correction to",
+      "retraction",
+      "contents",
+      "front matter",
+      "back matter",
+      "announcement",
+      "call for papers",
+      "preface"
+    ];
+
+    return !excludedTitles.some((excluded) => title === excluded || title.startsWith(`${excluded} `));
   }
 
   function comparePaperTrendItems(a, b) {
