@@ -639,6 +639,7 @@
   app.addEventListener("click", handleAppClick);
   app.addEventListener("submit", handleAppSubmit);
   app.addEventListener("input", handleAppInput);
+  app.addEventListener("change", handleAppChange);
   app.addEventListener("focusin", handleAppFocusIn);
   app.addEventListener("pointermove", handleAppPointerMove);
   app.addEventListener("keydown", handleAppKeydown);
@@ -1977,6 +1978,42 @@
       return;
     }
 
+    const trendTopicButton = event.target.closest("[data-paper-trend-topic]");
+    if (trendTopicButton) {
+      event.preventDefault();
+      const form = app.querySelector("[data-paper-trend-form]");
+      const queryInput = form?.querySelector("[data-paper-trend-query]");
+      if (queryInput) {
+        queryInput.value = trendTopicButton.dataset.paperTrendTopic || "";
+      }
+      app.querySelectorAll("[data-paper-trend-topic]").forEach((button) => {
+        button.classList.toggle("is-active", button === trendTopicButton);
+      });
+      updatePaperTrendLinks(form);
+      if (form) {
+        await loadPaperTrendResults(form);
+      }
+      return;
+    }
+
+    const trendJournalButton = event.target.closest("[data-paper-trend-journal]");
+    if (trendJournalButton) {
+      event.preventDefault();
+      const form = app.querySelector("[data-paper-trend-form]");
+      const journalSelect = form?.querySelector("[data-paper-trend-journal-select]");
+      if (journalSelect) {
+        journalSelect.value = trendJournalButton.dataset.paperTrendJournal || "";
+      }
+      app.querySelectorAll("[data-paper-trend-journal]").forEach((button) => {
+        button.classList.toggle("is-active", button === trendJournalButton);
+      });
+      updatePaperTrendLinks(form);
+      if (form) {
+        await loadPaperTrendResults(form);
+      }
+      return;
+    }
+
     const deleteContactPostButton = event.target.closest("[data-contact-post-delete]");
     if (deleteContactPostButton) {
       event.preventDefault();
@@ -2111,6 +2148,13 @@
       return;
     }
 
+    const paperTrendForm = event.target.closest("[data-paper-trend-form]");
+    if (paperTrendForm) {
+      event.preventDefault();
+      await loadPaperTrendResults(paperTrendForm);
+      return;
+    }
+
     const chatForm = event.target.closest("[data-ai-chat-form]");
     if (!chatForm) {
       return;
@@ -2136,6 +2180,17 @@
   function handleAppInput(event) {
     if (event.target.closest("[data-ai-chat-widget]")) {
       noteAiChatInteraction();
+    }
+
+    if (event.target.closest("[data-paper-trend-form]")) {
+      updatePaperTrendLinks(event.target.closest("[data-paper-trend-form]"));
+    }
+  }
+
+  function handleAppChange(event) {
+    const trendForm = event.target.closest("[data-paper-trend-form]");
+    if (trendForm) {
+      updatePaperTrendLinks(trendForm);
     }
   }
 
@@ -3583,6 +3638,624 @@
     `;
   }
 
+  function renderHomePage() {
+    const projects = fundedResearchProjects();
+
+    return `
+      ${renderHeroPanel()}
+      <section class="content-section home-primary-section">
+        ${renderSectionHeading(
+          { ko: "연구 과제", en: "Research Projects" },
+          { ko: "Funded Projects", en: "Funded Projects" },
+          route("teaching"),
+          { ko: "연구 페이지 보기", en: "Open research" }
+        )}
+        <div class="card-grid three-column research-project-grid">${projects.map((item) => renderResearchProjectCard(item)).join("")}</div>
+      </section>
+      <section class="content-section">
+        ${renderSectionHeading(
+          { ko: "논문 실적", en: "Publications" },
+          { ko: "Selected Publications", en: "Selected Publications" },
+          route("publications"),
+          { ko: "전체 논문 보기", en: "View publications" }
+        )}
+        ${renderPublicationHomeSummary()}
+      </section>
+      ${renderResearchTrendRadar()}
+      <section class="content-section">
+        ${renderSectionHeading(
+          { ko: "최근 활동", en: "Recent Activities" },
+          { ko: "Activities", en: "Activities" },
+          route("news"),
+          { ko: "활동 더 보기", en: "Open activities" }
+        )}
+        <div class="timeline-stack">${getActivities().map((item) => renderActivityCard(item)).join("")}</div>
+      </section>
+      ${renderContactCta()}
+    `;
+  }
+
+  function renderResearchTrendRadar() {
+    const journals = researchTrendJournals();
+    const topics = researchTrendTopics();
+
+    return `
+      <section class="content-section paper-trend-section" data-paper-trend-panel>
+        ${renderSectionHeading(
+          { ko: "논문 동향 레이더", en: "Paper Trend Radar" },
+          { ko: "Latest Literature Scan", en: "Latest Literature Scan" }
+        )}
+        <div class="paper-trend-panel">
+          <form class="paper-trend-form" data-paper-trend-form>
+            <label class="paper-trend-field paper-trend-field-query" for="paper-trend-query">
+              <span>${text({ ko: "검색 주제", en: "Search topic" })}</span>
+              <input
+                id="paper-trend-query"
+                data-paper-trend-query
+                type="search"
+                value="${escapeHtml(defaultPaperTrendQuery())}"
+                placeholder="${text({ ko: "예: AI construction management, project delivery, digital twin", en: "e.g. AI construction management, project delivery, digital twin" })}"
+              >
+            </label>
+            <label class="paper-trend-field" for="paper-trend-journal">
+              <span>${text({ ko: "저널", en: "Journal" })}</span>
+              <select id="paper-trend-journal" data-paper-trend-journal-select>
+                <option value="">${text({ ko: "전체 지정 저널", en: "All target journals" })}</option>
+                ${journals.map((journal) => `<option value="${escapeHtml(journal.title)}">${escapeHtml(journal.short)} · ${escapeHtml(journal.publisher)}</option>`).join("")}
+              </select>
+            </label>
+            <label class="paper-trend-field" for="paper-trend-window">
+              <span>${text({ ko: "기간", en: "Window" })}</span>
+              <select id="paper-trend-window" data-paper-trend-window>
+                <option value="12">${text({ ko: "최근 12개월", en: "Last 12 months" })}</option>
+                <option value="24" selected>${text({ ko: "최근 24개월", en: "Last 24 months" })}</option>
+                <option value="36">${text({ ko: "최근 36개월", en: "Last 36 months" })}</option>
+                <option value="60">${text({ ko: "최근 5년", en: "Last 5 years" })}</option>
+              </select>
+            </label>
+            <button class="button button-primary paper-trend-submit" type="submit">
+              ${icon("spark")}
+              <span>${text({ ko: "최신 논문 불러오기", en: "Load latest papers" })}</span>
+            </button>
+          </form>
+
+          <div class="paper-trend-topics" aria-label="${text({ ko: "빠른 주제", en: "Quick topics" })}">
+            ${topics.map((topic, index) => `
+              <button class="paper-topic-chip" type="button" data-paper-trend-topic="${escapeHtml(topic.query)}">
+                ${text(topic.label)}
+              </button>
+            `).join("")}
+          </div>
+
+          <div class="paper-journal-strip" aria-label="${text({ ko: "지정 저널", en: "Target journals" })}">
+            <button class="paper-journal-chip is-active" type="button" data-paper-trend-journal="">
+              ${text({ ko: "전체", en: "All" })}
+            </button>
+            ${journals.map((journal) => `
+              <button class="paper-journal-chip" type="button" data-paper-trend-journal="${escapeHtml(journal.title)}">
+                <span>${escapeHtml(journal.short)}</span>
+                <small>${escapeHtml(journal.publisher)}</small>
+              </button>
+            `).join("")}
+          </div>
+
+          <div class="paper-trend-meta">
+            <article>
+              <span>${text({ ko: "범위", en: "Scope" })}</span>
+              <strong data-paper-trend-scope>${text({ ko: "전체 지정 저널", en: "All target journals" })}</strong>
+            </article>
+            <article>
+              <span>${text({ ko: "분야", en: "Fields" })}</span>
+              <strong>Construction · Civil · Project Management</strong>
+            </article>
+            <article>
+              <span>${text({ ko: "자료원", en: "Sources" })}</span>
+              <strong>Crossref · Scholar · Semantic Scholar</strong>
+            </article>
+          </div>
+
+          <div class="paper-trend-source-row">
+            <a class="section-action" data-paper-trend-link="scholar" href="#" target="_blank" rel="noreferrer">${icon("scholar")}Google Scholar</a>
+            <a class="section-action" data-paper-trend-link="semantic" href="#" target="_blank" rel="noreferrer">${icon("research")}Semantic Scholar</a>
+            <a class="section-action" data-paper-trend-link="crossref" href="#" target="_blank" rel="noreferrer">${icon("link")}Crossref API</a>
+          </div>
+
+          <div class="paper-trend-clusters" data-paper-trend-clusters>
+            ${renderPaperTrendClusterSummary([])}
+          </div>
+
+          <div class="paper-trend-results-header">
+            <p class="paper-trend-status" data-paper-trend-status>${text({
+              ko: "홈 화면에서 바로 최신 논문 메타데이터를 불러올 수 있습니다.",
+              en: "Load recent paper metadata directly from the homepage."
+            })}</p>
+          </div>
+          <div class="paper-trend-results" data-paper-trend-results>
+            ${renderPaperTrendIntro()}
+          </div>
+          <p class="paper-trend-note">${text({
+            ko: "Crossref 메타데이터 기반 미리보기입니다. 최종 인용, 색인, 원문 접근 여부는 Scholar, Scopus, 출판사 페이지에서 확인하세요.",
+            en: "This preview uses Crossref metadata. Verify citation counts, indexing, and full-text access in Scholar, Scopus, or the publisher page."
+          })}</p>
+        </div>
+      </section>
+    `;
+  }
+
+  function researchTrendJournals() {
+    return [
+      { title: "Automation in Construction", short: "Automation in Construction", publisher: "Elsevier", issn: "0926-5805" },
+      { title: "Journal of Building Engineering", short: "Journal of Building Engineering", publisher: "Elsevier", issn: "2352-7102" },
+      { title: "Developments in the Built Environment", short: "Developments in Built Environment", publisher: "Elsevier", issn: "2666-1659" },
+      { title: "Building and Environment", short: "Building and Environment", publisher: "Elsevier", issn: "0360-1323" },
+      { title: "Journal of Construction Engineering and Management", short: "J. Construction Eng. & Management", publisher: "ASCE", issn: "0733-9364" },
+      { title: "Journal of Management in Engineering", short: "J. Management in Engineering", publisher: "ASCE", issn: "0742-597X" },
+      { title: "Journal of Computing in Civil Engineering", short: "J. Computing in Civil Engineering", publisher: "ASCE", issn: "0887-3801" }
+    ];
+  }
+
+  function researchTrendTopics() {
+    return [
+      { label: { ko: "AI 기반 건설관리", en: "AI for construction management" }, query: "artificial intelligence machine learning deep learning" },
+      { label: { ko: "프로젝트 관리", en: "Project management" }, query: "project management scheduling cost risk" },
+      { label: { ko: "BIM·Digital Twin", en: "BIM digital twin" }, query: "BIM digital twin" },
+      { label: { ko: "안전·리스크", en: "Safety and risk" }, query: "safety risk accident worker" },
+      { label: { ko: "건물 성능·에너지", en: "Building performance" }, query: "energy retrofit building performance" },
+      { label: { ko: "LLM·NLP 자동화", en: "LLM and NLP automation" }, query: "large language model natural language processing" },
+      { label: { ko: "지속가능·탄소", en: "Sustainability and carbon" }, query: "sustainable carbon circular economy" }
+    ];
+  }
+
+  function researchTrendClusters() {
+    return [
+      {
+        label: "AI / ML",
+        terms: ["artificial intelligence", "machine learning", "deep learning", "neural", "computer vision", "generative", "llm", "large language"],
+        hint: { ko: "AI, ML, 비전, 생성형 AI 흐름", en: "AI, ML, vision, and generative AI signals" }
+      },
+      {
+        label: "BIM / Digital Twin",
+        terms: ["bim", "building information", "digital twin", "scan-to-bim", "point cloud"],
+        hint: { ko: "BIM, 디지털 트윈, 포인트클라우드", en: "BIM, digital twins, and point-cloud workflows" }
+      },
+      {
+        label: "Safety / Risk",
+        terms: ["safety", "risk", "hazard", "accident", "worker", "fatigue"],
+        hint: { ko: "안전, 리스크, 근로자 모니터링", en: "Safety, risk, and worker monitoring" }
+      },
+      {
+        label: "Project Delivery",
+        terms: ["project management", "delivery", "contract", "schedule", "scheduling", "cost", "productivity"],
+        hint: { ko: "공정, 비용, 계약, 생산성", en: "Schedule, cost, contract, and productivity" }
+      },
+      {
+        label: "Building Performance",
+        terms: ["energy", "retrofit", "thermal", "indoor", "building performance", "environment"],
+        hint: { ko: "에너지, 리트로핏, 실내환경", en: "Energy, retrofit, and indoor environment" }
+      },
+      {
+        label: "Sustainability",
+        terms: ["sustainability", "carbon", "circular", "life cycle", "resilience", "climate"],
+        hint: { ko: "탄소, 순환경제, 회복탄력성", en: "Carbon, circular economy, and resilience" }
+      }
+    ];
+  }
+
+  function defaultPaperTrendQuery() {
+    return "";
+  }
+
+  function initializePaperTrendPanel() {
+    const panel = app.querySelector("[data-paper-trend-panel]");
+    const form = panel?.querySelector("[data-paper-trend-form]");
+    if (!panel || !form) {
+      return;
+    }
+
+    updatePaperTrendLinks(form);
+
+    if (panel.dataset.autoLoaded) {
+      return;
+    }
+
+    panel.dataset.autoLoaded = "true";
+    window.setTimeout(() => loadPaperTrendResults(form), 250);
+  }
+
+  function readPaperTrendForm(form) {
+    const query = String(form?.querySelector("[data-paper-trend-query]")?.value || "").trim() || defaultPaperTrendQuery();
+    const journal = String(form?.querySelector("[data-paper-trend-journal-select]")?.value || "").trim();
+    const months = Number(form?.querySelector("[data-paper-trend-window]")?.value || 24);
+    const journalMeta = researchTrendJournals().find((item) => item.title === journal);
+    return {
+      query,
+      journal,
+      issn: journalMeta?.issn || "",
+      months: Number.isFinite(months) && months > 0 ? months : 24
+    };
+  }
+
+  function updatePaperTrendLinks(form) {
+    if (!form) {
+      return;
+    }
+
+    const data = readPaperTrendForm(form);
+    const panel = form.closest("[data-paper-trend-panel]");
+    const links = {
+      scholar: buildScholarTrendUrl(data),
+      semantic: buildSemanticScholarTrendUrl(data),
+      crossref: buildCrossrefTrendUrl(data, 10)
+    };
+
+    Object.keys(links).forEach((key) => {
+      const link = panel?.querySelector(`[data-paper-trend-link="${key}"]`);
+      if (link) {
+        link.href = links[key];
+      }
+    });
+
+    const scope = panel?.querySelector("[data-paper-trend-scope]");
+    if (scope) {
+      scope.textContent = data.journal || text({ ko: "전체 지정 저널", en: "All target journals" });
+    }
+
+    panel?.querySelectorAll("[data-paper-trend-journal]").forEach((button) => {
+      button.classList.toggle("is-active", String(button.dataset.paperTrendJournal || "") === data.journal);
+    });
+  }
+
+  async function loadPaperTrendResults(form) {
+    if (!form || typeof fetch !== "function") {
+      return;
+    }
+
+    const panel = form.closest("[data-paper-trend-panel]");
+    const status = panel?.querySelector("[data-paper-trend-status]");
+    const results = panel?.querySelector("[data-paper-trend-results]");
+    const clusters = panel?.querySelector("[data-paper-trend-clusters]");
+    const data = readPaperTrendForm(form);
+    const requestId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+    if (!panel || !results) {
+      return;
+    }
+
+    panel.dataset.requestId = requestId;
+    updatePaperTrendLinks(form);
+
+    if (status) {
+      status.textContent = text({
+        ko: "Crossref에서 최신 논문 메타데이터를 불러오는 중입니다.",
+        en: "Loading recent paper metadata from Crossref."
+      });
+    }
+    results.innerHTML = renderPaperTrendLoading();
+
+    try {
+      const targetQueries = data.journal
+        ? [data]
+        : researchTrendJournals().map((journal) => ({ ...data, journal: journal.title, issn: journal.issn }));
+      const rowsPerQuery = data.journal ? 10 : 3;
+      const payloads = await Promise.all(
+        targetQueries.map(async (target) => {
+          try {
+            const response = await fetch(buildCrossrefTrendUrl(target, rowsPerQuery), {
+              headers: { Accept: "application/json" }
+            });
+            return response.ok ? response.json() : null;
+          } catch (error) {
+            return null;
+          }
+        })
+      );
+
+      if (!payloads.some(Boolean)) {
+        throw new Error("Crossref unavailable");
+      }
+
+      if (panel.dataset.requestId !== requestId) {
+        return;
+      }
+
+      const items = dedupePaperTrendItems(
+        payloads
+          .flatMap((payload) => normalizeCrossrefTrendItems(payload?.message?.items || []))
+          .filter((item) => isPaperTrendVenueMatch(item.venue, data.journal))
+          .filter((item) => isPaperTrendDatePlausible(item, data.months))
+      )
+        .sort(comparePaperTrendItems)
+        .slice(0, 10);
+
+      if (!items.length) {
+        results.innerHTML = renderPaperTrendEmpty(data);
+        if (clusters) {
+          clusters.innerHTML = renderPaperTrendClusterSummary([]);
+        }
+        if (status) {
+          status.textContent = text({
+            ko: "조건에 맞는 최신 논문을 찾지 못했습니다. 검색어를 넓혀보세요.",
+            en: "No recent papers matched this query. Try a broader search."
+          });
+        }
+        return;
+      }
+
+      results.innerHTML = items.map((item) => renderPaperTrendResultItem(item)).join("");
+      if (clusters) {
+        clusters.innerHTML = renderPaperTrendClusterSummary(items);
+      }
+      if (status) {
+        status.textContent = text({
+          ko: `${data.months}개월 범위에서 ${items.length}편을 불러왔습니다.`,
+          en: `Loaded ${items.length} recent records from the last ${data.months} months.`
+        });
+      }
+    } catch (error) {
+      if (panel.dataset.requestId !== requestId) {
+        return;
+      }
+      results.innerHTML = renderPaperTrendError(data);
+      if (status) {
+        status.textContent = text({
+          ko: "실시간 메타데이터를 불러오지 못했습니다. 외부 검색 링크를 사용하세요.",
+          en: "Could not load live metadata. Use the external search links."
+        });
+      }
+    }
+  }
+
+  function buildPaperTrendPhrase(data) {
+    const phrase = data.query || "construction management civil engineering project management";
+    return data.journal ? `${phrase} "${data.journal}"` : phrase;
+  }
+
+  function buildScholarTrendUrl(data) {
+    const year = new Date().getFullYear() - Math.max(0, Math.ceil(data.months / 12) - 1);
+    return `https://scholar.google.com/scholar?as_ylo=${year}&q=${encodeURIComponent(buildPaperTrendPhrase(data))}`;
+  }
+
+  function buildSemanticScholarTrendUrl(data) {
+    return `https://www.semanticscholar.org/search?q=${encodeURIComponent(buildPaperTrendPhrase(data))}&sort=pub-date`;
+  }
+
+  function buildCrossrefTrendUrl(data, rows = 10) {
+    const endpoint = "https://api.crossref.org/works";
+    const filters = [
+      "type:journal-article",
+      `from-pub-date:${isoDateMonthsAgo(data.months)}`,
+      `until-pub-date:${isoTodayDate()}`
+    ];
+
+    if (data.issn) {
+      filters.push(`issn:${data.issn}`);
+    }
+
+    const params = new URLSearchParams();
+    params.set("filter", filters.join(","));
+    params.set("sort", "published");
+    params.set("order", "desc");
+    params.set("rows", String(rows));
+    params.set("select", "DOI,title,author,container-title,published,published-print,published-online,issued,URL,is-referenced-by-count");
+
+    if (data.query) {
+      params.set("query.title", data.query);
+    }
+
+    if (data.journal && !data.issn) {
+      params.set("query.container-title", data.journal);
+    }
+
+    return `${endpoint}?${params.toString()}`;
+  }
+
+  function isoDateMonthsAgo(months) {
+    const date = new Date();
+    date.setMonth(date.getMonth() - Number(months || 24));
+    return date.toISOString().slice(0, 10);
+  }
+
+  function isoTodayDate() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function normalizeCrossrefTrendItems(items) {
+    return items
+      .map((item) => {
+        const date = crossrefPublishedDate(item);
+        const title = Array.isArray(item.title) ? item.title[0] : item.title;
+        const venue = Array.isArray(item["container-title"]) ? item["container-title"][0] : item["container-title"];
+
+        return {
+          title: String(title || "").trim(),
+          venue: String(venue || "").trim(),
+          authors: formatCrossrefAuthors(item.author),
+          doi: String(item.DOI || "").trim(),
+          url: String(item.URL || "").trim(),
+          citations: Number(item["is-referenced-by-count"] || 0),
+          date: date.label,
+          year: date.year
+        };
+      })
+      .filter((item) => item.title && item.venue);
+  }
+
+  function dedupePaperTrendItems(items) {
+    const seen = new Set();
+    return items.filter((item) => {
+      const key = item.doi ? `doi:${item.doi.toLowerCase()}` : `title:${item.title.toLowerCase()}`;
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function comparePaperTrendItems(a, b) {
+    const yearDiff = Number(b.year || 0) - Number(a.year || 0);
+    if (yearDiff) {
+      return yearDiff;
+    }
+    return String(b.date || "").localeCompare(String(a.date || ""));
+  }
+
+  function isPaperTrendDatePlausible(item, months) {
+    const year = Number(item.year || 0);
+    if (!year) {
+      return true;
+    }
+
+    const currentYear = new Date().getFullYear();
+    const earliestYear = currentYear - Math.ceil(Number(months || 24) / 12) - 1;
+    return year >= earliestYear && year <= currentYear + 1;
+  }
+
+  function isPaperTrendVenueMatch(venue, selectedJournal) {
+    const normalizedVenue = normalizePaperTrendText(venue);
+    const targets = selectedJournal
+      ? [selectedJournal]
+      : researchTrendJournals().map((journal) => journal.title);
+
+    return targets.some((target) => {
+      const normalizedTarget = normalizePaperTrendText(target);
+      return normalizedVenue.includes(normalizedTarget) || normalizedTarget.includes(normalizedVenue);
+    });
+  }
+
+  function normalizePaperTrendText(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/&/g, "and")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function crossrefPublishedDate(item) {
+    const candidates = [item?.["published-online"], item?.["published-print"], item?.published, item?.issued];
+    const parts = candidates
+      .map((candidate) => candidate?.["date-parts"]?.[0])
+      .find((part) => Array.isArray(part) && part.length);
+
+    const year = parts?.[0] || "";
+    const month = String(parts?.[1] || "01").padStart(2, "0");
+    const day = String(parts?.[2] || "01").padStart(2, "0");
+
+    return {
+      year,
+      label: year ? `${year}.${month}.${day}` : text({ ko: "날짜 미상", en: "Date unavailable" })
+    };
+  }
+
+  function formatCrossrefAuthors(authors) {
+    if (!Array.isArray(authors) || !authors.length) {
+      return text({ ko: "저자 정보 없음", en: "Author metadata unavailable" });
+    }
+
+    const names = authors
+      .slice(0, 3)
+      .map((author) => [author.given, author.family].filter(Boolean).join(" ") || author.name || "")
+      .filter(Boolean);
+
+    return `${names.join(", ")}${authors.length > 3 ? " et al." : ""}`;
+  }
+
+  function renderPaperTrendClusterSummary(items) {
+    const titleCorpus = items.map((item) => item.title.toLowerCase()).join(" ");
+    const clusters = researchTrendClusters()
+      .map((cluster) => ({
+        ...cluster,
+        count: items.length
+          ? items.filter((item) => cluster.terms.some((term) => item.title.toLowerCase().includes(term))).length
+          : 0,
+        hit: cluster.terms.some((term) => titleCorpus.includes(term))
+      }))
+      .sort((a, b) => b.count - a.count);
+
+    return clusters
+      .slice(0, 6)
+      .map((cluster) => `
+        <article class="paper-trend-cluster-card ${cluster.count ? "has-hits" : ""}">
+          <span>${cluster.count ? text({ ko: "감지", en: "Detected" }) : text({ ko: "트렌드 축", en: "Trend axis" })}</span>
+          <strong>${escapeHtml(cluster.label)}</strong>
+          <p>${cluster.count ? text({ ko: `${cluster.count}편 관련`, en: `${cluster.count} matched records` }) : text(cluster.hint)}</p>
+        </article>
+      `)
+      .join("");
+  }
+
+  function renderPaperTrendIntro() {
+    return `
+      <article class="paper-result-card paper-result-placeholder">
+        <div>
+          <span class="paper-result-date">${text({ ko: "준비됨", en: "Ready" })}</span>
+          <h3>${text({ ko: "관심 주제와 저널을 선택해 최신 논문 흐름을 확인하세요.", en: "Select a topic and journal to scan recent literature." })}</h3>
+          <p>${text({
+            ko: "Automation in Construction, Journal of Building Engineering, ASCE 저널 등 지정 저널을 중심으로 DOI 메타데이터를 조회합니다.",
+            en: "The scan focuses on the selected Elsevier and ASCE journals and retrieves DOI metadata where available."
+          })}</p>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderPaperTrendLoading() {
+    return [1, 2, 3]
+      .map(
+        () => `
+          <article class="paper-result-card paper-result-loading">
+            <span></span>
+            <strong></strong>
+            <p></p>
+          </article>
+        `
+      )
+      .join("");
+  }
+
+  function renderPaperTrendEmpty(data) {
+    return `
+      <article class="paper-result-card paper-result-placeholder">
+        <div>
+          <span class="paper-result-date">${text({ ko: "검색 결과 없음", en: "No matches" })}</span>
+          <h3>${escapeHtml(buildPaperTrendPhrase(data))}</h3>
+          <p>${text({ ko: "검색어를 줄이거나 전체 지정 저널 범위에서 다시 시도해보세요.", en: "Try a broader query or search across all target journals." })}</p>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderPaperTrendError(data) {
+    return `
+      <article class="paper-result-card paper-result-placeholder">
+        <div>
+          <span class="paper-result-date">${text({ ko: "외부 API 연결 실패", en: "External API unavailable" })}</span>
+          <h3>${escapeHtml(buildPaperTrendPhrase(data))}</h3>
+          <p>${text({ ko: "네트워크나 CORS 정책 때문에 미리보기를 불러오지 못할 수 있습니다. 위의 외부 검색 링크는 계속 사용할 수 있습니다.", en: "Network or CORS policy may block the preview. The external search links above remain available." })}</p>
+        </div>
+      </article>
+    `;
+  }
+
+  function renderPaperTrendResultItem(item) {
+    const href = item.doi ? `https://doi.org/${item.doi}` : item.url || scholarSearchUrl(item.title);
+
+    return `
+      <article class="paper-result-card">
+        <div class="paper-result-main">
+          <span class="paper-result-date">${escapeHtml(item.date)}</span>
+          <h3><a href="${escapeHtml(href)}" target="_blank" rel="noreferrer">${escapeHtml(item.title)}</a></h3>
+          <p>${escapeHtml(item.authors)}</p>
+          <div class="paper-result-meta">
+            <span>${icon("book")}${escapeHtml(item.venue)}</span>
+            ${item.doi ? `<span>DOI ${escapeHtml(item.doi)}</span>` : ""}
+            ${item.citations ? `<span>${text({ ko: `Crossref 인용 ${item.citations}`, en: `Crossref citations ${item.citations}` })}</span>` : ""}
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
   function ensureRuntimeStyleOverrides() {
     const styleId = "site-runtime-overrides";
     let styleEl = document.getElementById(styleId);
@@ -3825,6 +4498,204 @@
         font-size: 0.94rem !important;
       }
 
+      .paper-trend-panel {
+        display: grid !important;
+        gap: 18px !important;
+        padding: 22px !important;
+        border: 0 !important;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 252, 0.98)) !important;
+      }
+
+      .paper-trend-form {
+        display: grid !important;
+        grid-template-columns: minmax(240px, 1fr) minmax(210px, 0.72fr) minmax(150px, 0.36fr) auto !important;
+        gap: 12px !important;
+        align-items: end !important;
+      }
+
+      .paper-trend-field {
+        display: grid !important;
+        gap: 7px !important;
+        min-width: 0 !important;
+      }
+
+      .paper-trend-field span {
+        color: #57606a !important;
+        font-size: 0.82rem !important;
+        font-weight: 800 !important;
+      }
+
+      .paper-trend-field input,
+      .paper-trend-field select {
+        width: 100% !important;
+        min-height: 42px !important;
+        padding: 0 12px !important;
+        border: 1px solid #d0d7de !important;
+        border-radius: 8px !important;
+        background: #ffffff !important;
+        color: #24292f !important;
+        font: inherit !important;
+        font-weight: 600 !important;
+        outline: none !important;
+      }
+
+      .paper-trend-field input:focus,
+      .paper-trend-field select:focus {
+        border-color: #2da44e !important;
+        box-shadow: 0 0 0 3px rgba(45, 164, 78, 0.16) !important;
+      }
+
+      .paper-trend-submit {
+        min-height: 42px !important;
+        white-space: nowrap !important;
+      }
+
+      .paper-trend-topics,
+      .paper-journal-strip,
+      .paper-trend-source-row,
+      .paper-result-meta {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+      }
+
+      .paper-topic-chip,
+      .paper-journal-chip {
+        appearance: none !important;
+        cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 34px !important;
+        border: 1px solid #d0d7de !important;
+        border-radius: 999px !important;
+        background: #ffffff !important;
+        color: #24292f !important;
+        font: inherit !important;
+        font-size: 0.88rem !important;
+        font-weight: 700 !important;
+      }
+
+      .paper-topic-chip {
+        padding: 0 12px !important;
+      }
+
+      .paper-journal-chip {
+        gap: 6px !important;
+        padding: 0 12px !important;
+      }
+
+      .paper-journal-chip small {
+        color: #57606a !important;
+        font-size: 0.72rem !important;
+        font-weight: 700 !important;
+      }
+
+      .paper-topic-chip.is-active,
+      .paper-journal-chip.is-active {
+        border-color: #1f883d !important;
+        background: #dafbe1 !important;
+        color: #116329 !important;
+      }
+
+      .paper-trend-meta,
+      .paper-trend-clusters {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+      }
+
+      .paper-trend-meta article,
+      .paper-trend-cluster-card,
+      .paper-result-card {
+        display: grid !important;
+        gap: 8px !important;
+        padding: 16px !important;
+        border: 1px solid #d8dee4 !important;
+        border-radius: 10px !important;
+        background: #ffffff !important;
+        box-shadow: none !important;
+      }
+
+      .paper-trend-meta span,
+      .paper-trend-cluster-card span,
+      .paper-result-date {
+        color: #57606a !important;
+        font-size: 0.75rem !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.04em !important;
+        text-transform: uppercase !important;
+      }
+
+      .paper-trend-meta strong,
+      .paper-trend-cluster-card strong,
+      .paper-result-card h3 {
+        color: #24292f !important;
+        font-weight: 800 !important;
+        line-height: 1.4 !important;
+      }
+
+      .paper-trend-cluster-card.has-hits {
+        border-color: #aceebb !important;
+        background: #f0fff4 !important;
+      }
+
+      .paper-trend-results {
+        display: grid !important;
+        gap: 12px !important;
+      }
+
+      .paper-result-card p,
+      .paper-trend-note,
+      .paper-trend-status,
+      .paper-trend-cluster-card p {
+        color: #57606a !important;
+        line-height: 1.65 !important;
+      }
+
+      .paper-result-meta span {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        min-height: 30px !important;
+        padding: 4px 9px !important;
+        border-radius: 999px !important;
+        background: #f6f8fa !important;
+        color: #57606a !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+      }
+
+      .paper-result-loading span,
+      .paper-result-loading strong,
+      .paper-result-loading p {
+        display: block !important;
+        border-radius: 999px !important;
+        background: #f6f8fa !important;
+      }
+
+      @media (max-width: 1180px) {
+        .paper-trend-form,
+        .paper-trend-meta,
+        .paper-trend-clusters {
+          grid-template-columns: 1fr 1fr !important;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .paper-trend-form,
+        .paper-trend-meta,
+        .paper-trend-clusters {
+          grid-template-columns: 1fr !important;
+        }
+
+        .paper-trend-submit,
+        .paper-trend-source-row .section-action {
+          width: 100% !important;
+          justify-content: center !important;
+        }
+      }
+
       .hero-panel .hero-schematic,
       .hero-panel .hero-visual,
       .hero-panel .hero-diagram-shell {
@@ -4003,6 +4874,8 @@
     if (heroLead && buttonRow && heroLead.nextElementSibling !== buttonRow) {
       heroLead.insertAdjacentElement("afterend", buttonRow);
     }
+
+    initializePaperTrendPanel();
   }
 
   function finalizeRenderedPage() {
@@ -4123,6 +4996,8 @@
     if (heroLead && buttonRow && heroLead.nextElementSibling !== buttonRow) {
       heroLead.insertAdjacentElement("afterend", buttonRow);
     }
+
+    initializePaperTrendPanel();
   }
   }
 
