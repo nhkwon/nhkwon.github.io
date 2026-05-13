@@ -1454,8 +1454,9 @@ body.theme-github-mode .paper-trend-summary-kicker {
 body.theme-github-mode .paper-trend-summary-card h2 {
   margin: 0 !important;
   color: #1f2328 !important;
+  font-family: "Noto Serif KR", "Nanum Myeongjo", Georgia, "Times New Roman", serif !important;
   font-size: clamp(1.35rem, 2vw, 1.7rem) !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   line-height: 1.16 !important;
   letter-spacing: 0 !important;
 }
