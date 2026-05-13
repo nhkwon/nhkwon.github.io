@@ -3659,8 +3659,8 @@
     return `
       <article class="paper-trend-summary-card" data-paper-trend-summary>
         <div class="paper-trend-summary-head">
-          <p class="paper-trend-summary-kicker">${text({ ko: "자동 연구동향", en: "Automated Trends" })}</p>
-          <h2>${text({ ko: "논문동향 요약", en: "Paper Trend Summary" })}</h2>
+          <p class="paper-trend-summary-kicker">Automated Research Trends</p>
+          <h2>Paper Trend Summary</h2>
           <p class="paper-trend-summary-insight" data-paper-trend-summary-copy>${text({
             ko: "Automation in Construction, JBE, ASCE 저널 등 지정 저널의 최신 논문을 매일 수집해 누적하고, 주요 연구축을 요약합니다.",
             en: "Daily scans accumulate papers from the target Elsevier and ASCE journals and summarize the dominant research signals."
@@ -3867,24 +3867,24 @@
 
   function researchTrendJournals() {
     return [
-      { title: "Automation in Construction", short: "Automation in Construction", publisher: "Elsevier", issn: "0926-5805" },
-      { title: "Buildings", short: "Buildings", publisher: "MDPI", issn: "2075-5309" },
-      { title: "Journal of Building Engineering", short: "Journal of Building Engineering", publisher: "Elsevier", issn: "2352-7102" },
-      { title: "Sustainability", short: "Sustainability", publisher: "MDPI", issn: "2071-1050" },
-      { title: "Developments in the Built Environment", short: "Developments in Built Environment", publisher: "Elsevier", issn: "2666-1659" },
-      { title: "Building and Environment", short: "Building and Environment", publisher: "Elsevier", issn: "0360-1323" },
-      { title: "KSCE Journal of Civil Engineering", short: "KSCE Journal of Civil Engineering", publisher: "Elsevier / KSCE", issn: "1226-7988" },
-      { title: "Journal of Asian Architecture and Building Engineering", short: "JAABE", publisher: "Taylor & Francis", issn: "1347-2852" },
-      { title: "Applied Sciences", short: "Applied Sciences", publisher: "MDPI", issn: "2076-3417" },
-      { title: "Advances in Civil Engineering", short: "Advances in Civil Engineering", publisher: "Wiley / Hindawi", issn: "1687-8094" },
-      { title: "Energy and Buildings", short: "Energy and Buildings", publisher: "Elsevier", issn: "0378-7788" },
-      { title: "Energies", short: "Energies", publisher: "MDPI", issn: "1996-1073" },
-      { title: "Expert Systems with Applications", short: "Expert Systems with Applications", publisher: "Elsevier", issn: "0957-4174" },
-      { title: "Journal of the Architectural Institute of Korea", short: "JAIK", publisher: "Architectural Institute of Korea", issn: "2733-6247" },
-      { title: "Results in Engineering", short: "Results in Engineering", publisher: "Elsevier", issn: "2590-1230" },
-      { title: "Journal of Construction Engineering and Management", short: "J. Construction Eng. & Management", publisher: "ASCE", issn: "0733-9364" },
-      { title: "Journal of Management in Engineering", short: "J. Management in Engineering", publisher: "ASCE", issn: "0742-597X" },
-      { title: "Journal of Computing in Civil Engineering", short: "J. Computing in Civil Engineering", publisher: "ASCE", issn: "0887-3801" }
+      { title: "Automation in Construction", short: "Automation in Construction", publisher: "Elsevier", issn: "0926-5805", tier: "major" },
+      { title: "Buildings", short: "Buildings", publisher: "MDPI", issn: "2075-5309", tier: "secondary" },
+      { title: "Journal of Building Engineering", short: "Journal of Building Engineering", publisher: "Elsevier", issn: "2352-7102", tier: "major" },
+      { title: "Sustainability", short: "Sustainability", publisher: "MDPI", issn: "2071-1050", tier: "secondary" },
+      { title: "Developments in the Built Environment", short: "Developments in Built Environment", publisher: "Elsevier", issn: "2666-1659", tier: "major" },
+      { title: "Building and Environment", short: "Building and Environment", publisher: "Elsevier", issn: "0360-1323", tier: "major" },
+      { title: "KSCE Journal of Civil Engineering", short: "KSCE Journal of Civil Engineering", publisher: "Elsevier / KSCE", issn: "1226-7988", tier: "major" },
+      { title: "Journal of Asian Architecture and Building Engineering", short: "JAABE", publisher: "Taylor & Francis", issn: "1347-2852", tier: "major" },
+      { title: "Applied Sciences", short: "Applied Sciences", publisher: "MDPI", issn: "2076-3417", tier: "secondary" },
+      { title: "Advances in Civil Engineering", short: "Advances in Civil Engineering", publisher: "Wiley / Hindawi", issn: "1687-8094", tier: "secondary" },
+      { title: "Energy and Buildings", short: "Energy and Buildings", publisher: "Elsevier", issn: "0378-7788", tier: "major" },
+      { title: "Energies", short: "Energies", publisher: "MDPI", issn: "1996-1073", tier: "secondary" },
+      { title: "Expert Systems with Applications", short: "Expert Systems with Applications", publisher: "Elsevier", issn: "0957-4174", tier: "major" },
+      { title: "Journal of the Architectural Institute of Korea", short: "JAIK", publisher: "Architectural Institute of Korea", issn: "2733-6247", tier: "secondary" },
+      { title: "Results in Engineering", short: "Results in Engineering", publisher: "Elsevier", issn: "2590-1230", tier: "major" },
+      { title: "Journal of Construction Engineering and Management", short: "J. Construction Eng. & Management", publisher: "ASCE", issn: "0733-9364", tier: "major" },
+      { title: "Journal of Management in Engineering", short: "J. Management in Engineering", publisher: "ASCE", issn: "0742-597X", tier: "major" },
+      { title: "Journal of Computing in Civil Engineering", short: "J. Computing in Civil Engineering", publisher: "ASCE", issn: "0887-3801", tier: "major" }
     ];
   }
 
@@ -3971,6 +3971,9 @@
       query,
       journal,
       issn: journalMeta?.issn || "",
+      title: journalMeta?.title || journal,
+      publisher: journalMeta?.publisher || "",
+      tier: journalMeta?.tier || "",
       months: Number.isFinite(months) && months > 0 ? months : 24
     };
   }
@@ -4006,7 +4009,7 @@
         ? payload.items.map(normalizeStoredPaperTrendItem).filter((item) => item.title)
         : [];
 
-      return { ...payload, items };
+      return { ...payload, items: data.journal ? items : limitPaperTrendPreviewItems(items) };
     } catch (error) {
       return null;
     }
@@ -4019,6 +4022,7 @@
       authors: String(item?.authors || "").trim() || text({ ko: "저자 정보 없음", en: "Author metadata unavailable" }),
       doi: String(item?.doi || "").trim(),
       url: String(item?.url || "").trim(),
+      publisher: String(item?.publisher || "").trim(),
       citations: Number(item?.citations || 0),
       date: String(item?.date || "").trim() || text({ ko: "날짜 미상", en: "Date unavailable" }),
       year: Number(item?.year || 0),
@@ -4059,6 +4063,44 @@
     });
   }
 
+  function isMdpiTrendSource(itemOrVenue) {
+    const mdpiVenues = new Set(["buildings", "sustainability", "applied sciences", "energies"]);
+    const publisher = normalizePaperTrendText(typeof itemOrVenue === "object" ? itemOrVenue.publisher : "");
+    const venue = normalizePaperTrendText(typeof itemOrVenue === "object" ? itemOrVenue.venue || itemOrVenue.journal : itemOrVenue);
+    return publisher.includes("mdpi") || mdpiVenues.has(venue);
+  }
+
+  function isMajorTrendSource(itemOrVenue) {
+    const publisher = normalizePaperTrendText(typeof itemOrVenue === "object" ? itemOrVenue.publisher : "");
+    const venue = normalizePaperTrendText(typeof itemOrVenue === "object" ? itemOrVenue.venue || itemOrVenue.journal : itemOrVenue);
+    const majorVenues = new Set(
+      researchTrendJournals()
+        .filter((journal) => journal.tier === "major")
+        .map((journal) => normalizePaperTrendText(journal.title))
+    );
+    return !isMdpiTrendSource(itemOrVenue) && (publisher.includes("elsevier") || publisher.includes("asce") || majorVenues.has(venue));
+  }
+
+  function paperTrendRowsForTarget(target, baseRows) {
+    if (target?.tier === "secondary" || isMdpiTrendSource(target)) {
+      return Math.max(5, Math.min(10, Math.round(baseRows * 0.32)));
+    }
+
+    if (target?.tier === "major" || isMajorTrendSource(target)) {
+      return Math.max(baseRows, 32);
+    }
+
+    return Math.max(10, Math.round(baseRows * 0.6));
+  }
+
+  function limitPaperTrendPreviewItems(items, limit = PAPER_TREND_PREVIEW_LIMIT) {
+    const sorted = items.slice().sort(comparePaperTrendItems);
+    const mdpiLimit = Math.max(5, Math.floor(limit * 0.12));
+    const mdpiItems = sorted.filter((item) => isMdpiTrendSource(item)).slice(0, mdpiLimit);
+    const majorItems = sorted.filter((item) => !isMdpiTrendSource(item)).slice(0, limit - mdpiItems.length);
+    return majorItems.concat(mdpiItems).sort(comparePaperTrendItems).slice(0, limit);
+  }
+
   function topPaperTrendSummaryClusters(items) {
     return researchTrendClusters()
       .map((cluster) => ({
@@ -4072,16 +4114,24 @@
 
   function topPaperTrendVenues(items) {
     const counts = new Map();
+    const metaByVenue = new Map();
     items.forEach((item) => {
       const venue = item.venue || item.journal;
       if (venue) {
         counts.set(venue, (counts.get(venue) || 0) + 1);
+        metaByVenue.set(venue, item);
       }
     });
-    return Array.from(counts.entries())
+    const entries = Array.from(counts.entries())
       .sort((a, b) => b[1] - a[1])
+      .map(([venue, count]) => ({ venue, count, item: metaByVenue.get(venue) || { venue } }));
+    const majorEntries = entries.filter((entry) => isMajorTrendSource(entry.item));
+    const secondaryEntries = entries.filter((entry) => !isMajorTrendSource(entry.item));
+    const ordered = majorEntries.length ? majorEntries.concat(secondaryEntries) : entries;
+
+    return ordered
       .slice(0, 2)
-      .map(([venue]) => venue);
+      .map((entry) => entry.venue);
   }
 
   function paperTrendClusterTrendSentence(label) {
@@ -4154,8 +4204,8 @@
     const venueText = venues.length ? venues.join(", ") : text({ ko: "지정 저널", en: "target journals" });
 
     return text({
-      ko: `동향: ${trendText} 주요 출처는 ${venueText}입니다.`,
-      en: `Trend: ${trendText} Main sources include ${venueText}.`
+      ko: `동향: ${trendText} 주요 출처: ${venueText}`,
+      en: `Trend: ${trendText} Main sources: ${venueText}`
     });
   }
 
@@ -4301,7 +4351,10 @@
         while (nextIndex < targets.length) {
           const currentIndex = nextIndex;
           nextIndex += 1;
-          payloads[currentIndex] = await fetchPaperTrendPayload(targets[currentIndex], rows);
+          payloads[currentIndex] = await fetchPaperTrendPayload(
+            targets[currentIndex],
+            targets.length > 1 ? paperTrendRowsForTarget(targets[currentIndex], rows) : rows
+          );
         }
       })
     );
@@ -4362,7 +4415,7 @@
 
       const targetQueries = data.journal
         ? [data]
-        : researchTrendJournals().map((journal) => ({ ...data, journal: journal.title, issn: journal.issn }));
+        : researchTrendJournals().map((journal) => ({ ...data, ...journal, journal: journal.title, issn: journal.issn }));
       const rowsPerQuery = data.journal ? PAPER_TREND_SELECTED_JOURNAL_ROWS : PAPER_TREND_ROWS_PER_JOURNAL;
       const payloads = await fetchPaperTrendPayloads(targetQueries, rowsPerQuery);
 
@@ -4374,15 +4427,16 @@
         return;
       }
 
-      const items = dedupePaperTrendItems(
+      const normalizedItems = dedupePaperTrendItems(
         payloads
-          .flatMap((payload) => normalizeCrossrefTrendItems(payload?.message?.items || []))
+          .flatMap((payload, index) => normalizeCrossrefTrendItems(payload?.message?.items || [], targetQueries[index]))
           .filter(isPaperTrendResearchRecord)
           .filter((item) => isPaperTrendVenueMatch(item.venue, data.journal))
           .filter((item) => isPaperTrendDatePlausible(item, data.months))
-      )
-        .sort(comparePaperTrendItems)
-        .slice(0, PAPER_TREND_PREVIEW_LIMIT);
+      );
+      const items = data.journal
+        ? normalizedItems.sort(comparePaperTrendItems).slice(0, PAPER_TREND_PREVIEW_LIMIT)
+        : limitPaperTrendPreviewItems(normalizedItems);
 
       if (!items.length) {
         results.innerHTML = renderPaperTrendEmpty(data);
@@ -4483,7 +4537,7 @@
     return new Date().toISOString().slice(0, 10);
   }
 
-  function normalizeCrossrefTrendItems(items) {
+  function normalizeCrossrefTrendItems(items, journal = {}) {
     return items
       .map((item) => {
         const date = crossrefPublishedDate(item);
@@ -4496,6 +4550,8 @@
           authors: formatCrossrefAuthors(item.author),
           doi: String(item.DOI || "").trim(),
           url: String(item.URL || "").trim(),
+          journal: journal.title || journal.journal || "",
+          publisher: journal.publisher || "",
           citations: Number(item["is-referenced-by-count"] || 0),
           date: date.label,
           year: date.year

@@ -1466,12 +1466,11 @@ body.theme-github-mode .paper-trend-summary-card p {
 body.theme-github-mode .paper-trend-summary-insight {
   padding: 10px 12px !important;
   border: 1px solid #d0d7de !important;
-  border-left: 4px solid #5b6573 !important;
   border-radius: 8px !important;
   background: linear-gradient(180deg, #f6f8fa 0%, #ffffff 100%) !important;
   color: #394452 !important;
   font-size: 0.86rem !important;
-  font-weight: 650 !important;
+  font-weight: 400 !important;
   line-height: 1.42 !important;
 }
 

@@ -6,24 +6,24 @@ const CONCURRENT_CROSSREF_REQUESTS = 4;
 const CROSSREF_TIMEOUT_MS = 10000;
 
 const TARGET_JOURNALS = [
-  { title: "Automation in Construction", short: "Automation in Construction", publisher: "Elsevier", issn: "0926-5805" },
-  { title: "Buildings", short: "Buildings", publisher: "MDPI", issn: "2075-5309" },
-  { title: "Journal of Building Engineering", short: "Journal of Building Engineering", publisher: "Elsevier", issn: "2352-7102" },
-  { title: "Sustainability", short: "Sustainability", publisher: "MDPI", issn: "2071-1050" },
-  { title: "Developments in the Built Environment", short: "Developments in Built Environment", publisher: "Elsevier", issn: "2666-1659" },
-  { title: "Building and Environment", short: "Building and Environment", publisher: "Elsevier", issn: "0360-1323" },
-  { title: "KSCE Journal of Civil Engineering", short: "KSCE Journal of Civil Engineering", publisher: "Elsevier / KSCE", issn: "1226-7988" },
-  { title: "Journal of Asian Architecture and Building Engineering", short: "JAABE", publisher: "Taylor & Francis", issn: "1347-2852" },
-  { title: "Applied Sciences", short: "Applied Sciences", publisher: "MDPI", issn: "2076-3417" },
-  { title: "Advances in Civil Engineering", short: "Advances in Civil Engineering", publisher: "Wiley / Hindawi", issn: "1687-8094" },
-  { title: "Energy and Buildings", short: "Energy and Buildings", publisher: "Elsevier", issn: "0378-7788" },
-  { title: "Energies", short: "Energies", publisher: "MDPI", issn: "1996-1073" },
-  { title: "Expert Systems with Applications", short: "Expert Systems with Applications", publisher: "Elsevier", issn: "0957-4174" },
-  { title: "Journal of the Architectural Institute of Korea", short: "JAIK", publisher: "Architectural Institute of Korea", issn: "2733-6247" },
-  { title: "Results in Engineering", short: "Results in Engineering", publisher: "Elsevier", issn: "2590-1230" },
-  { title: "Journal of Construction Engineering and Management", short: "J. Construction Eng. & Management", publisher: "ASCE", issn: "0733-9364" },
-  { title: "Journal of Management in Engineering", short: "J. Management in Engineering", publisher: "ASCE", issn: "0742-597X" },
-  { title: "Journal of Computing in Civil Engineering", short: "J. Computing in Civil Engineering", publisher: "ASCE", issn: "0887-3801" }
+  { title: "Automation in Construction", short: "Automation in Construction", publisher: "Elsevier", issn: "0926-5805", tier: "major" },
+  { title: "Buildings", short: "Buildings", publisher: "MDPI", issn: "2075-5309", tier: "secondary" },
+  { title: "Journal of Building Engineering", short: "Journal of Building Engineering", publisher: "Elsevier", issn: "2352-7102", tier: "major" },
+  { title: "Sustainability", short: "Sustainability", publisher: "MDPI", issn: "2071-1050", tier: "secondary" },
+  { title: "Developments in the Built Environment", short: "Developments in Built Environment", publisher: "Elsevier", issn: "2666-1659", tier: "major" },
+  { title: "Building and Environment", short: "Building and Environment", publisher: "Elsevier", issn: "0360-1323", tier: "major" },
+  { title: "KSCE Journal of Civil Engineering", short: "KSCE Journal of Civil Engineering", publisher: "Elsevier / KSCE", issn: "1226-7988", tier: "major" },
+  { title: "Journal of Asian Architecture and Building Engineering", short: "JAABE", publisher: "Taylor & Francis", issn: "1347-2852", tier: "major" },
+  { title: "Applied Sciences", short: "Applied Sciences", publisher: "MDPI", issn: "2076-3417", tier: "secondary" },
+  { title: "Advances in Civil Engineering", short: "Advances in Civil Engineering", publisher: "Wiley / Hindawi", issn: "1687-8094", tier: "secondary" },
+  { title: "Energy and Buildings", short: "Energy and Buildings", publisher: "Elsevier", issn: "0378-7788", tier: "major" },
+  { title: "Energies", short: "Energies", publisher: "MDPI", issn: "1996-1073", tier: "secondary" },
+  { title: "Expert Systems with Applications", short: "Expert Systems with Applications", publisher: "Elsevier", issn: "0957-4174", tier: "major" },
+  { title: "Journal of the Architectural Institute of Korea", short: "JAIK", publisher: "Architectural Institute of Korea", issn: "2733-6247", tier: "secondary" },
+  { title: "Results in Engineering", short: "Results in Engineering", publisher: "Elsevier", issn: "2590-1230", tier: "major" },
+  { title: "Journal of Construction Engineering and Management", short: "J. Construction Eng. & Management", publisher: "ASCE", issn: "0733-9364", tier: "major" },
+  { title: "Journal of Management in Engineering", short: "J. Management in Engineering", publisher: "ASCE", issn: "0742-597X", tier: "major" },
+  { title: "Journal of Computing in Civil Engineering", short: "J. Computing in Civil Engineering", publisher: "ASCE", issn: "0887-3801", tier: "major" }
 ];
 
 async function handler(req, res) {
@@ -92,7 +92,7 @@ async function listPaperTrends(req, res) {
   }
 
   const filtered = Array.isArray(rows) ? rows.filter((row) => matchesStoredQuery(row, query)) : [];
-  const items = filtered.slice(0, limit).map(normalizeStoredTrendRow);
+  const items = prioritizeTrendItems(filtered.map(normalizeStoredTrendRow), limit);
   const run = await latestPaperTrendRun();
   const lastUpdatedAt =
     items.map((item) => item.lastSeenAt).filter(Boolean).sort().reverse()[0] ||
@@ -163,13 +163,16 @@ async function fetchCrossrefPayloads(targets, rows) {
 
   await Promise.all(
     Array.from({ length: workerCount }, async () => {
-      while (nextIndex < targets.length) {
-        const currentIndex = nextIndex;
-        nextIndex += 1;
-        payloads[currentIndex] = await fetchCrossrefPayload(targets[currentIndex], rows);
-      }
-    })
-  );
+        while (nextIndex < targets.length) {
+          const currentIndex = nextIndex;
+          nextIndex += 1;
+          payloads[currentIndex] = await fetchCrossrefPayload(
+            targets[currentIndex],
+            rowsForTargetJournal(targets[currentIndex], rows)
+          );
+        }
+      })
+    );
 
   return payloads;
 }
@@ -380,6 +383,41 @@ function matchesStoredQuery(row, query) {
 
   const corpus = normalizeText([row?.title, row?.venue, row?.journal, row?.authors].filter(Boolean).join(" "));
   return tokens.some((token) => corpus.includes(token));
+}
+
+function isMdpiRecord(record) {
+  const mdpiVenues = new Set(["buildings", "sustainability", "applied sciences", "energies"]);
+  const publisher = normalizeText(record?.publisher || "");
+  const venue = normalizeText(record?.venue || record?.journal || "");
+  return publisher.includes("mdpi") || mdpiVenues.has(venue);
+}
+
+function prioritizeTrendItems(items, limit) {
+  const sorted = items.slice().sort((a, b) => {
+    const yearDiff = Number(b.year || 0) - Number(a.year || 0);
+    if (yearDiff) return yearDiff;
+    return String(b.date || "").localeCompare(String(a.date || ""));
+  });
+  const mdpiLimit = Math.max(5, Math.floor(limit * 0.12));
+  const mdpiItems = sorted.filter(isMdpiRecord).slice(0, mdpiLimit);
+  const majorItems = sorted.filter((item) => !isMdpiRecord(item)).slice(0, limit - mdpiItems.length);
+  return majorItems.concat(mdpiItems).sort((a, b) => {
+    const yearDiff = Number(b.year || 0) - Number(a.year || 0);
+    if (yearDiff) return yearDiff;
+    return String(b.date || "").localeCompare(String(a.date || ""));
+  }).slice(0, limit);
+}
+
+function rowsForTargetJournal(target, rows) {
+  if (target?.tier === "secondary" || isMdpiRecord(target)) {
+    return Math.max(5, Math.min(10, Math.round(rows * 0.32)));
+  }
+
+  if (target?.tier === "major") {
+    return Math.max(rows, 32);
+  }
+
+  return Math.max(10, Math.round(rows * 0.6));
 }
 
 function isTargetVenue(venue, target) {
