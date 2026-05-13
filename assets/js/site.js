@@ -3661,19 +3661,22 @@
         <div class="paper-trend-summary-head">
           <p class="paper-trend-summary-kicker">${text({ ko: "자동 연구동향", en: "Automated Trends" })}</p>
           <h2>${text({ ko: "논문동향 요약", en: "Paper Trend Summary" })}</h2>
-          <p data-paper-trend-summary-copy>${text({
+          <p class="paper-trend-summary-insight" data-paper-trend-summary-copy>${text({
             ko: "Automation in Construction, JBE, ASCE 저널 등 지정 저널의 최신 논문을 매일 수집해 누적하고, 주요 연구축을 요약합니다.",
             en: "Daily scans accumulate papers from the target Elsevier and ASCE journals and summarize the dominant research signals."
           })}</p>
         </div>
         <div class="paper-trend-summary-metrics">
           <span><strong data-paper-trend-summary-count>--</strong>${text({ ko: "표시 논문", en: "shown" })}</span>
-          <span><strong data-paper-trend-summary-journals>7</strong>${text({ ko: "대상 저널", en: "journals" })}</span>
+          <span><strong data-paper-trend-summary-journals>18</strong>${text({ ko: "대상 저널", en: "journals" })}</span>
           <span><strong data-paper-trend-summary-signal>AI / ML</strong>${text({ ko: "주요 축", en: "top axis" })}</span>
         </div>
         <div class="paper-trend-summary-tags" data-paper-trend-summary-tags>
           <span>AI / ML</span>
+          <span>Energy</span>
+          <span>Carbon</span>
           <span>BIM / Digital Twin</span>
+          <span>Safety</span>
           <span>Project Delivery</span>
         </div>
         <p class="paper-trend-summary-updated" data-paper-trend-summary-updated>${text({
@@ -4081,6 +4084,81 @@
       .map(([venue]) => venue);
   }
 
+  function paperTrendClusterTrendSentence(label) {
+    const sentences = {
+      "AI / ML": {
+        ko: "AI/ML은 예측·분류·자동화 방법론으로 붙고 있습니다.",
+        en: "AI/ML is appearing as a prediction, classification, and automation layer."
+      },
+      "BIM / Digital Twin": {
+        ko: "BIM·디지털트윈·포인트클라우드 기반 현장 데이터화가 보입니다.",
+        en: "BIM, digital twins, and point clouds are shaping data-rich site workflows."
+      },
+      "Safety / Risk": {
+        ko: "안전·위험·근로자 모니터링 흐름이 이어집니다.",
+        en: "Safety, risk, and worker monitoring remain visible signals."
+      },
+      "Project Delivery": {
+        ko: "공정·비용·생산성 의사결정 지원 연구가 이어집니다.",
+        en: "Schedule, cost, and productivity decision support remain active."
+      },
+      "Building Performance": {
+        ko: "건물 에너지·성능예측·실내환경 연구가 가장 활발합니다.",
+        en: "Building energy, performance prediction, and indoor environment work are especially active."
+      },
+      Sustainability: {
+        ko: "탄소·순환경제·기후회복성 주제가 함께 확산됩니다.",
+        en: "Carbon, circular economy, and climate resilience themes are expanding together."
+      }
+    };
+
+    return sentences[label] ? text(sentences[label]) : label;
+  }
+
+  function paperTrendKeywordLabels(label) {
+    const labels = {
+      "AI / ML": ["AI / ML", "Machine Learning", "Deep Learning", "Computer Vision", "LLM"],
+      "BIM / Digital Twin": ["BIM", "Digital Twin", "Point Cloud", "Scan-to-BIM"],
+      "Safety / Risk": ["Safety", "Risk", "Worker Monitoring", "Hazard"],
+      "Project Delivery": ["Project Delivery", "Scheduling", "Cost", "Productivity"],
+      "Building Performance": ["Building Performance", "Energy", "Retrofit", "Indoor Environment"],
+      Sustainability: ["Sustainability", "Carbon", "Circular Economy", "Climate Resilience"]
+    };
+
+    return labels[label] || [label];
+  }
+
+  function topPaperTrendKeywords(items, clusters) {
+    const chosen = [];
+    const add = (label) => {
+      if (!label || chosen.some((item) => item.toLowerCase() === String(label).toLowerCase())) {
+        return;
+      }
+      chosen.push(label);
+    };
+
+    (clusters.length ? clusters : researchTrendClusters().slice(0, 4)).forEach((cluster) => {
+      paperTrendKeywordLabels(cluster.label).forEach(add);
+    });
+
+    if (chosen.length < 8) {
+      researchTrendClusters().forEach((cluster) => paperTrendKeywordLabels(cluster.label).slice(0, 2).forEach(add));
+    }
+
+    return chosen.slice(0, items.length > 0 ? 9 : 6);
+  }
+
+  function buildPaperTrendInsight(items, clusters, venues) {
+    const activeClusters = (clusters.length ? clusters : [{ label: "Building Performance" }, { label: "AI / ML" }, { label: "Sustainability" }]).slice(0, 3);
+    const trendText = activeClusters.map((cluster) => paperTrendClusterTrendSentence(cluster.label)).join(" ");
+    const venueText = venues.length ? venues.join(", ") : text({ ko: "지정 저널", en: "target journals" });
+
+    return text({
+      ko: `동향: ${trendText} 주요 출처는 ${venueText}입니다.`,
+      en: `Trend: ${trendText} Main sources include ${venueText}.`
+    });
+  }
+
   function paperTrendSignalShortLabel(label) {
     const labels = {
       "Building Performance": { ko: "성능", en: "Performance" },
@@ -4123,18 +4201,12 @@
     }
 
     if (copyEl) {
-      const venueText = venues.length ? venues.join(", ") : text({ ko: "지정 저널", en: "target journals" });
-      const signalText = clusters.length ? clusters.map((cluster) => cluster.label).join(", ") : "AI / ML";
-      copyEl.textContent = text({
-        ko: `${meta.data?.months || 24}개월 기준 최근 논문 ${items.length}편에서 ${signalText} 흐름이 두드러집니다. 주요 출처는 ${venueText}입니다.`,
-        en: `${items.length} recent records from the last ${meta.data?.months || 24} months highlight ${signalText}. Main sources include ${venueText}.`
-      });
+      copyEl.textContent = buildPaperTrendInsight(items, clusters, venues);
     }
 
     if (tagsEl) {
-      const tags = (clusters.length ? clusters : [{ label: topSignal }, { label: "Project Delivery" }, { label: "BIM / Digital Twin" }])
-        .slice(0, 3)
-        .map((cluster) => `<span>${escapeHtml(cluster.label)}</span>`)
+      const tags = topPaperTrendKeywords(items, clusters)
+        .map((label) => `<span>${escapeHtml(label)}</span>`)
         .join("");
       tagsEl.innerHTML = tags;
     }

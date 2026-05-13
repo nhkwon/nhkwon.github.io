@@ -1411,21 +1411,31 @@ body.theme-github-mode .summary-metric-grid .summary-detail {
 }
 
 body.theme-github-mode .paper-trend-summary-card {
+  position: relative !important;
   display: grid !important;
-  gap: 14px !important;
+  gap: 12px !important;
   min-height: 296px !important;
-  padding: 22px 24px !important;
-  border: 2px solid #58616e !important;
+  padding: 26px 24px 22px !important;
+  border: 2px solid #8a94a3 !important;
   border-radius: 8px !important;
   background: linear-gradient(135deg, #ffffff 0%, #f6f8fa 100%) !important;
   box-shadow:
-    0 0 0 4px rgba(88, 97, 110, 0.08),
+    0 0 0 4px rgba(88, 97, 110, 0.06),
     0 10px 24px rgba(27, 31, 36, 0.06) !important;
+  overflow: hidden !important;
+}
+
+body.theme-github-mode .paper-trend-summary-card::before {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 0 auto 0 !important;
+  height: 6px !important;
+  background: linear-gradient(90deg, #4b5563 0%, #5b6573 74%, #d8c5a6 100%) !important;
 }
 
 body.theme-github-mode .paper-trend-summary-head {
   display: grid !important;
-  gap: 7px !important;
+  gap: 8px !important;
 }
 
 body.theme-github-mode .paper-trend-summary-kicker {
@@ -1451,6 +1461,18 @@ body.theme-github-mode .paper-trend-summary-card p {
   color: #57606a !important;
   font-size: 0.93rem !important;
   line-height: 1.55 !important;
+}
+
+body.theme-github-mode .paper-trend-summary-insight {
+  padding: 10px 12px !important;
+  border: 1px solid #d0d7de !important;
+  border-left: 4px solid #5b6573 !important;
+  border-radius: 8px !important;
+  background: linear-gradient(180deg, #f6f8fa 0%, #ffffff 100%) !important;
+  color: #394452 !important;
+  font-size: 0.86rem !important;
+  font-weight: 650 !important;
+  line-height: 1.42 !important;
 }
 
 body.theme-github-mode .paper-trend-summary-metrics {
@@ -1485,19 +1507,21 @@ body.theme-github-mode .paper-trend-summary-metrics strong {
 body.theme-github-mode .paper-trend-summary-tags {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 8px !important;
+  gap: 6px !important;
+  max-height: 88px !important;
+  overflow: hidden !important;
 }
 
 body.theme-github-mode .paper-trend-summary-tags span {
   display: inline-flex !important;
   align-items: center !important;
-  min-height: 30px !important;
-  padding: 0 10px !important;
-  border: 1px solid #bfdbfe !important;
+  min-height: 24px !important;
+  padding: 0 8px !important;
+  border: 1px solid #d0d7de !important;
   border-radius: 999px !important;
-  background: #eff6ff !important;
-  color: #0753b7 !important;
-  font-size: 0.78rem !important;
+  background: #f6f8fa !important;
+  color: #3f4854 !important;
+  font-size: 0.69rem !important;
   font-weight: 800 !important;
 }
 
