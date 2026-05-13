@@ -3633,11 +3633,42 @@
             </div>
           </div>
         </div>
-        <div class="summary-grid hero-summary">
-          ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
-          ${renderResearchFocusCard()}
+        <div class="hero-summary hero-summary-balanced">
+          <div class="summary-metric-grid">
+            ${getSummaryCards().map((item) => renderSummaryCard(item)).join("")}
+          </div>
+          ${renderPaperTrendSnapshotCard()}
         </div>
       </section>
+    `;
+  }
+
+  function renderPaperTrendSnapshotCard() {
+    return `
+      <article class="paper-trend-summary-card" data-paper-trend-summary>
+        <div class="paper-trend-summary-head">
+          <p class="paper-trend-summary-kicker">${text({ ko: "자동 연구동향", en: "Automated Trends" })}</p>
+          <h2>${text({ ko: "논문동향 요약", en: "Paper Trend Summary" })}</h2>
+          <p data-paper-trend-summary-copy>${text({
+            ko: "Automation in Construction, JBE, ASCE 저널 등 지정 저널의 최신 논문을 매일 수집해 누적하고, 주요 연구축을 요약합니다.",
+            en: "Daily scans accumulate papers from the target Elsevier and ASCE journals and summarize the dominant research signals."
+          })}</p>
+        </div>
+        <div class="paper-trend-summary-metrics">
+          <span><strong data-paper-trend-summary-count>--</strong>${text({ ko: "표시 논문", en: "shown" })}</span>
+          <span><strong data-paper-trend-summary-journals>7</strong>${text({ ko: "대상 저널", en: "journals" })}</span>
+          <span><strong data-paper-trend-summary-signal>AI / ML</strong>${text({ ko: "주요 축", en: "top axis" })}</span>
+        </div>
+        <div class="paper-trend-summary-tags" data-paper-trend-summary-tags>
+          <span>AI / ML</span>
+          <span>BIM / Digital Twin</span>
+          <span>Project Delivery</span>
+        </div>
+        <p class="paper-trend-summary-updated" data-paper-trend-summary-updated>${text({
+          ko: "Vercel Cron과 Supabase 저장소로 계속 업데이트됩니다.",
+          en: "Continuously updated through Vercel Cron and Supabase storage."
+        })}</p>
+      </article>
     `;
   }
 
@@ -4002,6 +4033,105 @@
     });
   }
 
+  function topPaperTrendSummaryClusters(items) {
+    return researchTrendClusters()
+      .map((cluster) => ({
+        label: cluster.label,
+        count: items.filter((item) => cluster.terms.some((term) => item.title.toLowerCase().includes(term))).length
+      }))
+      .filter((cluster) => cluster.count > 0)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 3);
+  }
+
+  function topPaperTrendVenues(items) {
+    const counts = new Map();
+    items.forEach((item) => {
+      const venue = item.venue || item.journal;
+      if (venue) {
+        counts.set(venue, (counts.get(venue) || 0) + 1);
+      }
+    });
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 2)
+      .map(([venue]) => venue);
+  }
+
+  function paperTrendSignalShortLabel(label) {
+    const labels = {
+      "Building Performance": { ko: "성능", en: "Performance" },
+      "Project Delivery": { ko: "프로젝트", en: "Delivery" },
+      "BIM / Digital Twin": { ko: "BIM", en: "BIM" },
+      "Safety / Risk": { ko: "안전", en: "Safety" },
+      Sustainability: { ko: "탄소", en: "Carbon" }
+    };
+
+    return labels[label] ? text(labels[label]) : label;
+  }
+
+  function updatePaperTrendSummaryCard(items, meta = {}) {
+    const card = app.querySelector("[data-paper-trend-summary]");
+    if (!card || !Array.isArray(items) || !items.length) {
+      return;
+    }
+
+    const clusters = topPaperTrendSummaryClusters(items);
+    const venues = topPaperTrendVenues(items);
+    const countEl = card.querySelector("[data-paper-trend-summary-count]");
+    const journalsEl = card.querySelector("[data-paper-trend-summary-journals]");
+    const signalEl = card.querySelector("[data-paper-trend-summary-signal]");
+    const copyEl = card.querySelector("[data-paper-trend-summary-copy]");
+    const tagsEl = card.querySelector("[data-paper-trend-summary-tags]");
+    const updatedEl = card.querySelector("[data-paper-trend-summary-updated]");
+    const topSignal = clusters[0]?.label || "AI / ML";
+
+    if (countEl) {
+      countEl.textContent = String(items.length);
+    }
+
+    if (journalsEl) {
+      const journalCount = new Set(items.map((item) => item.venue).filter(Boolean)).size || researchTrendJournals().length;
+      journalsEl.textContent = String(journalCount);
+    }
+
+    if (signalEl) {
+      signalEl.textContent = paperTrendSignalShortLabel(topSignal);
+    }
+
+    if (copyEl) {
+      const venueText = venues.length ? venues.join(", ") : text({ ko: "지정 저널", en: "target journals" });
+      const signalText = clusters.length ? clusters.map((cluster) => cluster.label).join(", ") : "AI / ML";
+      copyEl.textContent = text({
+        ko: `${meta.data?.months || 24}개월 기준 최근 논문 ${items.length}편에서 ${signalText} 흐름이 두드러집니다. 주요 출처는 ${venueText}입니다.`,
+        en: `${items.length} recent records from the last ${meta.data?.months || 24} months highlight ${signalText}. Main sources include ${venueText}.`
+      });
+    }
+
+    if (tagsEl) {
+      const tags = (clusters.length ? clusters : [{ label: topSignal }, { label: "Project Delivery" }, { label: "BIM / Digital Twin" }])
+        .slice(0, 3)
+        .map((cluster) => `<span>${escapeHtml(cluster.label)}</span>`)
+        .join("");
+      tagsEl.innerHTML = tags;
+    }
+
+    if (updatedEl) {
+      const updatedAt = formatPaperTrendUpdatedAt(meta.lastUpdatedAt);
+      if (meta.source === "stored" && updatedAt) {
+        updatedEl.textContent = text({
+          ko: `Supabase 누적 데이터 기준 · 마지막 자동 업데이트 ${updatedAt}`,
+          en: `Based on the Supabase archive · last automatic update ${updatedAt}`
+        });
+      } else {
+        updatedEl.textContent = text({
+          ko: `현재 화면의 실시간 스캔 결과로 요약했습니다.${meta.loadedTargets && meta.totalTargets ? ` (${meta.loadedTargets}/${meta.totalTargets}개 저널 응답)` : ""}`,
+          en: `Summarized from the live scan on this page.${meta.loadedTargets && meta.totalTargets ? ` (${meta.loadedTargets}/${meta.totalTargets} journals responded)` : ""}`
+        });
+      }
+    }
+  }
+
   function updatePaperTrendLinks(form) {
     if (!form) {
       return;
@@ -4123,6 +4253,12 @@
         if (clusters) {
           clusters.innerHTML = renderPaperTrendClusterSummary(storedPayload.items);
         }
+        updatePaperTrendSummaryCard(storedPayload.items, {
+          source: "stored",
+          data,
+          lastUpdatedAt: storedPayload.lastUpdatedAt,
+          availableCount: storedPayload.availableCount
+        });
         if (status) {
           status.textContent = storedPaperTrendStatus(data, storedPayload);
         }
@@ -4171,6 +4307,12 @@
       if (clusters) {
         clusters.innerHTML = renderPaperTrendClusterSummary(items);
       }
+      updatePaperTrendSummaryCard(items, {
+        source: "live",
+        data,
+        loadedTargets: payloads.filter(Boolean).length,
+        totalTargets: targetQueries.length
+      });
       if (status) {
         const loadedTargets = payloads.filter(Boolean).length;
         status.textContent = text({
