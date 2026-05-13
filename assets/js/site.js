@@ -1159,7 +1159,7 @@
       case "publications":
         return `${renderPageLead("publications")}${renderPublicationsPage()}`;
       case "trends":
-        return `${renderPageLead("trends")}${renderResearchTrendRadar()}`;
+        return `${renderPageLead("trends")}<section class="content-section paper-trend-overview">${renderPaperTrendSnapshotCard()}</section>${renderResearchTrendRadar()}`;
       case "news":
         return `${renderPageLead("news")}${renderActivitiesPage()}`;
       case "contact":
@@ -3892,6 +3892,7 @@
     return [
       { label: { ko: "AI 기반 건설관리", en: "AI for construction management" }, query: "artificial intelligence machine learning deep learning" },
       { label: { ko: "프로젝트 관리", en: "Project management" }, query: "project management scheduling cost risk" },
+      { label: { ko: "비용·건설관리", en: "Cost and construction management" }, query: "construction management cost estimation cost overrun budget" },
       { label: { ko: "BIM·Digital Twin", en: "BIM digital twin" }, query: "BIM digital twin" },
       { label: { ko: "안전·리스크", en: "Safety and risk" }, query: "safety risk accident worker" },
       { label: { ko: "건물 성능·에너지", en: "Building performance" }, query: "energy retrofit building performance" },
@@ -3921,6 +3922,11 @@
         label: "Project Delivery",
         terms: ["project management", "delivery", "contract", "schedule", "scheduling", "cost", "productivity"],
         hint: { ko: "공정, 비용, 계약, 생산성", en: "Schedule, cost, contract, and productivity" }
+      },
+      {
+        label: "Cost / Construction Management",
+        terms: ["construction management", "cost", "cost estimation", "cost overrun", "budget", "life cycle cost", "maintenance cost", "quantity", "estimate"],
+        hint: { ko: "비용예측, 예산, 생애주기 비용, 건설관리", en: "Cost estimation, budgeting, life-cycle cost, and construction management" }
       },
       {
         label: "Building Performance",
@@ -4083,7 +4089,7 @@
 
   function paperTrendRowsForTarget(target, baseRows) {
     if (target?.tier === "secondary" || isMdpiTrendSource(target)) {
-      return Math.max(5, Math.min(10, Math.round(baseRows * 0.32)));
+      return Math.max(3, Math.min(5, Math.round(baseRows * 0.2)));
     }
 
     if (target?.tier === "major" || isMajorTrendSource(target)) {
@@ -4095,10 +4101,10 @@
 
   function limitPaperTrendPreviewItems(items, limit = PAPER_TREND_PREVIEW_LIMIT) {
     const sorted = items.slice().sort(comparePaperTrendItems);
-    const mdpiLimit = Math.max(5, Math.floor(limit * 0.12));
+    const mdpiLimit = Math.max(2, Math.floor(limit * 0.06));
     const mdpiItems = sorted.filter((item) => isMdpiTrendSource(item)).slice(0, mdpiLimit);
     const majorItems = sorted.filter((item) => !isMdpiTrendSource(item)).slice(0, limit - mdpiItems.length);
-    return majorItems.concat(mdpiItems).sort(comparePaperTrendItems).slice(0, limit);
+    return majorItems.concat(mdpiItems).slice(0, limit);
   }
 
   function topPaperTrendSummaryClusters(items) {
@@ -4152,6 +4158,10 @@
         ko: "공정·비용·생산성 의사결정 지원 연구가 이어집니다.",
         en: "Schedule, cost, and productivity decision support remain active."
       },
+      "Cost / Construction Management": {
+        ko: "공사비 예측·예산관리·건설관리 의사결정 연구가 함께 나타납니다.",
+        en: "Cost estimation, budgeting, and construction management decision support are also visible."
+      },
       "Building Performance": {
         ko: "건물 에너지·성능예측·실내환경 연구가 가장 활발합니다.",
         en: "Building energy, performance prediction, and indoor environment work are especially active."
@@ -4171,6 +4181,7 @@
       "BIM / Digital Twin": ["BIM", "Digital Twin", "Point Cloud", "Scan-to-BIM"],
       "Safety / Risk": ["Safety", "Risk", "Worker Monitoring", "Hazard"],
       "Project Delivery": ["Project Delivery", "Scheduling", "Cost", "Productivity"],
+      "Cost / Construction Management": ["Cost", "Construction Management", "Cost Estimation", "Budget", "Life-cycle Cost"],
       "Building Performance": ["Building Performance", "Energy", "Retrofit", "Indoor Environment"],
       Sustainability: ["Sustainability", "Carbon", "Circular Economy", "Climate Resilience"]
     };
@@ -4186,8 +4197,13 @@
       }
       chosen.push(label);
     };
+    const activeClusters = clusters.length ? clusters : researchTrendClusters().slice(0, 4);
 
-    (clusters.length ? clusters : researchTrendClusters().slice(0, 4)).forEach((cluster) => {
+    activeClusters.slice(0, 1).forEach((cluster) => {
+      paperTrendKeywordLabels(cluster.label).forEach(add);
+    });
+    paperTrendKeywordLabels("Cost / Construction Management").forEach(add);
+    activeClusters.slice(1).forEach((cluster) => {
       paperTrendKeywordLabels(cluster.label).forEach(add);
     });
 
@@ -4195,16 +4211,23 @@
       researchTrendClusters().forEach((cluster) => paperTrendKeywordLabels(cluster.label).slice(0, 2).forEach(add));
     }
 
-    return chosen.slice(0, items.length > 0 ? 9 : 6);
+    return chosen.slice(0, items.length > 0 ? 12 : 8);
   }
 
   function buildPaperTrendInsight(items, clusters, venues) {
-    const activeClusters = (clusters.length ? clusters : [{ label: "Building Performance" }, { label: "AI / ML" }, { label: "Sustainability" }]).slice(0, 3);
+    const baseClusters = clusters.length ? clusters : [{ label: "Building Performance" }, { label: "AI / ML" }, { label: "Sustainability" }];
+    const activeClusters = baseClusters.slice(0, 2);
+    const costCluster = baseClusters.find((cluster) => cluster.label === "Cost / Construction Management") || { label: "Cost / Construction Management" };
+    if (!activeClusters.some((cluster) => cluster.label === costCluster.label)) {
+      activeClusters.push(costCluster);
+    } else if (baseClusters[2]) {
+      activeClusters.push(baseClusters[2]);
+    }
     const trendText = activeClusters.map((cluster) => paperTrendClusterTrendSentence(cluster.label)).join(" ");
     const venueText = venues.length ? venues.join(", ") : text({ ko: "지정 저널", en: "target journals" });
 
     return text({
-      ko: `동향: ${trendText} 주요 출처: ${venueText}`,
+      ko: `동향: ${trendText} 주요출처: ${venueText}`,
       en: `Trend: ${trendText} Main sources: ${venueText}`
     });
   }
@@ -4215,6 +4238,7 @@
       "Project Delivery": { ko: "프로젝트", en: "Delivery" },
       "BIM / Digital Twin": { ko: "BIM", en: "BIM" },
       "Safety / Risk": { ko: "안전", en: "Safety" },
+      "Cost / Construction Management": { ko: "비용", en: "Cost" },
       Sustainability: { ko: "탄소", en: "Carbon" }
     };
 

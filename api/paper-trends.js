@@ -398,19 +398,15 @@ function prioritizeTrendItems(items, limit) {
     if (yearDiff) return yearDiff;
     return String(b.date || "").localeCompare(String(a.date || ""));
   });
-  const mdpiLimit = Math.max(5, Math.floor(limit * 0.12));
+  const mdpiLimit = Math.max(2, Math.floor(limit * 0.06));
   const mdpiItems = sorted.filter(isMdpiRecord).slice(0, mdpiLimit);
   const majorItems = sorted.filter((item) => !isMdpiRecord(item)).slice(0, limit - mdpiItems.length);
-  return majorItems.concat(mdpiItems).sort((a, b) => {
-    const yearDiff = Number(b.year || 0) - Number(a.year || 0);
-    if (yearDiff) return yearDiff;
-    return String(b.date || "").localeCompare(String(a.date || ""));
-  }).slice(0, limit);
+  return majorItems.concat(mdpiItems).slice(0, limit);
 }
 
 function rowsForTargetJournal(target, rows) {
   if (target?.tier === "secondary" || isMdpiRecord(target)) {
-    return Math.max(5, Math.min(10, Math.round(rows * 0.32)));
+    return Math.max(3, Math.min(5, Math.round(rows * 0.2)));
   }
 
   if (target?.tier === "major") {
