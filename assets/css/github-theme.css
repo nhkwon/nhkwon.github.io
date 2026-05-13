@@ -1415,11 +1415,11 @@ body.theme-github-mode .paper-trend-summary-card {
   gap: 14px !important;
   min-height: 296px !important;
   padding: 22px 24px !important;
-  border: 2px solid #9cc7ff !important;
+  border: 2px solid #58616e !important;
   border-radius: 8px !important;
   background: linear-gradient(135deg, #ffffff 0%, #f6f8fa 100%) !important;
   box-shadow:
-    0 0 0 4px rgba(9, 105, 218, 0.08),
+    0 0 0 4px rgba(88, 97, 110, 0.08),
     0 10px 24px rgba(27, 31, 36, 0.06) !important;
 }
 
