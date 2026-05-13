@@ -285,6 +285,12 @@
       languageHeading.textContent = copy.language;
       languageSwitch.parentNode.insertBefore(languageHeading, languageSwitch);
     }
+
+    const sidebarAssistant = aboutPanel?.querySelector(".sidebar-ai-assistant");
+    if (sidebarAssistant) {
+      sidebarAssistant.classList.add("gh-sidebar-ai-assistant");
+      contentLayout.appendChild(sidebarAssistant);
+    }
   }
 
   function findPageSearchTarget(value, lang) {

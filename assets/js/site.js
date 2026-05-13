@@ -1217,12 +1217,73 @@
           <a class="lang-pill ${lang === "ko" ? "is-active" : ""}" href="${route(page, "ko")}">KO</a>
           <a class="lang-pill ${lang === "en" ? "is-active" : ""}" href="${route(page, "en")}">EN</a>
         </div>
+        ${renderSidebarAiAssistant()}
       </aside>
     `;
   }
 
   function renderAiChat() {
     return "";
+  }
+
+  function renderSidebarAiAssistant() {
+    return `
+      <div class="ai-chat-widget sidebar-ai-assistant" data-ai-chat-widget>
+        <section class="ai-chat-panel" id="ai-chat-panel" data-ai-chat-panel aria-hidden="true">
+          <div class="ai-chat-panel-header">
+            <div class="ai-chat-panel-copy">
+              <p class="ai-chat-kicker">AI Assistant</p>
+              <h2 class="ai-chat-title">${text({ ko: "연구 안내 채팅", en: "Research guide chat" })}</h2>
+            </div>
+            <button class="ai-chat-close" type="button" data-ai-chat-close>${text({ ko: "닫기", en: "Close" })}</button>
+          </div>
+          <div class="ai-chat-messages" data-ai-chat-messages>
+            <article class="ai-chat-message is-assistant">
+              <p class="ai-chat-message-label">AI Assistant</p>
+              <p class="ai-chat-message-body">${text({
+                ko: "연구 주제, 논문 실적, 최근 활동, 연락 방법을 빠르게 안내해드릴게요.",
+                en: "Ask about research topics, publications, recent activities, or contact details."
+              })}</p>
+            </article>
+          </div>
+          <div class="ai-chat-starters">
+            ${AI_CHAT_STARTERS.map(
+              (item) => `
+                <button class="ai-chat-starter" type="button" data-ai-chat-starter="${text(item.prompt)}">${text(item.label)}</button>
+              `
+            ).join("")}
+          </div>
+          <form class="ai-chat-form" data-ai-chat-form>
+            <label class="sr-only" for="ai-chat-input">${text({ ko: "질문 입력", en: "Ask a question" })}</label>
+            <input
+              class="ai-chat-input"
+              id="ai-chat-input"
+              data-ai-chat-input
+              type="text"
+              maxlength="200"
+              placeholder="${text({ ko: "질문을 입력하세요", en: "Type your question" })}"
+            >
+            <button class="ai-chat-submit" type="submit">${text({ ko: "보내기", en: "Send" })}</button>
+          </form>
+          <p class="ai-chat-hint">${text({
+            ko: "사용하지 않으면 자동으로 다시 축소됩니다.",
+            en: "The panel automatically minimizes when it is idle."
+          })}</p>
+        </section>
+        <button
+          class="ai-chat-launcher"
+          type="button"
+          data-ai-chat-toggle
+          aria-controls="ai-chat-panel"
+          aria-expanded="false"
+          aria-label="${text({ ko: "AI 채팅 열기", en: "Open AI chat" })}"
+          title="AI Assistant"
+        >
+          <span class="ai-chat-launcher-icon" aria-hidden="true">${icon("spark")}</span>
+          <span class="ai-chat-launcher-text">AI Assistant</span>
+        </button>
+      </div>
+    `;
   }
 
   function renderSocialLink(item) {
@@ -3416,6 +3477,7 @@
           <a class="lang-pill ${lang === "ko" ? "is-active" : ""}" href="${route(page, "ko")}">KO</a>
           <a class="lang-pill ${lang === "en" ? "is-active" : ""}" href="${route(page, "en")}">EN</a>
         </div>
+        ${renderSidebarAiAssistant()}
       </aside>
     `;
   }
@@ -3560,6 +3622,7 @@
           <a class="lang-pill ${lang === "ko" ? "is-active" : ""}" href="${route(page, "ko")}">KO</a>
           <a class="lang-pill ${lang === "en" ? "is-active" : ""}" href="${route(page, "en")}">EN</a>
         </div>
+        ${renderSidebarAiAssistant()}
       </aside>
     `;
   }
