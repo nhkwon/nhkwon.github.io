@@ -1,15 +1,26 @@
 const MAX_LIST_RECORDS = 1000;
-const DEFAULT_LIST_LIMIT = 60;
+const DEFAULT_LIST_LIMIT = 90;
 const DEFAULT_SCAN_MONTHS = 24;
-const DEFAULT_ROWS_PER_JOURNAL = 30;
-const CONCURRENT_CROSSREF_REQUESTS = 2;
-const CROSSREF_TIMEOUT_MS = 12000;
+const DEFAULT_ROWS_PER_JOURNAL = 25;
+const CONCURRENT_CROSSREF_REQUESTS = 4;
+const CROSSREF_TIMEOUT_MS = 10000;
 
 const TARGET_JOURNALS = [
   { title: "Automation in Construction", short: "Automation in Construction", publisher: "Elsevier", issn: "0926-5805" },
+  { title: "Buildings", short: "Buildings", publisher: "MDPI", issn: "2075-5309" },
   { title: "Journal of Building Engineering", short: "Journal of Building Engineering", publisher: "Elsevier", issn: "2352-7102" },
+  { title: "Sustainability", short: "Sustainability", publisher: "MDPI", issn: "2071-1050" },
   { title: "Developments in the Built Environment", short: "Developments in Built Environment", publisher: "Elsevier", issn: "2666-1659" },
   { title: "Building and Environment", short: "Building and Environment", publisher: "Elsevier", issn: "0360-1323" },
+  { title: "KSCE Journal of Civil Engineering", short: "KSCE Journal of Civil Engineering", publisher: "Elsevier / KSCE", issn: "1226-7988" },
+  { title: "Journal of Asian Architecture and Building Engineering", short: "JAABE", publisher: "Taylor & Francis", issn: "1347-2852" },
+  { title: "Applied Sciences", short: "Applied Sciences", publisher: "MDPI", issn: "2076-3417" },
+  { title: "Advances in Civil Engineering", short: "Advances in Civil Engineering", publisher: "Wiley / Hindawi", issn: "1687-8094" },
+  { title: "Energy and Buildings", short: "Energy and Buildings", publisher: "Elsevier", issn: "0378-7788" },
+  { title: "Energies", short: "Energies", publisher: "MDPI", issn: "1996-1073" },
+  { title: "Expert Systems with Applications", short: "Expert Systems with Applications", publisher: "Elsevier", issn: "0957-4174" },
+  { title: "Journal of the Architectural Institute of Korea", short: "JAIK", publisher: "Architectural Institute of Korea", issn: "2733-6247" },
+  { title: "Results in Engineering", short: "Results in Engineering", publisher: "Elsevier", issn: "2590-1230" },
   { title: "Journal of Construction Engineering and Management", short: "J. Construction Eng. & Management", publisher: "ASCE", issn: "0733-9364" },
   { title: "Journal of Management in Engineering", short: "J. Management in Engineering", publisher: "ASCE", issn: "0742-597X" },
   { title: "Journal of Computing in Civil Engineering", short: "J. Computing in Civil Engineering", publisher: "ASCE", issn: "0887-3801" }
@@ -192,17 +203,27 @@ async function fetchCrossrefPayload(target, rows) {
 }
 
 function buildCrossrefUrl(data, rows) {
-  const params = new URLSearchParams();
-  params.set("filter", [
+  const filters = [
     "type:journal-article",
     `from-pub-date:${isoDateMonthsAgo(data.months)}`,
-    `until-pub-date:${isoTodayDate()}`,
-    `issn:${data.issn}`
-  ].join(","));
+    `until-pub-date:${isoTodayDate()}`
+  ];
+
+  if (data.issn) {
+    filters.push(`issn:${data.issn}`);
+  }
+
+  const params = new URLSearchParams();
+  params.set("filter", filters.join(","));
   params.set("sort", "published");
   params.set("order", "desc");
   params.set("rows", String(rows));
   params.set("select", "DOI,title,author,container-title,published,published-print,published-online,issued,URL,is-referenced-by-count");
+
+  if (data.title && !data.issn) {
+    params.set("query.container-title", data.title);
+  }
+
   return `https://api.crossref.org/works?${params.toString()}`;
 }
 

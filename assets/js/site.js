@@ -35,6 +35,7 @@
     bio: { ko: "bio.html", en: "bio-en.html" },
     teaching: { ko: "teaching.html", en: "teaching-en.html" },
     publications: { ko: "publications.html", en: "publications-en.html" },
+    trends: { ko: "trends.html", en: "trends-en.html" },
     news: { ko: "news.html", en: "news-en.html" },
     contact: { ko: "contact.html", en: "contact-en.html" }
   };
@@ -74,6 +75,15 @@
       description: {
         ko: "",
         en: ""
+      }
+    },
+    trends: {
+      icon: "chart",
+      label: { ko: "Research Trends", en: "Research Trends" },
+      subtitle: { ko: "Paper Trend Radar", en: "Paper Trend Radar" },
+      description: {
+        ko: "주요 건설관리, 건축공학, 토목공학, 프로젝트관리 저널의 최신 논문 흐름을 자동 수집해 요약합니다.",
+        en: "A live and archived scan of recent papers from construction management, building engineering, civil engineering, and project management journals."
       }
     },
     news: {
@@ -1148,6 +1158,8 @@
         return `${renderPageLead("teaching")}${renderResearchPage()}`;
       case "publications":
         return `${renderPageLead("publications")}${renderPublicationsPage()}`;
+      case "trends":
+        return `${renderPageLead("trends")}${renderResearchTrendRadar()}`;
       case "news":
         return `${renderPageLead("news")}${renderActivitiesPage()}`;
       case "contact":
@@ -1159,7 +1171,7 @@
   }
 
   function renderSidebar() {
-    const navOrder = ["home", "bio", "teaching", "publications", "news", "contact"];
+    const navOrder = ["home", "bio", "teaching", "publications", "trends", "news", "contact"];
 
     return `
       <aside class="site-sidebar">
@@ -3402,7 +3414,7 @@
   }
 
   function renderSidebar() {
-    const navOrder = ["home", "bio", "teaching", "publications", "news", "contact"];
+    const navOrder = ["home", "bio", "teaching", "publications", "trends", "news", "contact"];
 
     return `
       <aside class="site-sidebar">
@@ -3545,7 +3557,7 @@
   }
 
   function renderSidebar() {
-    const navOrder = ["home", "bio", "teaching", "publications", "news", "contact"];
+    const navOrder = ["home", "bio", "teaching", "publications", "trends", "news", "contact"];
 
     return `
       <aside class="site-sidebar">
@@ -3853,9 +3865,20 @@
   function researchTrendJournals() {
     return [
       { title: "Automation in Construction", short: "Automation in Construction", publisher: "Elsevier", issn: "0926-5805" },
+      { title: "Buildings", short: "Buildings", publisher: "MDPI", issn: "2075-5309" },
       { title: "Journal of Building Engineering", short: "Journal of Building Engineering", publisher: "Elsevier", issn: "2352-7102" },
+      { title: "Sustainability", short: "Sustainability", publisher: "MDPI", issn: "2071-1050" },
       { title: "Developments in the Built Environment", short: "Developments in Built Environment", publisher: "Elsevier", issn: "2666-1659" },
       { title: "Building and Environment", short: "Building and Environment", publisher: "Elsevier", issn: "0360-1323" },
+      { title: "KSCE Journal of Civil Engineering", short: "KSCE Journal of Civil Engineering", publisher: "Elsevier / KSCE", issn: "1226-7988" },
+      { title: "Journal of Asian Architecture and Building Engineering", short: "JAABE", publisher: "Taylor & Francis", issn: "1347-2852" },
+      { title: "Applied Sciences", short: "Applied Sciences", publisher: "MDPI", issn: "2076-3417" },
+      { title: "Advances in Civil Engineering", short: "Advances in Civil Engineering", publisher: "Wiley / Hindawi", issn: "1687-8094" },
+      { title: "Energy and Buildings", short: "Energy and Buildings", publisher: "Elsevier", issn: "0378-7788" },
+      { title: "Energies", short: "Energies", publisher: "MDPI", issn: "1996-1073" },
+      { title: "Expert Systems with Applications", short: "Expert Systems with Applications", publisher: "Elsevier", issn: "0957-4174" },
+      { title: "Journal of the Architectural Institute of Korea", short: "JAIK", publisher: "Architectural Institute of Korea", issn: "2733-6247" },
+      { title: "Results in Engineering", short: "Results in Engineering", publisher: "Elsevier", issn: "2590-1230" },
       { title: "Journal of Construction Engineering and Management", short: "J. Construction Eng. & Management", publisher: "ASCE", issn: "0733-9364" },
       { title: "Journal of Management in Engineering", short: "J. Management in Engineering", publisher: "ASCE", issn: "0742-597X" },
       { title: "Journal of Computing in Civil Engineering", short: "J. Computing in Civil Engineering", publisher: "ASCE", issn: "0887-3801" }
@@ -3913,11 +3936,11 @@
     return "";
   }
 
-  const PAPER_TREND_PREVIEW_LIMIT = 60;
-  const PAPER_TREND_ROWS_PER_JOURNAL = 30;
+  const PAPER_TREND_PREVIEW_LIMIT = 90;
+  const PAPER_TREND_ROWS_PER_JOURNAL = 25;
   const PAPER_TREND_SELECTED_JOURNAL_ROWS = 75;
-  const PAPER_TREND_CONCURRENT_REQUESTS = 2;
-  const PAPER_TREND_FETCH_TIMEOUT_MS = 12000;
+  const PAPER_TREND_CONCURRENT_REQUESTS = 4;
+  const PAPER_TREND_FETCH_TIMEOUT_MS = 10000;
 
   function initializePaperTrendPanel() {
     const panel = app.querySelector("[data-paper-trend-panel]");
@@ -4541,8 +4564,8 @@
           <span class="paper-result-date">${text({ ko: "준비됨", en: "Ready" })}</span>
           <h3>${text({ ko: "관심 주제와 저널을 선택해 최신 논문 흐름을 확인하세요.", en: "Select a topic and journal to scan recent literature." })}</h3>
           <p>${text({
-            ko: "Automation in Construction, Journal of Building Engineering, ASCE 저널 등 지정 저널을 중심으로 DOI 메타데이터를 조회합니다.",
-            en: "The scan focuses on the selected Elsevier and ASCE journals and retrieves DOI metadata where available."
+            ko: "지정한 건설관리, 건축공학, 토목공학, 프로젝트관리 저널 전체를 대상으로 DOI 메타데이터를 조회합니다.",
+            en: "The scan covers the full target journal set and retrieves DOI metadata where available."
           })}</p>
         </div>
       </article>
@@ -5141,6 +5164,11 @@
       refreshContactBoardList();
     }
 
+    if (page === "trends") {
+      initializePaperTrendPanel();
+      return;
+    }
+
     if (page !== "home") {
       return;
     }
@@ -5268,6 +5296,11 @@
 
     if (page === "contact") {
       refreshContactBoardList();
+    }
+
+    if (page === "trends") {
+      initializePaperTrendPanel();
+      return;
     }
 
     if (page !== "home") {

@@ -87,7 +87,13 @@
   }
 
   function paperTrendsHref(lang) {
-    return lang === "en" ? "en.html#paper-trends" : "ko.html#paper-trends";
+    return lang === "en" ? "trends-en.html" : "trends.html";
+  }
+
+  function isPaperTrendsRoute(entry, lang) {
+    const href = cleanText(entry?.href || "");
+    const label = cleanText(entry?.label || "").toLowerCase();
+    return href === paperTrendsHref(lang) || href.includes("#paper-trends") || /research trends|paper trend/.test(label);
   }
 
   function paperTrendsIcon() {
@@ -109,12 +115,12 @@
     }));
     const trendsEntry = {
       href: paperTrendsHref(lang),
-      active: window.location.hash === "#paper-trends",
+      active: (window.location.pathname.split("/").pop() || "") === paperTrendsHref(lang) || window.location.hash === "#paper-trends",
       iconMarkup: paperTrendsIcon(),
       label: "Research Trends"
     };
 
-    if (!entries.some((entry) => entry.href.includes("#paper-trends"))) {
+    if (!entries.some((entry) => isPaperTrendsRoute(entry, lang))) {
       const publicationsIndex = entries.findIndex((entry) => /publications/i.test(entry.href) || /publications/i.test(entry.label));
       const activitiesIndex = entries.findIndex((entry) => /news/i.test(entry.href) || /activities/i.test(entry.label));
       const insertIndex = publicationsIndex >= 0 ? publicationsIndex + 1 : activitiesIndex >= 0 ? activitiesIndex : entries.length;
@@ -123,7 +129,7 @@
 
     if (trendsEntry.active) {
       entries.forEach((entry) => {
-        entry.active = entry.href.includes("#paper-trends");
+        entry.active = isPaperTrendsRoute(entry, lang);
       });
     }
 

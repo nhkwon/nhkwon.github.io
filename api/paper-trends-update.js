@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
   try {
     const result = await refreshPaperTrendRecords({
       months: Number(process.env.PAPER_TREND_SCAN_MONTHS || 24),
-      rowsPerJournal: Number(process.env.PAPER_TREND_ROWS_PER_JOURNAL || 30)
+      rowsPerJournal: Number(process.env.PAPER_TREND_ROWS_PER_JOURNAL || 25)
     });
 
     return res.status(200).json(result);
