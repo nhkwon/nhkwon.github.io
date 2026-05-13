@@ -287,9 +287,11 @@
     }
 
     const sidebarAssistant = aboutPanel?.querySelector(".sidebar-ai-assistant");
-    if (sidebarAssistant) {
-      sidebarAssistant.classList.add("gh-sidebar-ai-assistant");
-      contentLayout.appendChild(sidebarAssistant);
+    if (languageSwitch && sidebarAssistant) {
+      const languageRow = document.createElement("div");
+      languageRow.className = "gh-language-row";
+      languageSwitch.parentNode.insertBefore(languageRow, languageSwitch);
+      languageRow.append(languageSwitch, sidebarAssistant);
     }
   }
 
