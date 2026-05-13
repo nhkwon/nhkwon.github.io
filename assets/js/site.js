@@ -350,6 +350,7 @@
   const CONTACT_BOARD_STORAGE_KEY = "nhkwon-contact-board-v1";
   const CONTACT_BOARD_MAX_FILE_SIZE = 2 * 1024 * 1024;
   const CONTACT_BOARD_API = "/api/contact-board";
+  const PAPER_TRENDS_API = "/api/paper-trends";
 
   function escapeHtml(value) {
     return String(value || "").replace(/[&<>"']/g, (char) => ({
@@ -3802,16 +3803,16 @@
 
           <div class="paper-trend-results-header">
             <p class="paper-trend-status" data-paper-trend-status>${text({
-              ko: "홈 화면에서 바로 최신 논문 메타데이터를 불러올 수 있습니다.",
-              en: "Load recent paper metadata directly from the homepage."
+              ko: "자동 업데이트로 축적된 논문 동향을 불러올 수 있습니다.",
+              en: "Load accumulated paper trends from the automatic update archive."
             })}</p>
           </div>
           <div class="paper-trend-results" data-paper-trend-results>
             ${renderPaperTrendIntro()}
           </div>
           <p class="paper-trend-note">${text({
-            ko: "Crossref 메타데이터 기반 미리보기입니다. 최종 인용, 색인, 원문 접근 여부는 Scholar, Scopus, 출판사 페이지에서 확인하세요.",
-            en: "This preview uses Crossref metadata. Verify citation counts, indexing, and full-text access in Scholar, Scopus, or the publisher page."
+            ko: "Vercel Cron이 Crossref 메타데이터를 주기적으로 수집해 Supabase에 축적합니다. 최종 인용, 색인, 원문 접근 여부는 Scholar, Scopus, 출판사 페이지에서 확인하세요.",
+            en: "Vercel Cron periodically collects Crossref metadata into Supabase. Verify citation counts, indexing, and full-text access in Scholar, Scopus, or the publisher page."
           })}</p>
         </div>
       </section>
@@ -3917,6 +3918,90 @@
     };
   }
 
+  function buildStoredPaperTrendUrl(data) {
+    const params = new URLSearchParams();
+    params.set("months", String(data.months || 24));
+    params.set("limit", String(PAPER_TREND_PREVIEW_LIMIT));
+
+    if (data.journal) {
+      params.set("journal", data.journal);
+    }
+
+    if (data.query) {
+      params.set("query", data.query);
+    }
+
+    return `${PAPER_TRENDS_API}?${params.toString()}`;
+  }
+
+  async function fetchStoredPaperTrendItems(data) {
+    try {
+      const response = await fetch(buildStoredPaperTrendUrl(data), {
+        headers: { Accept: "application/json" }
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const payload = await response.json();
+      const items = Array.isArray(payload?.items)
+        ? payload.items.map(normalizeStoredPaperTrendItem).filter((item) => item.title)
+        : [];
+
+      return { ...payload, items };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function normalizeStoredPaperTrendItem(item) {
+    return {
+      title: String(item?.title || "").trim(),
+      venue: String(item?.venue || item?.journal || "").trim(),
+      authors: String(item?.authors || "").trim() || text({ ko: "저자 정보 없음", en: "Author metadata unavailable" }),
+      doi: String(item?.doi || "").trim(),
+      url: String(item?.url || "").trim(),
+      citations: Number(item?.citations || 0),
+      date: String(item?.date || "").trim() || text({ ko: "날짜 미상", en: "Date unavailable" }),
+      year: Number(item?.year || 0),
+      firstSeenAt: String(item?.firstSeenAt || "").trim(),
+      lastSeenAt: String(item?.lastSeenAt || "").trim(),
+      source: String(item?.source || "crossref").trim()
+    };
+  }
+
+  function formatPaperTrendUpdatedAt(value) {
+    if (!value) {
+      return "";
+    }
+
+    try {
+      return new Intl.DateTimeFormat(lang === "ko" ? "ko-KR" : "en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Seoul"
+      }).format(new Date(value));
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function storedPaperTrendStatus(data, payload) {
+    const updatedAt = formatPaperTrendUpdatedAt(payload?.lastUpdatedAt);
+    const suffix = updatedAt
+      ? text({ ko: ` 마지막 자동 업데이트: ${updatedAt}`, en: ` Last automatic update: ${updatedAt}` })
+      : "";
+
+    return text({
+      ko: `${data.months}개월 누적 데이터에서 ${payload.items.length}편을 불러왔습니다.${suffix}`,
+      en: `Loaded ${payload.items.length} accumulated records from the last ${data.months} months.${suffix}`
+    });
+  }
+
   function updatePaperTrendLinks(form) {
     if (!form) {
       return;
@@ -4020,13 +4105,30 @@
 
     if (status) {
       status.textContent = text({
-        ko: "Crossref에서 최신 논문 메타데이터를 불러오는 중입니다.",
-        en: "Loading recent paper metadata from Crossref."
+        ko: "저장된 논문 동향을 확인한 뒤 최신 메타데이터를 불러오는 중입니다.",
+        en: "Checking stored paper trends before loading the latest metadata."
       });
     }
     results.innerHTML = renderPaperTrendLoading();
 
     try {
+      const storedPayload = await fetchStoredPaperTrendItems(data);
+
+      if (storedPayload?.items?.length) {
+        if (panel.dataset.requestId !== requestId) {
+          return;
+        }
+
+        results.innerHTML = storedPayload.items.map((item) => renderPaperTrendResultItem(item)).join("");
+        if (clusters) {
+          clusters.innerHTML = renderPaperTrendClusterSummary(storedPayload.items);
+        }
+        if (status) {
+          status.textContent = storedPaperTrendStatus(data, storedPayload);
+        }
+        return;
+      }
+
       const targetQueries = data.journal
         ? [data]
         : researchTrendJournals().map((journal) => ({ ...data, journal: journal.title, issn: journal.issn }));
