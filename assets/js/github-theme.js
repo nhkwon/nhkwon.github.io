@@ -39,6 +39,12 @@
     return COPY[document.body.dataset.lang === "en" ? "en" : "ko"];
   }
 
+  function wantsAlgorithmPreview() {
+    const params = new URLSearchParams(window.location.search);
+    const theme = (params.get("theme") || params.get("preview") || "").toLowerCase();
+    return theme === "algorithm" || theme === "algo" || theme === "code" || params.get("algorithm") === "1";
+  }
+
   function pageSearchItems(lang) {
     return [
       { keys: ["home", "홈"], label: "Home", href: lang === "en" ? "en.html" : "ko.html" },
@@ -235,6 +241,7 @@
           "Construction AI, smart maintenance, data science, and publication records.";
 
     document.body.classList.add("theme-github-mode");
+    document.body.classList.toggle("theme-algorithm-preview", wantsAlgorithmPreview());
 
     const shell = document.createElement("div");
     shell.className = "gh-theme-shell";

@@ -2197,3 +2197,229 @@ body.theme-github-mode .gh-about-panel .gh-language-row .sidebar-ai-assistant .a
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
+
+body.theme-github-mode.theme-algorithm-preview {
+  --algo-ink: #1f2328;
+  --algo-muted: #57606a;
+  --algo-line: #8c959f;
+  --algo-blue: #0969da;
+  --algo-green: #1a7f37;
+  --algo-cyan: #087ea4;
+  --algo-code: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  background-color: #f6f8fa !important;
+  background-image:
+    linear-gradient(rgba(9, 105, 218, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(9, 105, 218, 0.045) 1px, transparent 1px) !important;
+  background-size: 28px 28px !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-topbar,
+body.theme-github-mode.theme-algorithm-preview .gh-repo-header,
+body.theme-github-mode.theme-algorithm-preview .gh-about-panel,
+body.theme-github-mode.theme-algorithm-preview .gh-home-overview,
+body.theme-github-mode.theme-algorithm-preview .content-section,
+body.theme-github-mode.theme-algorithm-preview .panel,
+body.theme-github-mode.theme-algorithm-preview .info-card,
+body.theme-github-mode.theme-algorithm-preview .topic-card,
+body.theme-github-mode.theme-algorithm-preview .timeline-item,
+body.theme-github-mode.theme-algorithm-preview .activity-card,
+body.theme-github-mode.theme-algorithm-preview .contact-card,
+body.theme-github-mode.theme-algorithm-preview .publication-preview,
+body.theme-github-mode.theme-algorithm-preview .year-block,
+body.theme-github-mode.theme-algorithm-preview .publication-item {
+  border-color: rgba(88, 96, 105, 0.54) !important;
+  background-image:
+    linear-gradient(90deg, rgba(9, 105, 218, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(26, 127, 55, 0.032) 1px, transparent 1px) !important;
+  background-size: 22px 22px !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-repo-header,
+body.theme-github-mode.theme-algorithm-preview .gh-home-overview,
+body.theme-github-mode.theme-algorithm-preview .content-section,
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card {
+  position: relative !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-repo-header::after {
+  content: "algorithm preview" !important;
+  position: absolute !important;
+  right: 16px !important;
+  top: 14px !important;
+  display: inline-flex !important;
+  min-height: 24px !important;
+  align-items: center !important;
+  padding: 0 9px !important;
+  border: 1px solid rgba(9, 105, 218, 0.28) !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  color: var(--algo-blue) !important;
+  font-family: var(--algo-code) !important;
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-topbar-mark,
+body.theme-github-mode.theme-algorithm-preview .gh-repo-pathline strong,
+body.theme-github-mode.theme-algorithm-preview .section-title,
+body.theme-github-mode.theme-algorithm-preview .page-title,
+body.theme-github-mode.theme-algorithm-preview .card-title,
+body.theme-github-mode.theme-algorithm-preview .publication-title,
+body.theme-github-mode.theme-algorithm-preview .publication-card-title,
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card h2 {
+  text-shadow: 0 1px 0 rgba(9, 105, 218, 0.08) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-repo-tab,
+body.theme-github-mode.theme-algorithm-preview .gh-repo-tabs-update-label,
+body.theme-github-mode.theme-algorithm-preview .gh-home-overview-kicker,
+body.theme-github-mode.theme-algorithm-preview .summary-label,
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-kicker,
+body.theme-github-mode.theme-algorithm-preview .sidebar-contact-label,
+body.theme-github-mode.theme-algorithm-preview .sidebar-credential-heading,
+body.theme-github-mode.theme-algorithm-preview .meta-pill,
+body.theme-github-mode.theme-algorithm-preview .tag,
+body.theme-github-mode.theme-algorithm-preview .tiny-badge,
+body.theme-github-mode.theme-algorithm-preview .project-program {
+  font-family: var(--algo-code) !important;
+  letter-spacing: 0 !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-repo-tab .icon,
+body.theme-github-mode.theme-algorithm-preview .button .icon,
+body.theme-github-mode.theme-algorithm-preview .social-link .icon {
+  filter: drop-shadow(0 0 4px rgba(9, 105, 218, 0.2)) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .button,
+body.theme-github-mode.theme-algorithm-preview .social-link,
+body.theme-github-mode.theme-algorithm-preview .lang-pill,
+body.theme-github-mode.theme-algorithm-preview .sort-chip,
+body.theme-github-mode.theme-algorithm-preview .metric-chip,
+body.theme-github-mode.theme-algorithm-preview .keyword-chip,
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-tags span {
+  border-color: rgba(9, 105, 218, 0.28) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .button-primary,
+body.theme-github-mode.theme-algorithm-preview .section-action,
+body.theme-github-mode.theme-algorithm-preview .sort-chip.is-active {
+  background:
+    linear-gradient(135deg, rgba(26, 127, 55, 0.96), rgba(9, 105, 218, 0.92)) !important;
+  border-color: rgba(9, 105, 218, 0.52) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-home-overview::before,
+body.theme-github-mode.theme-algorithm-preview .content-section::before,
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card::after {
+  position: absolute !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  color: rgba(87, 96, 106, 0.62) !important;
+  font-family: var(--algo-code) !important;
+  font-size: 0.67rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-home-overview::before {
+  content: "pipeline.home()" !important;
+  top: 10px !important;
+  right: 14px !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .content-section::before {
+  content: "module.section" !important;
+  top: 10px !important;
+  right: 14px !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .summary-metric-grid {
+  counter-reset: metric-card !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .summary-card {
+  position: relative !important;
+  counter-increment: metric-card !important;
+  border-top-color: var(--algo-blue) !important;
+  overflow: hidden !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .summary-card::after {
+  content: "metric." counter(metric-card, decimal-leading-zero) !important;
+  position: absolute !important;
+  right: 11px !important;
+  bottom: 10px !important;
+  color: rgba(87, 96, 106, 0.58) !important;
+  font-family: var(--algo-code) !important;
+  font-size: 0.64rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .summary-value,
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-metrics strong {
+  font-family: var(--algo-code) !important;
+  color: var(--algo-ink) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card {
+  border-color: rgba(87, 96, 106, 0.72) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card::before {
+  background:
+    linear-gradient(90deg, var(--algo-blue) 0%, var(--algo-cyan) 48%, var(--algo-green) 100%) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card::after {
+  content: "sources -> filter -> cluster -> summarize" !important;
+  right: 18px !important;
+  bottom: 14px !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-insight {
+  border-style: dashed !important;
+  border-color: rgba(9, 105, 218, 0.28) !important;
+  background:
+    linear-gradient(90deg, rgba(9, 105, 218, 0.055), rgba(26, 127, 55, 0.045)) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-tags span,
+body.theme-github-mode.theme-algorithm-preview .keyword-chip,
+body.theme-github-mode.theme-algorithm-preview .metric-chip {
+  background: #ffffff !important;
+  color: var(--algo-ink) !important;
+  font-family: var(--algo-code) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .publication-item,
+body.theme-github-mode.theme-algorithm-preview .publication-preview,
+body.theme-github-mode.theme-algorithm-preview .activity-card,
+body.theme-github-mode.theme-algorithm-preview .timeline-item,
+body.theme-github-mode.theme-algorithm-preview .info-card,
+body.theme-github-mode.theme-algorithm-preview .topic-card {
+  box-shadow:
+    inset 3px 0 0 rgba(9, 105, 218, 0.26),
+    0 10px 22px rgba(31, 35, 40, 0.045) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-about-panel {
+  border-top-color: var(--algo-blue) !important;
+}
+
+@media (max-width: 820px) {
+  body.theme-github-mode.theme-algorithm-preview .gh-repo-header::after {
+    position: static !important;
+    width: fit-content !important;
+    margin-top: 8px !important;
+  }
+
+  body.theme-github-mode.theme-algorithm-preview .gh-home-overview::before,
+  body.theme-github-mode.theme-algorithm-preview .content-section::before,
+  body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card::after {
+    display: none !important;
+  }
+}
