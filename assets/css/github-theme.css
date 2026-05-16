@@ -2255,13 +2255,16 @@ body.theme-github-mode.theme-algorithm-preview .gh-repo-header::after {
   background: #ffffff !important;
   color: var(--algo-blue) !important;
   font-family: var(--algo-code) !important;
-  font-size: 0.68rem !important;
+  font-size: 0.73rem !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
 }
 
 body.theme-github-mode.theme-algorithm-preview .gh-topbar-mark,
+body.theme-github-mode.theme-algorithm-preview .gh-repo-pathline,
+body.theme-github-mode.theme-algorithm-preview .gh-repo-pathline a,
 body.theme-github-mode.theme-algorithm-preview .gh-repo-pathline strong,
+body.theme-github-mode.theme-algorithm-preview .gh-visibility-badge,
 body.theme-github-mode.theme-algorithm-preview .section-title,
 body.theme-github-mode.theme-algorithm-preview .page-title,
 body.theme-github-mode.theme-algorithm-preview .card-title,
@@ -2269,6 +2272,24 @@ body.theme-github-mode.theme-algorithm-preview .publication-title,
 body.theme-github-mode.theme-algorithm-preview .publication-card-title,
 body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card h2 {
   text-shadow: 0 1px 0 rgba(9, 105, 218, 0.08) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-repo-pathline,
+body.theme-github-mode.theme-algorithm-preview .gh-repo-pathline a,
+body.theme-github-mode.theme-algorithm-preview .gh-repo-pathline strong,
+body.theme-github-mode.theme-algorithm-preview .gh-visibility-badge {
+  font-family: var(--algo-code) !important;
+  letter-spacing: 0 !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-repo-pathline {
+  font-size: 1.28rem !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-visibility-badge {
+  min-height: 30px !important;
+  padding: 0 11px !important;
+  font-size: 0.95rem !important;
 }
 
 body.theme-github-mode.theme-algorithm-preview .gh-repo-tab,
@@ -2284,6 +2305,23 @@ body.theme-github-mode.theme-algorithm-preview .tiny-badge,
 body.theme-github-mode.theme-algorithm-preview .project-program {
   font-family: var(--algo-code) !important;
   letter-spacing: 0 !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-repo-tab {
+  font-size: 0.98rem !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .gh-repo-tabs-update-label,
+body.theme-github-mode.theme-algorithm-preview .gh-home-overview-kicker,
+body.theme-github-mode.theme-algorithm-preview .summary-label,
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-kicker,
+body.theme-github-mode.theme-algorithm-preview .sidebar-contact-label,
+body.theme-github-mode.theme-algorithm-preview .sidebar-credential-heading,
+body.theme-github-mode.theme-algorithm-preview .meta-pill,
+body.theme-github-mode.theme-algorithm-preview .tag,
+body.theme-github-mode.theme-algorithm-preview .tiny-badge,
+body.theme-github-mode.theme-algorithm-preview .project-program {
+  font-size: 0.84rem !important;
 }
 
 body.theme-github-mode.theme-algorithm-preview .gh-repo-tab .icon,
@@ -2319,7 +2357,7 @@ body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-card::after 
   pointer-events: none !important;
   color: rgba(87, 96, 106, 0.62) !important;
   font-family: var(--algo-code) !important;
-  font-size: 0.67rem !important;
+  font-size: 0.72rem !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
 }
@@ -2354,7 +2392,7 @@ body.theme-github-mode.theme-algorithm-preview .summary-card::after {
   bottom: 10px !important;
   color: rgba(87, 96, 106, 0.58) !important;
   font-family: var(--algo-code) !important;
-  font-size: 0.64rem !important;
+  font-size: 0.7rem !important;
   font-weight: 700 !important;
   letter-spacing: 0 !important;
 }
@@ -2392,7 +2430,7 @@ body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-source {
   margin-top: 8px !important;
   color: var(--algo-ink) !important;
   font-family: var(--algo-code) !important;
-  font-size: 0.84em !important;
+  font-size: 0.9em !important;
   line-height: 1.55 !important;
 }
 
@@ -2410,6 +2448,11 @@ body.theme-github-mode.theme-algorithm-preview .paper-journal-chip small {
   background: #ffffff !important;
   color: var(--algo-ink) !important;
   font-family: var(--algo-code) !important;
+  font-size: 0.76rem !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .paper-journal-chip small {
+  font-size: 0.68rem !important;
 }
 
 body.theme-github-mode.theme-algorithm-preview .publication-item,
