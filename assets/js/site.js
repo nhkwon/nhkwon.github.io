@@ -34,6 +34,7 @@
     home: { ko: "ko.html", en: "en.html" },
     bio: { ko: "bio.html", en: "bio-en.html" },
     teaching: { ko: "teaching.html", en: "teaching-en.html" },
+    methodology: { ko: "methodology.html", en: "methodology-en.html" },
     publications: { ko: "publications.html", en: "publications-en.html" },
     trends: { ko: "trends.html", en: "trends-en.html" },
     news: { ko: "news.html", en: "news-en.html" },
@@ -66,6 +67,15 @@
       description: {
         ko: "주요 연구 축, 방법론, 적용 분야 중심의 현재 연구 방향",
         en: "Current research directions, methods, and application domains."
+      }
+    },
+    methodology: {
+      icon: "code",
+      label: { ko: "Methodology", en: "Methodology" },
+      subtitle: { ko: "Research Methodology", en: "Research Methodology" },
+      description: {
+        ko: "논문동향에서 반복적으로 등장하는 AI/ML, 통계분석, 검증, 클러스터링, 비용·건설관리 방법론을 학습용으로 정리한 섹션",
+        en: "Study notes on AI/ML, statistical analysis, validation, clustering, cost, and construction management methods drawn from the research trend radar."
       }
     },
     publications: {
@@ -1156,6 +1166,8 @@
         return `${renderPageLead("bio")}${renderBioPage()}`;
       case "teaching":
         return `${renderPageLead("teaching")}${renderResearchPage()}`;
+      case "methodology":
+        return `${renderPageLead("methodology")}${renderResearchMethodologySection()}`;
       case "publications":
         return `${renderPageLead("publications")}${renderPublicationsPage()}`;
       case "trends":
@@ -1171,7 +1183,7 @@
   }
 
   function renderSidebar() {
-    const navOrder = ["home", "bio", "teaching", "publications", "trends", "news", "contact"];
+    const navOrder = ["home", "bio", "teaching", "methodology", "publications", "trends", "news", "contact"];
 
     return `
       <aside class="site-sidebar">
@@ -3420,7 +3432,7 @@
   }
 
   function renderSidebar() {
-    const navOrder = ["home", "bio", "teaching", "publications", "trends", "news", "contact"];
+    const navOrder = ["home", "bio", "teaching", "methodology", "publications", "trends", "news", "contact"];
 
     return `
       <aside class="site-sidebar">
@@ -3564,7 +3576,7 @@
   }
 
   function renderSidebar() {
-    const navOrder = ["home", "bio", "teaching", "publications", "trends", "news", "contact"];
+    const navOrder = ["home", "bio", "teaching", "methodology", "publications", "trends", "news", "contact"];
 
     return `
       <aside class="site-sidebar">
@@ -3989,7 +4001,6 @@
 
     return `
       ${renderHeroPanel()}
-      ${renderResearchMethodologySection()}
       <section class="content-section home-primary-section">
         ${renderSectionHeading(
           { ko: "연구 과제", en: "Research Projects" },

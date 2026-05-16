@@ -53,6 +53,7 @@
       { keys: ["home", "홈"], label: "Home", href: lang === "en" ? "en.html" : "ko.html" },
       { keys: ["biography", "bio", "소개", "학력", "경력"], label: "Biography", href: lang === "en" ? "bio-en.html" : "bio.html" },
       { keys: ["research", "연구"], label: "Research", href: lang === "en" ? "teaching-en.html" : "teaching.html" },
+      { keys: ["methodology", "methods", "statistics", "regression", "anova", "research methodology", "연구방법론", "방법론", "통계기법", "회귀분석", "분산분석"], label: "Methodology", href: lang === "en" ? "methodology-en.html" : "methodology.html" },
       { keys: ["publications", "publication", "papers", "논문"], label: "Publications", href: lang === "en" ? "publications-en.html" : "publications.html" },
       { keys: ["research trends", "trend", "literature", "paper trend", "paper trends", "연구동향", "논문동향"], label: "Research Trends", href: paperTrendsHref(lang) },
       { keys: ["activities", "activity", "news", "활동"], label: "Activities", href: lang === "en" ? "news-en.html" : "news.html" },
