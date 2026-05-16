@@ -1411,6 +1411,92 @@ body.theme-github-mode .methodology-tags span {
   font-weight: 700 !important;
 }
 
+body.theme-github-mode .statistics-study-panel {
+  display: grid !important;
+  gap: 16px !important;
+  padding: 18px !important;
+  border: 1px solid #d0d7de !important;
+  border-top: 3px solid #0969da !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f6f8fa 100%) !important;
+}
+
+body.theme-github-mode .statistics-study-head {
+  display: grid !important;
+  gap: 8px !important;
+  max-width: 960px !important;
+}
+
+body.theme-github-mode .statistics-study-head h3 {
+  margin: 0 !important;
+  color: #1f2328 !important;
+  font-size: 1.28rem !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+}
+
+body.theme-github-mode .statistics-study-head p:not(.methodology-code) {
+  margin: 0 !important;
+  color: #57606a !important;
+  font-size: 0.92rem !important;
+  line-height: 1.65 !important;
+}
+
+body.theme-github-mode .statistics-study-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+body.theme-github-mode .statistics-study-card {
+  display: grid !important;
+  gap: 10px !important;
+  padding: 16px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+}
+
+body.theme-github-mode .statistics-study-card h4 {
+  margin: 0 !important;
+  color: #1f2328 !important;
+  font-size: 1.02rem !important;
+  font-weight: 800 !important;
+  line-height: 1.32 !important;
+}
+
+body.theme-github-mode .statistics-study-card dl {
+  display: grid !important;
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+body.theme-github-mode .statistics-study-card dl div {
+  display: grid !important;
+  grid-template-columns: 46px minmax(0, 1fr) !important;
+  gap: 8px !important;
+  align-items: start !important;
+}
+
+body.theme-github-mode .statistics-study-card dt,
+body.theme-github-mode .statistics-study-card dd {
+  margin: 0 !important;
+  line-height: 1.5 !important;
+}
+
+body.theme-github-mode .statistics-study-card dt {
+  color: #0969da !important;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+}
+
+body.theme-github-mode .statistics-study-card dd {
+  color: #4b5563 !important;
+  font-size: 0.84rem !important;
+  overflow-wrap: anywhere !important;
+}
+
 @media (max-width: 1100px) {
   body.theme-github-mode .methodology-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -1425,6 +1511,19 @@ body.theme-github-mode .methodology-tags span {
   body.theme-github-mode .methodology-card {
     min-height: 0 !important;
     padding: 16px !important;
+  }
+
+  body.theme-github-mode .statistics-study-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  body.theme-github-mode .statistics-study-panel {
+    padding: 16px !important;
+  }
+
+  body.theme-github-mode .statistics-study-card dl div {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 3px !important;
   }
 }
 
@@ -2573,7 +2672,9 @@ body.theme-github-mode.theme-algorithm-preview .activity-card,
 body.theme-github-mode.theme-algorithm-preview .timeline-item,
 body.theme-github-mode.theme-algorithm-preview .info-card,
 body.theme-github-mode.theme-algorithm-preview .topic-card,
-body.theme-github-mode.theme-algorithm-preview .methodology-card {
+body.theme-github-mode.theme-algorithm-preview .methodology-card,
+body.theme-github-mode.theme-algorithm-preview .statistics-study-panel,
+body.theme-github-mode.theme-algorithm-preview .statistics-study-card {
   box-shadow:
     inset 3px 0 0 rgba(9, 105, 218, 0.26),
     0 10px 22px rgba(31, 35, 40, 0.045) !important;
@@ -2585,13 +2686,16 @@ body.theme-github-mode.theme-algorithm-preview .research-methodology-section::be
 
 body.theme-github-mode.theme-algorithm-preview .methodology-intro,
 body.theme-github-mode.theme-algorithm-preview .methodology-summary,
-body.theme-github-mode.theme-algorithm-preview .methodology-use {
+body.theme-github-mode.theme-algorithm-preview .methodology-use,
+body.theme-github-mode.theme-algorithm-preview .statistics-study-head p:not(.methodology-code),
+body.theme-github-mode.theme-algorithm-preview .statistics-study-card dd {
   font-size: 0.92rem !important;
 }
 
 body.theme-github-mode.theme-algorithm-preview .methodology-code,
 body.theme-github-mode.theme-algorithm-preview .methodology-use span,
-body.theme-github-mode.theme-algorithm-preview .methodology-tags span {
+body.theme-github-mode.theme-algorithm-preview .methodology-tags span,
+body.theme-github-mode.theme-algorithm-preview .statistics-study-card dt {
   font-family: var(--algo-code) !important;
 }
 
@@ -2602,6 +2706,11 @@ body.theme-github-mode.theme-algorithm-preview .methodology-code {
 body.theme-github-mode.theme-algorithm-preview .methodology-card h3 {
   font-family: var(--algo-code) !important;
   font-size: 1.08rem !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .statistics-study-head h3,
+body.theme-github-mode.theme-algorithm-preview .statistics-study-card h4 {
+  font-family: var(--algo-code) !important;
 }
 
 body.theme-github-mode.theme-algorithm-preview .methodology-tags span {

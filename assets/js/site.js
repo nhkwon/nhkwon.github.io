@@ -3794,6 +3794,163 @@
     ];
   }
 
+  function statisticalStudyNotes() {
+    return [
+      {
+        code: "stats.eda",
+        title: { ko: "기초통계와 탐색적 분석", en: "Descriptive Statistics and EDA" },
+        when: {
+          ko: "데이터를 본격적으로 모델링하기 전, 변수의 분포·결측·이상치·단위를 이해할 때 사용합니다.",
+          en: "Use before modeling to understand distributions, missing values, outliers, and units."
+        },
+        check: {
+          ko: "평균·중앙값·표준편차·IQR, 히스토그램, 박스플롯, 결측률, 이상치 기준",
+          en: "Mean, median, standard deviation, IQR, histograms, box plots, missing rate, outlier rules"
+        },
+        output: {
+          ko: "데이터가 정규분포에 가까운지, 변환이 필요한지, 분석에서 제외하거나 보정할 값이 있는지 판단합니다.",
+          en: "Decide whether variables are near-normal, require transformation, or need outlier handling."
+        },
+        tags: ["Mean", "SD", "IQR", "Outlier"]
+      },
+      {
+        code: "stats.regression",
+        title: { ko: "회귀분석", en: "Regression Analysis" },
+        when: {
+          ko: "유지관리비, 공사비, 에너지 사용량처럼 연속형 결과값을 여러 설명변수로 예측하거나 영향관계를 해석할 때 사용합니다.",
+          en: "Use to predict continuous outcomes such as maintenance cost, construction cost, or energy use, and to interpret explanatory factors."
+        },
+        check: {
+          ko: "선형성, 독립성, 등분산성, 잔차 정규성, 다중공선성(VIF), 영향점(Cook's distance)",
+          en: "Linearity, independence, homoscedasticity, residual normality, multicollinearity (VIF), influential points"
+        },
+        output: {
+          ko: "회귀계수는 변수 1단위 변화의 평균 효과를 뜻합니다. p-value, 신뢰구간, R², MAE/RMSE를 함께 읽어야 합니다.",
+          en: "Coefficients show average effects per unit change. Read p-values, confidence intervals, R², and MAE/RMSE together."
+        },
+        tags: ["OLS", "VIF", "R2", "RMSE"]
+      },
+      {
+        code: "stats.anova",
+        title: { ko: "ANOVA · 분산분석", en: "ANOVA" },
+        when: {
+          ko: "공법, 건물유형, 보수전략처럼 3개 이상 집단의 평균 차이가 통계적으로 유의한지 비교할 때 사용합니다.",
+          en: "Use to compare whether means differ significantly across three or more groups such as methods, building types, or repair strategies."
+        },
+        check: {
+          ko: "집단 독립성, 정규성, 등분산성, F-statistic, p-value, 사후검정(Tukey HSD), 효과크기(eta squared)",
+          en: "Group independence, normality, equal variance, F-statistic, p-value, post-hoc tests, effect size"
+        },
+        output: {
+          ko: "ANOVA는 어느 집단이 다른지까지 직접 말해주지 않습니다. 유의하면 사후검정으로 차이가 나는 집단쌍을 확인합니다.",
+          en: "ANOVA tells whether a difference exists, not exactly which groups differ. Use post-hoc tests after a significant result."
+        },
+        tags: ["F-test", "Tukey", "Effect Size", "ANCOVA"]
+      },
+      {
+        code: "stats.tests",
+        title: { ko: "t-test · 카이제곱 · 비모수 검정", en: "t-test · Chi-square · Nonparametric Tests" },
+        when: {
+          ko: "두 집단 평균, 범주형 변수의 독립성, 정규성을 만족하지 않는 자료의 차이를 검정할 때 사용합니다.",
+          en: "Use for two-group mean comparison, independence of categorical variables, or group differences when normality is weak."
+        },
+        check: {
+          ko: "독립표본/대응표본 구분, 기대빈도, 정규성, Mann-Whitney U, Wilcoxon, Kruskal-Wallis",
+          en: "Independent vs paired samples, expected frequencies, normality, Mann-Whitney U, Wilcoxon, Kruskal-Wallis"
+        },
+        output: {
+          ko: "p-value만 보지 말고 평균 차이, 교차표 비율, 효과크기, 실제 의사결정에서 의미 있는 차이인지 함께 판단합니다.",
+          en: "Do not rely only on p-values. Interpret mean differences, proportions, effect sizes, and practical relevance."
+        },
+        tags: ["t-test", "Chi-square", "Wilcoxon", "Kruskal"]
+      },
+      {
+        code: "stats.correlation",
+        title: { ko: "상관분석과 변수 관계", en: "Correlation and Variable Relationships" },
+        when: {
+          ko: "두 변수의 함께 변하는 정도를 빠르게 파악하고, 예측모델에 넣을 후보 변수를 선별할 때 사용합니다.",
+          en: "Use to understand how two variables move together and to screen candidate predictors."
+        },
+        check: {
+          ko: "Pearson, Spearman, 산점도, 비선형 관계, 이상치 영향, 상관과 인과의 구분",
+          en: "Pearson, Spearman, scatterplots, nonlinear relationships, outlier influence, correlation vs causation"
+        },
+        output: {
+          ko: "상관계수는 방향과 강도를 보여주지만 원인을 증명하지 않습니다. 산점도와 도메인 지식을 함께 확인해야 합니다.",
+          en: "Correlation shows direction and strength, not causality. Always check scatterplots and domain knowledge."
+        },
+        tags: ["Pearson", "Spearman", "Scatter", "Causality"]
+      },
+      {
+        code: "stats.diagnostics",
+        title: { ko: "모델 진단과 잔차 분석", en: "Model Diagnostics and Residual Analysis" },
+        when: {
+          ko: "회귀모델이나 예측모델이 데이터의 패턴을 제대로 설명하는지, 특정 조건에서 크게 틀리는지 확인할 때 사용합니다.",
+          en: "Use to verify whether a model explains patterns well and whether it fails under specific conditions."
+        },
+        check: {
+          ko: "잔차-예측값 플롯, Q-Q plot, 이분산성, 영향점, VIF, 훈련/검증 성능 차이",
+          en: "Residual-fitted plots, Q-Q plots, heteroscedasticity, influential points, VIF, train-validation gap"
+        },
+        output: {
+          ko: "진단 결과에 따라 로그변환, 변수 추가, 상호작용항, 강건회귀, 트리 기반 모델 등을 고려합니다.",
+          en: "Use diagnostics to consider log transforms, additional variables, interaction terms, robust regression, or tree-based models."
+        },
+        tags: ["Residuals", "Q-Q Plot", "VIF", "Robust"]
+      },
+      {
+        code: "stats.validation",
+        title: { ko: "검증 설계와 성능지표", en: "Validation Design and Metrics" },
+        when: {
+          ko: "모델이 현재 데이터에만 맞는지, 새로운 프로젝트나 건물에도 적용 가능한지 검토할 때 사용합니다.",
+          en: "Use to test whether a model only fits current data or generalizes to new projects and buildings."
+        },
+        check: {
+          ko: "Train/Test split, K-fold CV, Leave-One-Out, 데이터 누수, MAE, RMSE, R², Accuracy, F1-score",
+          en: "Train/test split, K-fold CV, Leave-One-Out, data leakage, MAE, RMSE, R², accuracy, F1-score"
+        },
+        output: {
+          ko: "표본이 적으면 LOOCV가 유용하지만 변동성이 클 수 있습니다. K-fold는 안정성과 계산량 사이의 균형을 잡습니다.",
+          en: "LOOCV is useful for small samples but can be variable. K-fold balances stability and computation."
+        },
+        tags: ["K-fold", "LOOCV", "MAE", "F1-score"]
+      }
+    ];
+  }
+
+  function renderStatisticalStudyNotes() {
+    return `
+      <div class="statistics-study-panel">
+        <div class="statistics-study-head">
+          <p class="methodology-code">study.stats_toolkit</p>
+          <h3>${text({ ko: "통계기법 학습 노트", en: "Statistical Methods Study Notes" })}</h3>
+          <p>${text({
+            ko: "학생들이 연구문제를 통계모형으로 바꿀 때 확인해야 할 핵심 질문을 정리했습니다. 각 기법은 '언제 쓰는가', '무엇을 점검하는가', '결과를 어떻게 읽는가' 순서로 보면 됩니다.",
+            en: "These notes summarize the key questions students should ask when turning a research problem into a statistical model: when to use it, what to check, and how to interpret it."
+          })}</p>
+        </div>
+        <div class="statistics-study-grid">
+          ${statisticalStudyNotes()
+            .map(
+              (item) => `
+                <article class="statistics-study-card">
+                  <p class="methodology-code">${escapeHtml(item.code)}</p>
+                  <h4>${text(item.title)}</h4>
+                  <dl>
+                    <div><dt>${text({ ko: "언제", en: "When" })}</dt><dd>${text(item.when)}</dd></div>
+                    <div><dt>${text({ ko: "점검", en: "Check" })}</dt><dd>${text(item.check)}</dd></div>
+                    <div><dt>${text({ ko: "해석", en: "Interpret" })}</dt><dd>${text(item.output)}</dd></div>
+                  </dl>
+                  <div class="methodology-tags">${item.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+                </article>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    `;
+  }
+
   function renderResearchMethodologySection() {
     return `
       <section class="content-section research-methodology-section">
@@ -3822,6 +3979,7 @@
             )
             .join("")}
         </div>
+        ${renderStatisticalStudyNotes()}
       </section>
     `;
   }
