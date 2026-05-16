@@ -42,7 +42,10 @@
   function wantsAlgorithmPreview() {
     const params = new URLSearchParams(window.location.search);
     const theme = (params.get("theme") || params.get("preview") || "").toLowerCase();
-    return theme === "algorithm" || theme === "algo" || theme === "code" || params.get("algorithm") === "1";
+    if (theme === "classic" || theme === "default" || theme === "base" || params.get("algorithm") === "0") {
+      return false;
+    }
+    return true;
   }
 
   function pageSearchItems(lang) {

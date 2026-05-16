@@ -4233,11 +4233,9 @@
     }
     const trendText = activeClusters.map((cluster) => paperTrendClusterTrendSentence(cluster.label)).join(" ");
     const venueText = venues.length ? venues.join(", ") : text({ ko: "지정 저널", en: "target journals" });
+    const sourceLabel = text({ ko: "주요출처:", en: "Main sources:" });
 
-    return text({
-      ko: `동향: ${trendText} 주요출처: ${venueText}`,
-      en: `Trend: ${trendText} Main sources: ${venueText}`
-    });
+    return `${escapeHtml(trendText)}<br><span class="paper-trend-summary-source"><span class="paper-trend-summary-source-label">${escapeHtml(sourceLabel)}</span> ${escapeHtml(venueText)}</span>`;
   }
 
   function paperTrendSignalShortLabel(label) {
@@ -4283,7 +4281,7 @@
     }
 
     if (copyEl) {
-      copyEl.textContent = buildPaperTrendInsight(items, clusters, venues);
+      copyEl.innerHTML = buildPaperTrendInsight(items, clusters, venues);
     }
 
     if (tagsEl) {

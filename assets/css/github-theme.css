@@ -2387,9 +2387,26 @@ body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-insight {
     linear-gradient(90deg, rgba(9, 105, 218, 0.055), rgba(26, 127, 55, 0.045)) !important;
 }
 
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-source {
+  display: block !important;
+  margin-top: 8px !important;
+  color: var(--algo-ink) !important;
+  font-family: var(--algo-code) !important;
+  font-size: 0.84em !important;
+  line-height: 1.55 !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-source-label {
+  color: var(--algo-blue) !important;
+  font-family: var(--algo-code) !important;
+  font-weight: 800 !important;
+}
+
 body.theme-github-mode.theme-algorithm-preview .paper-trend-summary-tags span,
 body.theme-github-mode.theme-algorithm-preview .keyword-chip,
-body.theme-github-mode.theme-algorithm-preview .metric-chip {
+body.theme-github-mode.theme-algorithm-preview .metric-chip,
+body.theme-github-mode.theme-algorithm-preview .paper-journal-chip,
+body.theme-github-mode.theme-algorithm-preview .paper-journal-chip small {
   background: #ffffff !important;
   color: var(--algo-ink) !important;
   font-family: var(--algo-code) !important;
