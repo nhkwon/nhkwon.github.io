@@ -1316,6 +1316,118 @@ body.theme-github-mode .research-focus-tag {
   overflow-wrap: anywhere !important;
 }
 
+body.theme-github-mode .research-methodology-section {
+  gap: 18px !important;
+}
+
+body.theme-github-mode .methodology-intro {
+  max-width: 920px !important;
+  margin: 0 !important;
+  color: #57606a !important;
+  font-size: 0.96rem !important;
+  line-height: 1.7 !important;
+}
+
+body.theme-github-mode .methodology-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+body.theme-github-mode .methodology-card {
+  position: relative !important;
+  display: grid !important;
+  grid-template-rows: auto auto 1fr auto auto !important;
+  gap: 10px !important;
+  min-height: 292px !important;
+  padding: 18px !important;
+  border: 1px solid #d0d7de !important;
+  border-top: 3px solid #0969da !important;
+  border-radius: 8px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f6f8fa 100%) !important;
+  overflow: hidden !important;
+}
+
+body.theme-github-mode .methodology-code {
+  margin: 0 !important;
+  color: #0969da !important;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 0.73rem !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+}
+
+body.theme-github-mode .methodology-card h3 {
+  margin: 0 !important;
+  color: #1f2328 !important;
+  font-size: 1.06rem !important;
+  font-weight: 800 !important;
+  line-height: 1.32 !important;
+  letter-spacing: 0 !important;
+}
+
+body.theme-github-mode .methodology-summary,
+body.theme-github-mode .methodology-use {
+  margin: 0 !important;
+  color: #4b5563 !important;
+  font-size: 0.86rem !important;
+  line-height: 1.58 !important;
+  overflow-wrap: anywhere !important;
+}
+
+body.theme-github-mode .methodology-use {
+  padding: 9px 10px !important;
+  border: 1px dashed rgba(9, 105, 218, 0.26) !important;
+  border-radius: 8px !important;
+  background: rgba(246, 248, 250, 0.78) !important;
+}
+
+body.theme-github-mode .methodology-use span {
+  display: inline-flex !important;
+  margin-right: 8px !important;
+  color: #0969da !important;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+}
+
+body.theme-github-mode .methodology-tags {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+body.theme-github-mode .methodology-tags span {
+  display: inline-flex !important;
+  min-height: 24px !important;
+  align-items: center !important;
+  padding: 0 9px !important;
+  border: 1px solid rgba(9, 105, 218, 0.24) !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  color: #1f2328 !important;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+}
+
+@media (max-width: 1100px) {
+  body.theme-github-mode .methodology-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 680px) {
+  body.theme-github-mode .methodology-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  body.theme-github-mode .methodology-card {
+    min-height: 0 !important;
+    padding: 16px !important;
+  }
+}
+
 body.theme-github-mode .button-primary,
 body.theme-github-mode .section-action,
 body.theme-github-mode .sort-chip.is-active {
@@ -2460,10 +2572,40 @@ body.theme-github-mode.theme-algorithm-preview .publication-preview,
 body.theme-github-mode.theme-algorithm-preview .activity-card,
 body.theme-github-mode.theme-algorithm-preview .timeline-item,
 body.theme-github-mode.theme-algorithm-preview .info-card,
-body.theme-github-mode.theme-algorithm-preview .topic-card {
+body.theme-github-mode.theme-algorithm-preview .topic-card,
+body.theme-github-mode.theme-algorithm-preview .methodology-card {
   box-shadow:
     inset 3px 0 0 rgba(9, 105, 218, 0.26),
     0 10px 22px rgba(31, 35, 40, 0.045) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .research-methodology-section::before {
+  content: "module.methodology" !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .methodology-intro,
+body.theme-github-mode.theme-algorithm-preview .methodology-summary,
+body.theme-github-mode.theme-algorithm-preview .methodology-use {
+  font-size: 0.92rem !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .methodology-code,
+body.theme-github-mode.theme-algorithm-preview .methodology-use span,
+body.theme-github-mode.theme-algorithm-preview .methodology-tags span {
+  font-family: var(--algo-code) !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .methodology-code {
+  font-size: 0.8rem !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .methodology-card h3 {
+  font-family: var(--algo-code) !important;
+  font-size: 1.08rem !important;
+}
+
+body.theme-github-mode.theme-algorithm-preview .methodology-tags span {
+  font-size: 0.76rem !important;
 }
 
 body.theme-github-mode.theme-algorithm-preview .gh-about-panel {

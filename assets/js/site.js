@@ -3729,11 +3729,109 @@
     `;
   }
 
+  function researchMethodologyItems() {
+    return [
+      {
+        code: "method.case_retrieval",
+        title: { ko: "사례기반추론 (CBR)", en: "Case-Based Reasoning (CBR)" },
+        summary: {
+          ko: "과거 프로젝트나 유지관리 사례 중 현재 조건과 가장 비슷한 사례를 찾아 비용, 공기, 소음, 보수 시점을 추정하는 방법입니다.",
+          en: "Finds past projects or maintenance cases similar to the current case, then reuses them to estimate cost, duration, noise, or repair timing."
+        },
+        use: { ko: "유사도 계산, 거리척도, 사례 검색, 유지관리비/소음 예측", en: "Similarity metrics, distance measures, case retrieval, maintenance-cost and noise prediction" },
+        tags: ["Similarity", "Distance", "Retrieval", "Maintenance"]
+      },
+      {
+        code: "model.ensemble",
+        title: { ko: "머신러닝 앙상블 · CatBoost", en: "ML Ensembles · CatBoost" },
+        summary: {
+          ko: "여러 결정트리를 결합해 비선형 패턴을 학습합니다. CatBoost는 범주형 변수가 많은 건설 데이터에서 비용, 성능, 리스크 예측에 유용합니다.",
+          en: "Combines decision trees to learn nonlinear patterns. CatBoost is useful for construction datasets with many categorical variables in cost, performance, and risk prediction."
+        },
+        use: { ko: "CatBoost, Random Forest, XGBoost, 변수중요도, 예측모델", en: "CatBoost, Random Forest, XGBoost, feature importance, predictive models" },
+        tags: ["CatBoost", "Random Forest", "XGBoost", "Feature Importance"]
+      },
+      {
+        code: "stats.baseline",
+        title: { ko: "통계기법과 해석 가능한 기준모델", en: "Statistical Methods and Interpretable Baselines" },
+        summary: {
+          ko: "회귀분석, 상관분석, 가설검정, AHP 등은 데이터의 영향관계를 설명하고 AI 모델의 기준 성능을 비교하는 출발점입니다.",
+          en: "Regression, correlation, hypothesis tests, and AHP explain relationships in data and provide baselines for comparing AI models."
+        },
+        use: { ko: "회귀분석, 상관분석, AHP, 유의성 검정, 효과크기", en: "Regression, correlation, AHP, significance tests, effect size" },
+        tags: ["Regression", "AHP", "Correlation", "p-value"]
+      },
+      {
+        code: "cluster.trend_map",
+        title: { ko: "클러스터링과 연구동향 군집화", en: "Clustering and Trend Mapping" },
+        summary: {
+          ko: "논문 제목, 키워드, 초록을 벡터화해 유사한 연구를 묶습니다. Research Trends의 주제축을 자동으로 발견하고 변화 흐름을 볼 때 사용합니다.",
+          en: "Vectorizes titles, keywords, and abstracts to group similar studies. It helps discover topic axes in Research Trends and track how they change."
+        },
+        use: { ko: "K-means, 계층적 군집, DBSCAN, 키워드 공출현, 토픽맵", en: "K-means, hierarchical clustering, DBSCAN, keyword co-occurrence, topic maps" },
+        tags: ["K-means", "DBSCAN", "Topic Map", "Embeddings"]
+      },
+      {
+        code: "validate.generalize",
+        title: { ko: "모델 검증: K-fold · Leave-One-Out", en: "Model Validation: K-fold · Leave-One-Out" },
+        summary: {
+          ko: "데이터를 여러 번 나누어 학습과 검증을 반복합니다. 표본이 적은 건설·유지관리 데이터에서는 Leave-One-Out으로 일반화 가능성을 더 촘촘히 봅니다.",
+          en: "Repeats training and validation across multiple splits. Leave-One-Out is useful for small construction and maintenance datasets to check generalization carefully."
+        },
+        use: { ko: "K-fold CV, LOOCV, Train/Test split, MAE, RMSE, R², F1-score", en: "K-fold CV, LOOCV, train/test split, MAE, RMSE, R², F1-score" },
+        tags: ["K-fold", "LOOCV", "MAE/RMSE", "R2"]
+      },
+      {
+        code: "optimize.decision",
+        title: { ko: "최적화와 의사결정지원", en: "Optimization and Decision Support" },
+        summary: {
+          ko: "예산, 일정, 성능, 탄소, 안전 조건을 동시에 고려해 가능한 대안을 탐색합니다. 유전알고리즘과 다기준 의사결정은 실제 선택지를 좁히는 데 유용합니다.",
+          en: "Searches alternatives under budget, schedule, performance, carbon, and safety constraints. Genetic algorithms and multi-criteria decisions narrow practical options."
+        },
+        use: { ko: "Genetic Algorithm, 제약조건, 예산배분, 일정계획, 다기준 의사결정", en: "Genetic algorithms, constraints, budget allocation, scheduling, multi-criteria decisions" },
+        tags: ["GA", "Budget", "Scheduling", "MCDM"]
+      }
+    ];
+  }
+
+  function renderResearchMethodologySection() {
+    return `
+      <section class="content-section research-methodology-section">
+        ${renderSectionHeading(
+          { ko: "연구 방법론", en: "Research Methodology" },
+          { ko: "Methods from Research Trends", en: "Methods from Research Trends" },
+          route("trends"),
+          { ko: "Research Trends 보기", en: "Open Research Trends" }
+        )}
+        <p class="methodology-intro">${text({
+          ko: "최근 논문동향에서 반복적으로 나타나는 AI/ML, 비용·건설관리, 성능예측, 지속가능성 주제를 실제 연구 설계에서 사용하는 방법론으로 연결했습니다.",
+          en: "This section connects recurring Research Trends signals such as AI/ML, cost and construction management, performance prediction, and sustainability to practical research methods."
+        })}</p>
+        <div class="methodology-grid">
+          ${researchMethodologyItems()
+            .map(
+              (item) => `
+                <article class="methodology-card">
+                  <p class="methodology-code">${escapeHtml(item.code)}</p>
+                  <h3>${text(item.title)}</h3>
+                  <p class="methodology-summary">${text(item.summary)}</p>
+                  <p class="methodology-use"><span>${text({ ko: "활용", en: "Use" })}</span>${text(item.use)}</p>
+                  <div class="methodology-tags">${item.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+                </article>
+              `
+            )
+            .join("")}
+        </div>
+      </section>
+    `;
+  }
+
   function renderHomePage() {
     const projects = fundedResearchProjects();
 
     return `
       ${renderHeroPanel()}
+      ${renderResearchMethodologySection()}
       <section class="content-section home-primary-section">
         ${renderSectionHeading(
           { ko: "연구 과제", en: "Research Projects" },
